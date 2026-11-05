@@ -1,0 +1,36 @@
+{
+  "name": "@wapri/gbase",
+  "version": "2.0.0",
+  "description": "前端基础公共库",
+  "keywords": [],
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && father build",
+    "dev": "father dev"
+  },
+  "dependencies": {
+    "copy-to-clipboard": "^4.0.2",
+    "currency.js": "^2.0.4",
+    "dayjs": "^1.11.9",
+    "js-cookie": "^3.0.8",
+    "lodash-es": "^4.17.21",
+    "mitt": "^3.0.1",
+    "nanoid": "^5.1.5"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/lodash-es": "^4.17.12"
+  },
+  "peerDependenciesMeta": {}
+}

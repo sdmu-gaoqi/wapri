@@ -1,0 +1,45 @@
+/**
+ * oxfmt 格式化配置。
+ *
+ * 取值与 `@wagq/lint-ox/oxfmt.json` 保持一致：oxfmt 不支持 `extends`（.oxfmtrc.json 里写 extends 会被静默忽略），
+ * 所以这里显式落一份仓库内的配置，供 CLI 与编辑器（oxc.oxc-vscode）共同读取。
+ * 升级 `@wagq/lint-ox` 时请对照 `node_modules/@wagq/lint-ox/oxfmt.json` 同步本文件。
+ */
+{
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf",
+  "insertFinalNewline": true,
+  "semi": false,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "quoteProps": "consistent",
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "arrowParens": "always",
+  "singleAttributePerLine": true,
+  "htmlWhitespaceSensitivity": "ignore",
+  "vueIndentScriptAndStyle": false,
+  "objectWrap": "preserve",
+  "embeddedLanguageFormatting": "auto",
+  "sortImports": false,
+  "sortPackageJson": true,
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".turbo",
+    ".output",
+    "docs-dist",
+    "**/*.min.js",
+    "**/*.md",
+    "**/*.html",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "yarn.lock",
+    "CHANGELOG.md",
+  ],
+}

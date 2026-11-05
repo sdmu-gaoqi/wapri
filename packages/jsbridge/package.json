@@ -1,0 +1,45 @@
+{
+  "name": "@wapri/gjsbridge",
+  "version": "5.0.0",
+  "description": "App WebView JSBridge 封装",
+  "keywords": [
+    "android",
+    "harmonyos",
+    "ios",
+    "jsbridge"
+  ],
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": true,
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && father build",
+    "dev": "father dev"
+  },
+  "dependencies": {
+    "@wapri/gbase": "workspace:^"
+  },
+  "devDependencies": {
+    "@wapri/gbase": "workspace:^"
+  },
+  "peerDependencies": {
+    "@wapri/gbase": "2.0.0"
+  },
+  "peerDependenciesMeta": {}
+}

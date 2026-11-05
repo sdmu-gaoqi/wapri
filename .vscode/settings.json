@@ -1,0 +1,57 @@
+{
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "files.eol": "\n",
+  // lint / 格式化统一交给 oxlint + oxfmt（@wagq/lint-ox 共享配置），不再启用 ESLint / Prettier / Stylelint 扩展
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  // 保存时自动格式化
+  "editor.formatOnSave": true,
+  // lint / 格式化配置都在仓库内：.oxlintrc.json（继承 @wagq/lint-ox/oxlint/vue.json）、.oxfmtrc.jsonc
+  "oxc.configPath": ".oxlintrc.json",
+  "oxc.fmt.configPath": ".oxfmtrc.jsonc",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  // 语言级设置优先级高于上面的通用默认值：Volar(All In One)、Prettier 等扩展会用
+  // configurationDefaults 给 [vue]/[typescript] 注入自己的格式化器，必须逐个语言显式覆盖，否则会回落到它们
+  "[vue]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[less]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
+}

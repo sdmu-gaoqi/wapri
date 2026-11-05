@@ -1,0 +1,56 @@
+# AGENTS.md
+
+Guidance for coding agents working in this repository.
+
+## Project Overview
+
+本仓库是一个使用vue3+typescript+changesets编写的Monorepo前端项目
+
+## Repository Map
+
+- `packages/@base`: 基础能力建设
+  - 被packages/下其他组件引入,基础通用的能力放在这里
+  - 可存放常量,常量必须放在 /src/constant下
+- `packages/hooks`, `packages/utils`: shared runtime packages.
+  - hooks内置导出了`vue-hooks-plus`
+  - utils内置导出了`lodash-es` 、`dayjs`、
+- `packages/element-pro`: vue3组件库
+  - 接入了tsx写法
+  - 使用模板更优时,实现使用模板方式
+  - 使用tsx更优时,实现使用tsx方式
+- `packages/jsbridge`: App WebView 桥接,通道名由业务注入
+
+## Common Commands
+
+- 安装依赖: `pnpm install`
+- 启动文档站: `pnpm dev`
+- 打包文档站: `pnpm doc`
+- 代码检查: `pnpm lint` / 自动修复 `pnpm lint:fix`（oxlint + `.oxlintrc.json`）
+- 代码格式化: `pnpm format` / 仅校验 `pnpm format:check`（oxfmt + `.oxfmtrc.jsonc`）
+- 发版: `pnpm ver` / `pnpm pub`
+
+## Development Notes
+
+- 比起新的抽象，更喜欢现有的组件模式。在更改结构之前，请先查看附近的组件。
+- 将更改限制在请求的行为范围内。避免无关的重构和格式混乱。
+- 对于组件更改，请检查相关的道具、发出的事件、公开的类型、样式和文档是否需要更新。
+- 使用工作区包和现有别名，如“@wapri/*”，而不是随意引入新的本地路径。
+- 避免添加依赖项，除非任务明确需要它们，而现有的工具链无法覆盖它们。
+- 所有修改都要严格遵守 `.oxlintrc.json`（继承 `@wagq/lint-ox/oxlint/vue.json`）的配置,不得使用any
+- element-pro 组件的 class 命名,必须使用 `packages\element-pro\src\constant\index.ts` 统一的 `prefix` 做为前缀
+- 每次修改完,都要同步下文档与skill
+- ui组件可以直接使用element-plus的直接使用element-plus的
+- 不允许使用localStorage或sessionStorage,必须使用@wapri/gbase packages\@base\src\storage.ts中的导出
+- 复杂的代码,类型超过三个的,不要把类型和实现写在一个文件里,放在同级目录的types/下维护
+
+## Documentation And API
+
+- 破坏性变更采用主版本号更新,新增功能采用次版本号更新,修复问题与样式变更采用补丁版本号更新
+- 保持prop、event、slot和暴露类型与实现行为同步。
+- 业务域名、桶名、网关前缀、Token 键、App 通道名一律走配置或环境变量,不要写进源码与文档示例。
+
+## Git And Review Hygiene
+
+- 除非明确要求，否则不要提交、推送或打开拉取请求,这一切都由你来申请,我来执行
+- 在提交之前，确保格式化、lint、类型检查和测试都通过。
+- 在完成之前，报告运行的命令和无法运行的任何检查。

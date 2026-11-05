@@ -1,0 +1,110 @@
+/*
+ * Dumi renders code tokens with prism-react-renderer. Its packaged Prism theme
+ * can be removed from the production bundle, so retain the token palette here.
+ */
+.dumi-default-source-code .token.comment,
+.dumi-default-source-code .token.prolog,
+.dumi-default-source-code .token.cdata {
+  color: #6a737d;
+}
+
+.dumi-default-source-code .token.doctype,
+.dumi-default-source-code .token.punctuation,
+.dumi-default-source-code .token.entity {
+  color: #24292f;
+}
+
+.dumi-default-source-code .token.attr-name,
+.dumi-default-source-code .token.class-name,
+.dumi-default-source-code .token.boolean,
+.dumi-default-source-code .token.constant,
+.dumi-default-source-code .token.number,
+.dumi-default-source-code .token.atrule {
+  color: #9a6700;
+}
+
+.dumi-default-source-code .token.keyword {
+  color: #8250df;
+}
+
+.dumi-default-source-code .token.property,
+.dumi-default-source-code .token.tag,
+.dumi-default-source-code .token.symbol,
+.dumi-default-source-code .token.deleted,
+.dumi-default-source-code .token.important {
+  color: #cf222e;
+}
+
+.dumi-default-source-code .token.selector,
+.dumi-default-source-code .token.string,
+.dumi-default-source-code .token.char,
+.dumi-default-source-code .token.builtin,
+.dumi-default-source-code .token.inserted,
+.dumi-default-source-code .token.regex,
+.dumi-default-source-code .token.attr-value {
+  color: #116329;
+}
+
+.dumi-default-source-code .token.variable,
+.dumi-default-source-code .token.operator,
+.dumi-default-source-code .token.function {
+  color: #0550ae;
+}
+
+.dumi-default-source-code .token.bold {
+  font-weight: 700;
+}
+
+.dumi-default-source-code .token.comment,
+.dumi-default-source-code .token.italic {
+  font-style: italic;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.comment,
+[data-prefers-color='dark'] .dumi-default-source-code .token.prolog,
+[data-prefers-color='dark'] .dumi-default-source-code .token.cdata {
+  color: #8b949e;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.doctype,
+[data-prefers-color='dark'] .dumi-default-source-code .token.punctuation,
+[data-prefers-color='dark'] .dumi-default-source-code .token.entity {
+  color: #c9d1d9;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.attr-name,
+[data-prefers-color='dark'] .dumi-default-source-code .token.class-name,
+[data-prefers-color='dark'] .dumi-default-source-code .token.boolean,
+[data-prefers-color='dark'] .dumi-default-source-code .token.constant,
+[data-prefers-color='dark'] .dumi-default-source-code .token.number,
+[data-prefers-color='dark'] .dumi-default-source-code .token.atrule {
+  color: #d29922;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.keyword {
+  color: #d2a8ff;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.property,
+[data-prefers-color='dark'] .dumi-default-source-code .token.tag,
+[data-prefers-color='dark'] .dumi-default-source-code .token.symbol,
+[data-prefers-color='dark'] .dumi-default-source-code .token.deleted,
+[data-prefers-color='dark'] .dumi-default-source-code .token.important {
+  color: #ff7b72;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.selector,
+[data-prefers-color='dark'] .dumi-default-source-code .token.string,
+[data-prefers-color='dark'] .dumi-default-source-code .token.char,
+[data-prefers-color='dark'] .dumi-default-source-code .token.builtin,
+[data-prefers-color='dark'] .dumi-default-source-code .token.inserted,
+[data-prefers-color='dark'] .dumi-default-source-code .token.regex,
+[data-prefers-color='dark'] .dumi-default-source-code .token.attr-value {
+  color: #7ee787;
+}
+
+[data-prefers-color='dark'] .dumi-default-source-code .token.variable,
+[data-prefers-color='dark'] .dumi-default-source-code .token.operator,
+[data-prefers-color='dark'] .dumi-default-source-code .token.function {
+  color: #79c0ff;
+}

@@ -1,0 +1,1 @@
+export { BridgeError } from './bridgeError'

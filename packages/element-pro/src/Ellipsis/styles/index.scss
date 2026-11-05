@@ -1,0 +1,26 @@
+.wa-ui-ellipsis {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.wa-ui-ellipsis__measure {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+.wa-ui-ellipsis__action {
+  padding: 0;
+  color: var(--el-color-primary);
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}

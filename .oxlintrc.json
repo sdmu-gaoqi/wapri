@@ -1,0 +1,5 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["./node_modules/@wagq/lint-ox/oxlint/vue.json"],
+  "ignorePatterns": [".dumirc.ts", "**/dist/**", "**/docs-dist/**", "**/.dumi/**", "**/demo/**"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@wapri/ghooks",
+  "version": "1.0.0",
+  "description": "Vue 3 Hooks 工具库",
+  "keywords": [],
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && father build",
+    "dev": "father dev"
+  },
+  "dependencies": {
+    "@wapri/gbase": "workspace:^",
+    "lottie-api": "^1.0.3",
+    "lottie-web": "^5.13.0",
+    "vue-hooks-plus": "^2.4.3"
+  },
+  "peerDependenciesMeta": {}
+}

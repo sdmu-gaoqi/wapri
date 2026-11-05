@@ -1,0 +1,39 @@
+{
+  "name": "@wapri/element-pro",
+  "version": "3.0.0",
+  "description": "Vue 3 中后台组件库",
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "dist/**/*.css"
+  ],
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && vite build",
+    "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "@wapri/ghooks": "workspace:^",
+    "@wapri/gutils": "workspace:^",
+    "classnames": "^2.5.1",
+    "vue-cropper": "^1.1.4"
+  },
+  "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "element-plus": "^2.14.4"
+  },
+  "peerDependencies": {
+    "@element-plus/icons-vue": ">=2.0.0",
+    "element-plus": ">=2.4.0",
+    "vue": ">=3.3"
+  }
+}

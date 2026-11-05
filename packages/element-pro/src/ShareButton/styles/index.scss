@@ -1,0 +1,126 @@
+/**
+ * ShareButton 分享按钮样式。
+ * 引导浮层会 teleport 到 body，因此样式不能收敛在组件根节点下，
+ * 统一使用 wa-ui 前缀的独立类名，与组件内 `${prefix}-share-button` 保持一致。
+ *
+ * 视觉：全屏深色遮罩 + 靠上左对齐的引导文案 + 结果提示居中 + 底部通栏主色按钮，不使用卡片容器。
+ */
+
+.wa-ui-share-button__mask {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.72);
+  color: #fff;
+}
+
+/**
+ * 右上角引导箭头，指向微信「···」。用内联 SVG 保证箭头形状与参考一致。
+ * 位置随变量可调，宿主也能覆盖。
+ */
+.wa-ui-share-button__arrow {
+  --wa-ui-share-button-arrow-size: 30px;
+  --wa-ui-share-button-arrow-top: 28px;
+  --wa-ui-share-button-arrow-right: 24px;
+
+  position: absolute;
+  top: var(--wa-ui-share-button-arrow-top);
+  right: var(--wa-ui-share-button-arrow-right);
+  width: var(--wa-ui-share-button-arrow-size);
+  height: var(--wa-ui-share-button-arrow-size);
+  color: #fff;
+  pointer-events: none;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.wa-ui-share-button__content {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 14% 20px 24px;
+  overflow-y: auto;
+}
+
+.wa-ui-share-button__title {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.wa-ui-share-button__steps {
+  margin: 0;
+  padding-left: 1.3em;
+  font-size: 15px;
+  line-height: 2;
+  text-align: left;
+  list-style: decimal;
+}
+
+.wa-ui-share-button__step {
+  word-break: break-word;
+}
+
+.wa-ui-share-button__step strong {
+  font-weight: 600;
+}
+
+.wa-ui-share-button__status {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.wa-ui-share-button__footer {
+  flex-shrink: 0;
+  padding: 12px 12px calc(24px + env(safe-area-inset-bottom));
+}
+
+.wa-ui-share-button__action {
+  --el-button-bg-color: #2563eb;
+  --el-button-border-color: #2563eb;
+  --el-button-hover-bg-color: #1d4ed8;
+  --el-button-hover-border-color: #1d4ed8;
+  --el-button-active-bg-color: #1e40af;
+  --el-button-active-border-color: #1e40af;
+  --el-button-text-color: #fff;
+  --el-button-hover-text-color: #fff;
+  --el-button-active-text-color: #fff;
+
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.wa-ui-share-button-fade-enter-active,
+.wa-ui-share-button-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.wa-ui-share-button-fade-enter-from,
+.wa-ui-share-button-fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-ui-share-button-fade-enter-active,
+  .wa-ui-share-button-fade-leave-active {
+    transition: none;
+  }
+}

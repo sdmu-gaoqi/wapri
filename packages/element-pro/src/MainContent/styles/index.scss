@@ -1,0 +1,37 @@
+/**
+ * MainContent 组件样式。
+ *
+ * 主内容区跟随侧栏状态让位，宽度全部取自 styles/theme.scss 里的侧栏 CSS 变量，
+ * 宿主覆盖同名变量即可同时改变侧栏与主内容区。
+ */
+
+.wa-ui-main-content {
+  position: relative;
+  height: 100%;
+  transition: margin-left 0.28s;
+  margin-left: var(--wa-ui-sidebar-width, 200px);
+
+  // 让位优先级：隐藏 / 移动端 > 折叠 > 分组 > 默认
+  &.is-grouped {
+    margin-left: var(--wa-ui-sidebar-grouped-width, 260px);
+  }
+
+  &.is-collapsed {
+    margin-left: var(--wa-ui-sidebar-collapsed-width, 54px);
+  }
+
+  &.is-mobile,
+  &.is-sidebar-hidden {
+    margin-left: 0;
+  }
+
+  &.without-animation {
+    transition: none;
+  }
+
+  // 内部有固定的 Layout 头部时，容器撑满视口高度，由内部区域各自滚动
+  &:has(.wa-ui-layout__header.is-fixed) {
+    height: 100vh;
+    overflow: hidden;
+  }
+}

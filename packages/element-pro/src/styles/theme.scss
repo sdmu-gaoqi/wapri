@@ -1,0 +1,54 @@
+/**
+ * element-pro 全局主题变量。
+ *
+ * 与 Element Plus 一致，所有主题值都以 CSS 变量形式定义在 `:root` 上：
+ * 宿主项目只要在自己的样式里覆盖同名变量即可定制主题，既不需要引入任何 scss，
+ * 也不需要额外的 JS 配置。例如：
+ *
+ * ```css
+ * :root {
+ *   --wa-ui-sidebar-menu-background: #1f2937;
+ *   --wa-ui-sidebar-active-color: #ffc400;
+ * }
+ * ```
+ */
+
+:root {
+  // ---------- 主色板 ----------
+  --wa-ui-color-blue: #324157;
+  --wa-ui-color-light-blue: #3a71a8;
+  --wa-ui-color-red: #c03639;
+  --wa-ui-color-pink: #e65d6e;
+  --wa-ui-color-green: #30b08f;
+  --wa-ui-color-tiffany: #4ab7bd;
+  --wa-ui-color-yellow: #fec171;
+
+  // ---------- 侧栏尺寸 ----------
+  --wa-ui-sidebar-width: 200px;
+  --wa-ui-sidebar-collapsed-width: 54px;
+  --wa-ui-sidebar-grouped-width: 260px;
+  --wa-ui-sidebar-grouped-width-sm: 240px;
+  --wa-ui-sidebar-logo-height: 56px;
+
+  // ---------- 侧栏折叠按钮 ----------
+  --wa-ui-layout-trigger-width: 50px;
+  --wa-ui-layout-trigger-height: 56px;
+  --wa-ui-layout-trigger-icon-size: 20px;
+  --wa-ui-layout-trigger-color: #303133;
+  --wa-ui-layout-trigger-hover-background: var(--el-color-primary-light-9);
+
+  // ---------- 侧栏配色 ----------
+  --wa-ui-sidebar-menu-color: #bfcbd9;
+  --wa-ui-sidebar-menu-light-color: rgba(0, 0, 0, 0.7);
+  --wa-ui-sidebar-menu-color-active: #ffffff;
+  --wa-ui-sidebar-menu-background: #1a1f2e;
+  --wa-ui-sidebar-menu-light-background: #ffffff;
+  --wa-ui-sidebar-sub-menu-background: #141824;
+  --wa-ui-sidebar-sub-menu-hover: rgba(255, 255, 255, 0.06);
+  --wa-ui-sidebar-logo-title-color: #ffffff;
+  --wa-ui-sidebar-logo-light-title-color: #001529;
+  // 激活态跟随 Element Plus 主题色，宿主换主题色时侧栏会自动跟随
+  --wa-ui-sidebar-active-color: var(--el-color-primary);
+  --wa-ui-sidebar-active-color-light: var(--el-color-primary-light-9);
+  --wa-ui-sidebar-active-color-dark-bg: color-mix(in srgb, var(--el-color-primary) 20%, transparent);
+}

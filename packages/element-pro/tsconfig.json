@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@wapri/element-pro": ["./src"],
+      "@wapri/element-pro/*": ["./*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}

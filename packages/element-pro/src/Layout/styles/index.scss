@@ -1,0 +1,193 @@
+/**
+ * Layout 组件样式。
+ *
+ * Layout 负责把侧栏固定在左侧、主内容区让位；两侧宽度都取自 styles/theme.scss 里的
+ * 侧栏 CSS 变量，宿主覆盖同名变量即可同时改变两侧。
+ */
+
+.wa-ui-layout {
+  position: relative;
+  height: 100%;
+  width: 100%;
+
+  // ---------- 侧栏折叠按钮：贴在主内容区左上角，浮在顶栏之上 ----------
+  // 宿主用 --wa-ui-layout-trigger-width 给自己的顶栏留出左侧间距
+  &__trigger {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--wa-ui-layout-trigger-width, 50px);
+    height: var(--wa-ui-layout-trigger-height, 56px);
+    padding: 0;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    background: transparent;
+    color: var(--wa-ui-layout-trigger-color, #303133);
+    cursor: pointer;
+    transition: background-color 0.3s;
+    -webkit-tap-highlight-color: transparent;
+
+    svg {
+      width: var(--wa-ui-layout-trigger-icon-size, 20px);
+      height: var(--wa-ui-layout-trigger-icon-size, 20px);
+      fill: currentcolor;
+      transition: transform 0.28s;
+    }
+
+    &.is-active svg {
+      transform: rotate(180deg);
+    }
+
+    &:hover {
+      background-color: var(--wa-ui-layout-trigger-hover-background, var(--el-color-primary-light-9));
+    }
+  }
+
+  // ---------- 头部：header.fixed 时固定在顶部，宽度跟随侧栏让位 ----------
+  &__header {
+    &.is-fixed {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 9;
+      width: calc(100% - var(--wa-ui-sidebar-width, 200px));
+      transition: width 0.28s;
+    }
+  }
+
+  &.is-grouped &__header.is-fixed {
+    width: calc(100% - var(--wa-ui-sidebar-grouped-width, 260px));
+  }
+
+  &.is-collapsed &__header.is-fixed {
+    width: calc(100% - var(--wa-ui-sidebar-collapsed-width, 54px));
+  }
+
+  // 侧栏隐藏 / 移动端时主内容区占满整行，头部同步铺满
+  &.is-mobile &__header.is-fixed,
+  &.is-sidebar-hidden &__header.is-fixed {
+    width: 100%;
+  }
+
+  &.without-animation &__header.is-fixed {
+    transition: none;
+  }
+
+  // ---------- 侧栏：固定在左侧，宽度由 Sidebar 自身的 is-grouped / is-collapsed 决定 ----------
+  &__sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    height: 100%;
+    transition: width 0.28s;
+  }
+
+  // ---------- 移动端：侧栏改为抽屉，折叠时整块滑出 ----------
+  &.is-mobile &__sidebar {
+    transition: transform 0.28s;
+    width: var(--wa-ui-sidebar-width, 200px) !important;
+  }
+
+  &.is-mobile.is-grouped &__sidebar {
+    width: var(--wa-ui-sidebar-grouped-width, 260px) !important;
+  }
+
+  &.is-mobile.is-collapsed &__sidebar {
+    pointer-events: none;
+    transition-duration: 0.3s;
+    transform: translate3d(calc(-1 * var(--wa-ui-sidebar-width, 200px)), 0, 0);
+  }
+
+  &.is-mobile.is-grouped.is-collapsed &__sidebar {
+    transform: translate3d(calc(-1 * var(--wa-ui-sidebar-grouped-width, 260px)), 0, 0);
+  }
+
+  &.without-animation &__sidebar {
+    transition: none;
+  }
+}
+
+.wa-ui-layout__main {
+  /* 56 = navbar */
+  min-height: calc(100vh - 56px);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #f4f6f8;
+
+  &:fullscreen,
+  &:-webkit-full-screen,
+  &:-moz-full-screen,
+  &:-ms-fullscreen {
+    background: #f4f6f8;
+    overflow-y: auto;
+  }
+}
+
+.wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+  overflow-y: auto;
+  scrollbar-gutter: auto;
+  height: calc(100vh - 56px);
+  min-height: 0px;
+}
+
+.wa-ui-layout__main:has(.copyright) {
+  padding-bottom: 36px;
+}
+
+.wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+  margin-top: 56px;
+}
+
+.has-tags-view {
+  .wa-ui-layout__main {
+    /* navbar + tags-view = 56 + tags height */
+    min-height: calc(100vh - calc(56px + var(--wa-height-header-tag-wrapper, 0px)));
+  }
+
+  .wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+    margin-top: calc(56px + var(--wa-height-header-tag-wrapper, 0px));
+    height: calc(100vh - calc(56px + var(--wa-height-header-tag-wrapper, 0px)));
+    min-height: 0px;
+  }
+}
+
+/* 移动端fixed-header优化 */
+@media screen and (max-width: 991px) {
+  .wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+    padding-bottom: max(60px, calc(constant(safe-area-inset-bottom) + 40px));
+    padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
+    overscroll-behavior-y: none;
+  }
+
+  .has-tags-view .wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+    padding-bottom: max(60px, calc(constant(safe-area-inset-bottom) + 40px));
+    padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
+    overscroll-behavior-y: none;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  @media screen and (max-width: 991px) {
+    .wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+      padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
+      padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
+      height: calc(100svh - 56px);
+      height: calc(100dvh - 56px);
+    }
+
+    .has-tags-view .wa-ui-layout__header.is-fixed + .wa-ui-layout__main {
+      padding-bottom: max(17px, calc(constant(safe-area-inset-bottom) + 10px));
+      padding-bottom: max(17px, calc(env(safe-area-inset-bottom) + 10px));
+      height: calc(100svh - calc(56px + var(--wa-height-header-tag-wrapper, 0px)));
+      height: calc(100dvh - calc(56px + var(--wa-height-header-tag-wrapper, 0px)));
+    }
+  }
+}

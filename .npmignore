@@ -1,0 +1,21 @@
+# Logs
+logs
+*.log
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+/.*
+/docs
+/docs-dist
+/dist/**/demo*
+/node_modules/*
+/scripts/*
+/src
+tsconfig.json
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
