@@ -35,9 +35,10 @@
 ## 4. 文档站与演示
 
 - [x] 4.1 `.dumirc.ts` 增加 `atomDirs`（`type: 'preview'`）、`nav`（`/previews`）、`alias`
-- [x] 4.2 新增 `src/index.md`（dumi 页面）与 `src/demo/basic.vue`（文件选择 + 2000 行文本演示）
+- [x] 4.2 新增 `src/index.md`（dumi 页面）与 `src/demo/basic.vue`（文件选择 + 2000 行文本 + 远程地址演示）
 - [x] 4.3 新增 `packages/preview/README.md`、`CHANGELOG.md`、`docs/changelog/preview.md`
-- [ ] 4.4 执行 `pnpm dev` 人工确认 `/previews` 与 `/changelog/preview` 可访问，demo 能预览各类型
+- [x] 4.4 `.dumi/pages/index.tsx` 首页 `PROJECTS` 增加 preview 卡片与「文件预览」分类
+- [ ] 4.5 执行 `pnpm dev` 人工确认 `/previews`、`/changelog/preview` 与首页 preview 卡片可访问，demo 能预览各类型
 
 ## 5. 发布与仓库同步
 

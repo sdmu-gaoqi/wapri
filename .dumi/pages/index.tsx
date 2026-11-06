@@ -1,7 +1,7 @@
 /**
  * title: 组件库
- * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数与 App 桥接
- * keywords: [SDK, element-pro, hooks, utils, jsbridge, lint]
+ * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览与 App 桥接
+ * keywords: [SDK, element-pro, preview, hooks, utils, jsbridge, lint]
  * sidebar: false
  * toc: false
  * hideChrome: true
@@ -16,7 +16,7 @@ import './index.css'
 const ALL_CATEGORY = '全部'
 
 /** 项目分类的展示顺序 */
-const CATEGORY_ORDER = ['组件库', 'Hooks 与工具', '网络与通信', '工程化']
+const CATEGORY_ORDER = ['组件库', 'Hooks 与工具', '文件预览', '网络与通信', '工程化']
 
 type ProjectCategory = (typeof CATEGORY_ORDER)[number]
 
@@ -78,6 +78,17 @@ const PROJECTS: ProjectItem[] = [
     mark: 'ut',
     accent: ['#b45309', '#d97706'],
     docPath: '/utils',
+  },
+  {
+    name: 'preview',
+    packageName: '@wapri/preview',
+    category: '文件预览',
+    tech: 'TypeScript · Canvas',
+    description: 'H5 文件预览包，支持文本、PDF、Word、XLSX，解析与渲染分离，正文与缩略图都只渲染可视区域。',
+    highlights: ['按可视区域懒渲染', 'PDF / Word / XLSX'],
+    mark: 'pv',
+    accent: ['#9f1239', '#f43f5e'],
+    docPath: '/previews',
   },
   {
     name: 'jsbridge',
@@ -217,7 +228,7 @@ const ProjectsPage: React.FC = () => {
           <p className="wa-projects__eyebrow">wa · Monorepo</p>
           <h1 className="wa-projects__title">前端 SDK</h1>
           <p className="wa-projects__subtitle">
-            前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库、Hooks、工具函数与 App 桥接， 全部由 pnpm workspace
+            前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库、Hooks、工具函数、文件预览与 App 桥接， 全部由 pnpm workspace
             管理并独立发包。
           </p>
           <div>
