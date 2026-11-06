@@ -68,6 +68,82 @@ window.onNativeEvent('networkChanged', JSON.stringify({ online: true }))
 > await bridge.webReady()
 > ```
 
+## 三端设备定义
+
+三端注入的通道形态不同，Web 侧按通道形状识别当前设备。`@wapri/gjsbridge` 不内置设备判断，识别能力用 `@wapri/gutils` 转出的 `os`。
+
+| 设备    | Native 注入的通道                                            | 报文                            |
+| ------- | ------------------------------------------------------------ | ------------------------------- |
+| iOS     | `window.webkit.messageHandlers[方法名].postMessage`          | `{ params, requestId }`         |
+| Android | `window.JSBridge.handle`                                     | `{ method, params, requestId }` |
+| 鸿蒙    | `window.JSBridge.handle`（ArkWeb 的注入方式与 Android 一致） | `{ method, params, requestId }` |
+
+### 三端通道定义
+
+```ts | pure
+/** iOS：WKWebView 通过 WKScriptMessageHandler 注入，Native 方法名就是 messageHandlers 的键 */
+export interface IOSBridgeWindow {
+  webkit: {
+    messageHandlers: Record<string, { postMessage(message: string): void } | undefined>
+  }
+}
+
+/** Android：WebView.addJavascriptInterface 注入 window.JSBridge */
+export interface AndroidBridgeWindow {
+  JSBridge: {
+    handle(message: string): void
+  }
+}
+
+/** 鸿蒙：ArkWeb 同样注入 window.JSBridge.handle，JS 侧与 Android 共用一套结构 */
+export type HarmonyBridgeWindow = AndroidBridgeWindow
+
+export type DevicePlatform = 'ios' | 'android' | 'harmonyos'
+```
+
+### 运行期识别设备
+
+```ts | pure
+// os 由 @wapri/gutils 转出（gutils 已全量导出 gbase），业务侧统一从 gutils 引入
+import { os } from '@wapri/gutils'
+import type { DevicePlatform } from './types'
+
+export const getDevicePlatform = (): DevicePlatform | undefined => {
+  // 鸿蒙必须先判断：旧版鸿蒙兼容 AOSP，UA 里同时带 Android，先判 Android 会把它吞掉
+  if (os.isHarmonyOS()) return 'harmonyos'
+  if (os.isIOS()) return 'ios'
+  if (os.isAndroid()) return 'android'
+  return undefined
+}
+```
+
+Android 与鸿蒙只能靠 UA 区分（鸿蒙 NEXT 不含 `Android`，旧版鸿蒙含 `Android` 与 `HarmonyOS`）；需要再细分时用 `os.isHarmonyOSNext()` / `os.isHarmonyOSLegacy()`。
+
+### 按设备检查通道
+
+```ts | pure
+const getIOSHandler = (method: string) => (window as unknown as IOSBridgeWindow).webkit?.messageHandlers?.[method]
+
+const getAndroidBridge = () => (window as unknown as AndroidBridgeWindow).JSBridge
+
+export const isChannelReady = (method: string): boolean => {
+  const platform = getDevicePlatform()
+
+  if (platform === 'ios') {
+    return typeof getIOSHandler(method)?.postMessage === 'function'
+  }
+
+  if (platform === 'android' || platform === 'harmonyos') {
+    return typeof getAndroidBridge()?.handle === 'function'
+  }
+
+  return false
+}
+```
+
+> `createJSB({ nativeChannel })` 只改 Android / 鸿蒙的通道名；iOS 始终按 Native 方法名取 `window.webkit.messageHandlers[method]`。
+> 日常只需要判断容器是否可用时，直接调用 `jsbridge.webReady()`，包内已经合并了上述两种通道的判断。
+
 ## 业务调用
 
 Native 注入的 `window.JSBridge.handle(message)` 与 `window.webkit.messageHandlers[method].postMessage(message)` 都只是包的内部传输通道。业务直接调用 Native 方法名，包会自动生成 `requestId`、选择当前容器的通道、序列化请求并处理 `onNativeMessage` 回调。

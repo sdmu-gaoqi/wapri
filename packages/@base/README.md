@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+与框架无关的前端基础能力包：浏览器存储封装、运行环境（含鸿蒙）判断、正则校验，以及 `lodash-es`、`dayjs` 等基础依赖的统一出口。
+
+## 在线文档
+
+https://sdmu-gaoqi.github.io/wapri/changelog/base
+
 ## Storage
 
 `MyStorage` 创建时先检查对应浏览器存储是否可用，并在不可用时回退到内存，避免 App 壳或非浏览器环境的读写异常。
