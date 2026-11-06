@@ -1,5 +1,13 @@
 # @wapri/gutils
 
+## 2.0.1
+
+### Patch Changes
+
+- 修改readme
+- Updated dependencies
+  - @wapri/gbase@2.0.1
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,13 @@
 # @wapri/ghooks
 
+## 1.0.1
+
+### Patch Changes
+
+- 修改readme
+- Updated dependencies
+  - @wapri/gbase@2.0.1
+
 ## 1.0.0
 
 ### Major Changes
