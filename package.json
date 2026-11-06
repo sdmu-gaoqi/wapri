@@ -11,24 +11,25 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "pnpm -r --filter \"./packages/**\" --if-present build && node scripts/prune-dist.mjs",
-    "changeset": "changeset",
-    "clear": "rimraf node_modules packages/*/node_modules packages/@base/node_modules",
-    "dev": "dumi dev",
-    "doc": "node scripts/doc-build.mjs",
-    "enter-beta": "changeset pre enter beta",
-    "exit-beta": "changeset pre exit",
+    "build": "wa changesetDoc tBuild",
+    "changeset": "wa changesetDoc changeset",
+    "clear": "wa clearLibrary",
+    "dev": "wa changesetDoc dev",
+    "doc": "dumi build",
+    "enter-beta": "wa changesetDoc enterBeta",
+    "exit-beta": "wa changesetDoc exitBeta",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "preinstall": "npx only-allow pnpm",
-    "pub": "pnpm build && changeset publish",
-    "pub:beta": "pnpm build && changeset publish --tag beta",
-    "ver": "changeset version"
+    "pub": "wa checkBranch dev && pnpm build && wa changesetDoc pub",
+    "pub:pure": "pnpm build && wa changesetDoc pub",
+    "ver": "wa changesetDoc ver"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.4",
+    "@wagq/wa-cli": "^0.6.66",
     "vue": "^3.4.0",
     "wa-postcss-pxtorem": "^0.0.1"
   },
