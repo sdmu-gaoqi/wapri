@@ -15,7 +15,7 @@
     "changeset": "wa changesetDoc changeset",
     "clear": "wa clearLibrary",
     "dev": "wa changesetDoc dev",
-    "doc": "dumi build",
+    "doc": "node scripts/doc-build.mjs",
     "enter-beta": "wa changesetDoc enterBeta",
     "exit-beta": "wa changesetDoc exitBeta",
     "format": "oxfmt .",

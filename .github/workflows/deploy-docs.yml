@@ -22,6 +22,8 @@ jobs:
   build:
     name: Build docs
     runs-on: ubuntu-latest
+    # dumi 构建正常 2 分钟内完成；留足余量，卡住时快速失败而不是耗尽 6 小时
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -57,6 +59,7 @@ jobs:
       # 公开部署前必须抹掉构建机的目录（路径里带着本地目录名），抹不掉就直接失败
       - name: Scrub local absolute paths
         run: |
+          test -f docs-dist/index.html
           grep -rlF "$PWD" docs-dist --include='*.js' --include='*.html' --include='*.json' \
             | xargs -r sed -i "s|$PWD||g" || true
           if grep -rqF "$PWD" docs-dist --include='*.js' --include='*.html' --include='*.json'; then
