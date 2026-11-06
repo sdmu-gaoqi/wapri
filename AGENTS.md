@@ -19,6 +19,15 @@ Guidance for coding agents working in this repository.
   - 使用模板更优时,实现使用模板方式
   - 使用tsx更优时,实现使用tsx方式
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
+- `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
+  - 只依赖 `@wapri/gbase`,解析用 pdfjs-dist / mammoth / xlsx,排版用 opentype.js
+  - 只渲染可视区域,常量放 `src/constant`
+
+## OpenSpec 工作流
+
+- 规范驱动：提案在 `openspec/`，先写提案后写代码；流程见 `openspec/AGENTS.md`，项目事实见 `openspec/project.md`
+- 新增包、破坏性变更、跨包能力调整前，先在 `openspec/changes/<change-id>/` 写 `proposal.md`、`tasks.md`、`specs/<capability>/spec.md`（有取舍时补 `design.md`）
+- 校验：`npx -y @fission-ai/openspec@latest validate <change-id> --strict`；实施完成后 `npx -y @fission-ai/openspec@latest archive <change-id>` 归档
 
 ## Common Commands
 

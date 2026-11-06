@@ -51,6 +51,7 @@ export default defineConfig({
       { title: '指南', link: '/guide' },
       { title: 'changelog', link: '/changelog/base' },
       { title: 'element-pro', link: '/element-pros' },
+      { title: 'preview', link: '/previews' },
       { title: 'hooks', link: '/hooks' },
       { title: 'utils', link: '/utils' },
       { title: 'jsbridge', link: '/jsbridges' },
@@ -84,6 +85,10 @@ export default defineConfig({
         type: 'element-pro',
         dir: 'packages/element-pro/src',
       },
+      {
+        type: 'preview',
+        dir: 'packages/preview/src',
+      },
     ],
   },
   favicons: [LOGO_PATH],
@@ -104,6 +109,7 @@ export default defineConfig({
     '@wapri/gjsbridge': `${process.cwd()}/packages/jsbridge/src`,
     '@wapri/ghooks': `${process.cwd()}/packages/hooks/src`,
     '@wapri/element-pro': `${process.cwd()}/packages/element-pro/src`,
+    '@wapri/preview': `${process.cwd()}/packages/preview/src`,
   },
   jsMinifierOptions: {
     target: ['chrome80', 'es2020'],

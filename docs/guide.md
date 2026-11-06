@@ -73,7 +73,7 @@ pnpm i
 每个子包必须包含以下文件：
 
 - `src`：源码目录。
-- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge`）。`element-pro` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单）。
+- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）。`element-pro` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单）。
 - `package.json`：包的元信息，`name` 以 `@wapri/` 开头（如 `@wapri/element-pro`），版本号建议初始为 `0.0.0`。`build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免已删除模块残留在 `dist` 被一起发包。
 - `tsconfig.json`：TypeScript 配置文件，需设置 `paths` 以解析依赖。
 
