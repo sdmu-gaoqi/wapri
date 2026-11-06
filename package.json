@@ -23,7 +23,7 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "preinstall": "npx only-allow pnpm",
-    "pub": "wa checkBranch dev && pnpm build && wa changesetDoc pub",
+    "pub": "wa checkBranch main && pnpm build && wa changesetDoc pub",
     "pub:pure": "pnpm build && wa changesetDoc pub",
     "ver": "wa changesetDoc ver"
   },
