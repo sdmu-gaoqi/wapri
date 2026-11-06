@@ -1,6 +1,6 @@
 {
   "name": "@wapri/preview",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "H5 文件预览：文本、PDF、Word、XLSX，按可视区域懒渲染",
   "license": "MIT",
   "author": "wapri contributors",

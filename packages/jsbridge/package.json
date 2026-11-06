@@ -1,6 +1,6 @@
 {
   "name": "@wapri/gjsbridge",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "App WebView JSBridge 封装",
   "keywords": [
     "android",
@@ -39,7 +39,7 @@
     "@wapri/gbase": "workspace:^"
   },
   "peerDependencies": {
-    "@wapri/gbase": "2.0.1"
+    "@wapri/gbase": "2.1.0"
   },
   "peerDependenciesMeta": {}
 }

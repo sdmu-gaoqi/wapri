@@ -72,3 +72,8 @@ const handle = await previewFile(
 
 - 预览只读取用户选择的文件，不上传、不落盘。
 - 大文件解析会占用主线程内存，`maxCells`（XLSX）等上限参数可按业务调整。
+
+
+## 在线文档
+
+https://sdmu-gaoqi.github.io/wapri/previews

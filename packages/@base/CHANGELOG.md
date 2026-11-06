@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.1.0
+
+### Minor Changes
+
+- 新增了预览库
+
 ## 2.0.1
 
 ### Patch Changes
