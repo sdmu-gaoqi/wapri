@@ -1,0 +1,82 @@
+name: Deploy Docs
+
+# 推送 main 或手动触发时，构建文档站并发布到 GitHub Pages（<user>.github.io/<repo>）
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# GitHub Pages 发布所需的最小权限：读仓库、写 Pages、用 OIDC 换部署令牌
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只跑一条发布流水线，但不要打断进行中的部署
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 先装 pnpm，setup-node 的 pnpm 缓存才能生效；版本与 package.json 的 packageManager 对齐
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.4.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # preinstall 会执行 npx only-allow pnpm，CI 无 TTY 时必须自动确认，否则卡在交互
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        env:
+          npm_config_yes: 'true'
+
+      # 项目页部署在 /<repo>/ 子路径下，dumi 的 base 由 DOC_BASE_PATH 注入；
+      # 可用仓库变量 DOC_BASE_PATH 覆盖（如自定义域名时设为 /）
+      - name: Build docs
+        run: pnpm doc
+        env:
+          DOC_BASE_PATH: ${{ vars.DOC_BASE_PATH || format('/{0}/', github.event.repository.name) }}
+          DOC_SITE_NAME: ${{ vars.DOC_SITE_NAME || 'wapri' }}
+          DOC_SITE_TITLE: ${{ vars.DOC_SITE_TITLE || 'wapri SDK' }}
+
+      # dumi 会把 demo 文件的绝对路径写进 meta__packages.*.async.js，
+      # 公开部署前必须抹掉构建机的目录（路径里带着本地目录名），抹不掉就直接失败
+      - name: Scrub local absolute paths
+        run: |
+          grep -rlF "$PWD" docs-dist --include='*.js' --include='*.html' --include='*.json' \
+            | xargs -r sed -i "s|$PWD||g" || true
+          if grep -rqF "$PWD" docs-dist --include='*.js' --include='*.html' --include='*.json'; then
+            echo "::error::docs-dist 中仍存在构建机绝对路径，终止发布"
+            exit 1
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs-dist
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

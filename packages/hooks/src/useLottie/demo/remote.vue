@@ -92,9 +92,6 @@ const handleAsyncPlay = async () => {
       </div>
 
       <p class="lottie-remote-demo__status">{{ status }}</p>
-      <p class="lottie-remote-demo__status">
-        {{ instance ? `实例已就绪，总时长 ${getDuration(false).toFixed(2)}s` : '实例加载中…' }}
-      </p>
       <p class="lottie-remote-demo__url">{{ REMOTE_URL }}</p>
     </div>
   </div>
