@@ -11,44 +11,20 @@ import type {
   TableProps,
 } from 'element-plus'
 import type { Ref, VNode, VNodeChild } from 'vue'
+import type { DataIndex, Key, ValueEnum, ValueType } from '../shared/field/types'
 import type {
   DateQuickSelectConfig as DateQuickSelectConfigProps,
   DateQuickSelectSelection,
   DateQuickSelectValueType,
 } from '../DateQuickSelect'
 
-export type Key = string | number
-export type DataIndex = string | string[]
+// 字段级类型已上移到 shared/field，这里保持原有导出名，业务 import 路径不变。
+export type { DataIndex, Key, ValueEnum, ValueEnumItem, ValueType } from '../shared/field/types'
+
 export type SortOrder = 'ascend' | 'descend' | null
 export type ProTableMode = 'table' | 'list'
-export type ValueType =
-  | 'text'
-  | 'textarea'
-  | 'password'
-  | 'digit'
-  | 'money'
-  | 'select'
-  | 'tag'
-  | 'treeSelect'
-  | 'cascader'
-  | 'date'
-  | 'dateRange'
-  | 'time'
-  | 'timeRange'
-  | 'switch'
-  | 'customer'
 
 export type ProTableDateValueType = DateQuickSelectValueType
-
-export interface ValueEnumItem {
-  text: string
-  value: Key
-  status?: string
-  disabled?: boolean
-  children?: ValueEnumItem[]
-}
-
-export type ValueEnum = Record<string, string | number | Omit<ValueEnumItem, 'value'>> | ValueEnumItem[]
 
 /** 标签选择器配置。 */
 export interface TagSelectorProps {

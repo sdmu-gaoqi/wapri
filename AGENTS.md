@@ -18,6 +18,8 @@ Guidance for coding agents working in this repository.
   - 接入了tsx写法
   - 使用模板更优时,实现使用模板方式
   - 使用tsx更优时,实现使用tsx方式
+  - 表单: 容器用 `ModalForm` / `DrawerForm`,字段用 `ProFormFields`(`ProFormText`、`ProFormSelect` 等,通过 `name` 读写 `ElForm` 的 `model`)
+  - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
   - 只依赖 `@wapri/gbase`,解析用 pdfjs-dist / mammoth / xlsx,排版用 opentype.js

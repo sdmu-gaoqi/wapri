@@ -1,0 +1,16 @@
+// 与 ProTable 一致：SCSS 里直接使用默认前缀，运行时前缀由 ConfigProvider 的 class 承担。
+.wa-ui-pro-form-field {
+  &__readonly {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--el-component-size);
+    color: var(--el-text-color-regular);
+    word-break: break-word;
+  }
+
+  &__tip {
+    margin-left: 4px;
+    color: var(--el-text-color-placeholder);
+    cursor: help;
+  }
+}

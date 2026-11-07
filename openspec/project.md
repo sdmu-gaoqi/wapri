@@ -33,6 +33,8 @@
 - 常量必须放在 `src/constant/` 下并导出，不在业务文件里散写魔法值。
 - 类型超过三个或实现较长时，类型放同级 `types/` 目录，不与实现混在一个文件。
 - 组件 class 命名以 `packages/element-pro/src/constant/index.ts` 的 `defaultPrefix`（`wa-ui`）为前缀。
+- `element-pro` 的表单由两部分组成：容器是 `ModalForm` / `DrawerForm`，字段是 `ProFormFields` 目录下的一组组件（`ProFormText`、`ProFormSelect` 等）。字段组件通过 `name` 读写 `ElForm` 的 `model`，`name` 同时是 `ElFormItem` 的 `prop`。
+- 字段级能力（`ValueType`、`ValueEnum`、`formatCellValue` 等）放在 `packages/element-pro/src/shared/field/`，`ProTable/types.ts` 与 `ProTable/utils.ts` 只做 re-export，保证表格与表单共用同一份解析。
 - 禁止直接使用 `localStorage` / `sessionStorage`，统一走 `@wapri/gbase` 的 `storage` / `MyStorage`。
 - 业务域名、桶名、网关前缀、Token 键、App 通道名一律走配置或环境变量，不写进源码与文档示例。
 - 优先复用 `@wapri/*` 工作区别名，不引入新的相对路径穿透。

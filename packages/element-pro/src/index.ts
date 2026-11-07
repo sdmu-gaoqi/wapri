@@ -15,6 +15,22 @@ import { ShareButton } from './ShareButton'
 import { Sidebar } from './Sidebar'
 import { CropperUpload } from './CropperUpload'
 import { UmdComponent } from './UmdComponent'
+import {
+  ProFormCascader,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDateTimePicker,
+  ProFormDateTimeRangePicker,
+  ProFormDigit,
+  ProFormMoney,
+  ProFormPassword,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormTag,
+  ProFormText,
+  ProFormTextArea,
+  ProFormTreeSelect,
+} from './ProFormFields'
 import { version } from '../package.json'
 // 全局主题变量（:root 上的 CSS 变量），随组件库样式一起输出
 import './styles/theme.scss'
@@ -37,6 +53,7 @@ export * from './ShareButton'
 export * from './Sidebar'
 export * from './CropperUpload'
 export * from './UmdComponent'
+export * from './ProFormFields'
 export {
   ConfigProvider,
   SvgIcon,
@@ -53,6 +70,20 @@ export {
   ShareButton,
   CropperUpload,
   UmdComponent,
+  ProFormText,
+  ProFormTextArea,
+  ProFormPassword,
+  ProFormDigit,
+  ProFormMoney,
+  ProFormSelect,
+  ProFormTag,
+  ProFormTreeSelect,
+  ProFormCascader,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDateTimePicker,
+  ProFormDateTimeRangePicker,
+  ProFormSwitch,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
@@ -73,6 +104,20 @@ const components = [
   ShareButton,
   CropperUpload,
   UmdComponent,
+  ProFormText,
+  ProFormTextArea,
+  ProFormPassword,
+  ProFormDigit,
+  ProFormMoney,
+  ProFormSelect,
+  ProFormTag,
+  ProFormTreeSelect,
+  ProFormCascader,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormDateTimePicker,
+  ProFormDateTimeRangePicker,
+  ProFormSwitch,
 ]
 
 const install = (app: App): void => {
