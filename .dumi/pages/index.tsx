@@ -51,7 +51,7 @@ const PROJECTS: ProjectItem[] = [
     category: '组件库',
     tech: 'Vue 3 · TypeScript',
     description:
-      '面向中后台场景的 Vue 3 组件库，沉淀了 CheckCard、ProTable、DrawerForm、TagSelector、Ellipsis 等高频组件，同时支持模板与 TSX 两种写法。',
+      '面向中后台场景的 Vue 3 组件库，沉淀了 CheckCard、ProTable、DrawerForm、TagSelector、Ellipsis、UmdComponent 等高频组件，同时支持模板与 TSX 两种写法。',
     highlights: [],
     mark: 'ui',
     accent: ['#d97706', '#f59e0b'],

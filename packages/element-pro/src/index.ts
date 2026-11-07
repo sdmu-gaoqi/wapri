@@ -14,6 +14,7 @@ import { MainContent } from './MainContent'
 import { ShareButton } from './ShareButton'
 import { Sidebar } from './Sidebar'
 import { CropperUpload } from './CropperUpload'
+import { UmdComponent } from './UmdComponent'
 import { version } from '../package.json'
 // 全局主题变量（:root 上的 CSS 变量），随组件库样式一起输出
 import './styles/theme.scss'
@@ -35,6 +36,7 @@ export * from './MainContent'
 export * from './ShareButton'
 export * from './Sidebar'
 export * from './CropperUpload'
+export * from './UmdComponent'
 export {
   ConfigProvider,
   SvgIcon,
@@ -50,6 +52,7 @@ export {
   Layout,
   ShareButton,
   CropperUpload,
+  UmdComponent,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
@@ -69,6 +72,7 @@ const components = [
   Layout,
   ShareButton,
   CropperUpload,
+  UmdComponent,
 ]
 
 const install = (app: App): void => {
