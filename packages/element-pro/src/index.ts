@@ -15,6 +15,9 @@ import { ShareButton } from './ShareButton'
 import { Sidebar } from './Sidebar'
 import { CropperUpload } from './CropperUpload'
 import { UmdComponent } from './UmdComponent'
+import { ProForm } from './ProForm'
+import { ProFormDependency } from './ProFormDependency'
+import { ProFormList } from './ProFormList'
 import {
   ProFormCascader,
   ProFormDatePicker,
@@ -54,6 +57,9 @@ export * from './Sidebar'
 export * from './CropperUpload'
 export * from './UmdComponent'
 export * from './ProFormFields'
+export * from './ProForm'
+export * from './ProFormList'
+export * from './ProFormDependency'
 export {
   ConfigProvider,
   SvgIcon,
@@ -70,6 +76,7 @@ export {
   ShareButton,
   CropperUpload,
   UmdComponent,
+  ProForm,
   ProFormText,
   ProFormTextArea,
   ProFormPassword,
@@ -84,6 +91,8 @@ export {
   ProFormDateTimePicker,
   ProFormDateTimeRangePicker,
   ProFormSwitch,
+  ProFormList,
+  ProFormDependency,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
@@ -104,6 +113,7 @@ const components = [
   ShareButton,
   CropperUpload,
   UmdComponent,
+  ProForm,
   ProFormText,
   ProFormTextArea,
   ProFormPassword,
@@ -118,6 +128,8 @@ const components = [
   ProFormDateTimePicker,
   ProFormDateTimeRangePicker,
   ProFormSwitch,
+  ProFormList,
+  ProFormDependency,
 ]
 
 const install = (app: App): void => {

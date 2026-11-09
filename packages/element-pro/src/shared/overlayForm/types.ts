@@ -10,6 +10,10 @@ export interface OverlayFormProps {
   cancelText?: string
   submitter?: boolean
   resetOnClose?: boolean
+  /** 只读：所有字段渲染纯文本。 */
+  readonly?: boolean
+  /** 标签宽度，透传给内部表单。 */
+  labelWidth?: string | number
 }
 
 export interface ModalFormProps extends OverlayFormProps {

@@ -1,5 +1,6 @@
 import type { ColProps, FormItemProps, FormItemRule } from 'element-plus'
 import type { Key, ValueEnum, ValueType } from '../shared/field/types'
+import type { ProFormFieldName } from '../shared/form/path'
 
 /** 字段宽度预设：`xs` 104 / `sm` 216 / `md` 328 / `lg` 440 / `xl` 552，传数字按像素处理。 */
 export type ProFormFieldWidth = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number
@@ -23,7 +24,7 @@ export type ProFormFieldValueType = Exclude<ValueType, 'customer'>
  */
 export interface ProFormFieldProps {
   /** 字段路径，对应 `ElForm` 的 `model` 键；同时作为 `ElFormItem` 的 `prop`。 */
-  name?: string | string[]
+  name?: ProFormFieldName
   /** 标签文案。 */
   label?: string
   /** 校验规则，透传给 `ElFormItem`。 */

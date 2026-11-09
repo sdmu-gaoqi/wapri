@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { ElConfigProvider, ElForm, ElRow } from 'element-plus'
+import { ElConfigProvider, ElRow } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
-import { ProFormSelect, ProFormText } from '@wapri/element-pro'
+import { ProForm, ProFormSelect, ProFormText } from '@wapri/element-pro'
 
 const model = reactive<Record<string, unknown>>({
   xs: 'xs 104px',
@@ -18,7 +18,7 @@ const model = reactive<Record<string, unknown>>({
 
 <template>
   <ElConfigProvider :locale="zhCn">
-    <ElForm
+    <ProForm
       :model="model"
       label-width="120px"
     >
@@ -70,6 +70,6 @@ const model = reactive<Record<string, unknown>>({
           label="span 24（默认）"
         />
       </ElRow>
-    </ElForm>
+    </ProForm>
   </ElConfigProvider>
 </template>

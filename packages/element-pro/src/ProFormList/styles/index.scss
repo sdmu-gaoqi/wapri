@@ -1,0 +1,75 @@
+// 与 ProTable 一致：SCSS 里直接使用默认前缀，运行时前缀由 ConfigProvider 的 class 承担。
+.wa-ui-pro-form-list {
+  width: 100%;
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px 0 8px 12px;
+    border-left: 2px solid var(--el-border-color);
+
+    & + & {
+      margin-top: 4px;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+
+    // 行内字段通常不带 label，去掉表单项的底部间距让行高更紧凑
+    :deep(.el-form-item) {
+      margin-bottom: 0;
+    }
+
+    // 行内多列之间留出间距，避免控件紧贴
+    :deep(.el-col) {
+      padding-right: 8px;
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 2px;
+    height: var(--el-component-size);
+
+    .el-button {
+      margin-left: 0;
+      padding: 4px;
+      height: 24px;
+    }
+  }
+
+  &__empty {
+    padding: 16px 0;
+    color: var(--el-text-color-placeholder);
+    text-align: center;
+  }
+
+  &__add {
+    margin-top: 8px;
+  }
+
+  &__tip {
+    color: var(--el-text-color-placeholder);
+    cursor: help;
+    flex-shrink: 0;
+  }
+
+  // ElFormItem 的 label 是 `align-items: flex-start` 的 flex 容器，
+  // 图标直接放进去会贴顶；这里包一层居中的 flex，让文字与图标同基线。
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    line-height: inherit;
+  }
+}

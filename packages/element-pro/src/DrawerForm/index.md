@@ -7,9 +7,21 @@ group:
 
 # DrawerForm
 
-与 ModalForm 共用的类型和逻辑位于 `src/shared/overlayForm/`，公开类型统一从 `@wapri/element-pro` 导入。
+抽屉表单。通过 `v-model:open` 控制显示，直接绑定业务 `model`，默认插槽放字段组件即可，不需要再包 `ElForm`。
 
-基于 Element Plus 的抽屉表单。默认插槽放置 `ElFormItem`，无需再包裹 `ElForm`。通过 `v-model:open` 控制显示，直接绑定业务 `model`。
+```vue | pure
+<DrawerForm
+  v-model:open="open"
+  title="新增记录"
+  :model="model"
+  :on-finish="save"
+>
+  <ProFormText
+    name="name"
+    label="名称"
+  />
+</DrawerForm>
+```
 
 ## 基础用法
 
@@ -28,11 +40,13 @@ group:
 | submitText | string | 确定 | 提交按钮文字 |
 | cancelText | string | 取消 | 取消按钮文字 |
 | submitter | boolean | true | 是否显示默认底部按钮 |
-| resetOnClose | boolean | false | 关闭动画结束后调用 resetFields，恢复 ElForm 字段挂载时的初始值 |
+| resetOnClose | boolean | false | 关闭动画结束后重置字段，恢复挂载时的初始值 |
+| readonly | boolean | false | 只读：所有字段渲染纯文本 |
+| labelWidth | string \| number | — | 标签宽度 |
 
 其他属性和容器生命周期事件透传给 Element Plus 容器。`beforeClose` 可通过容器配置传递，仅作用于容器原生关闭交互；底部取消按钮直接触发 cancel 并关闭。提交期间禁止重复提交及用户关闭；父组件仍可主动设置 open。父组件关闭或重新打开后，旧请求的完成结果不会关闭新会话。
 
-校验失败不调用 onFinish，字段错误由 ElForm 展示。未配置 onFinish 时，校验成功会触发 finish 并关闭。业务保存请使用 onFinish，异步事件监听器的返回值不会被等待。组件不自动展示请求错误提示，请监听 finishFailed。
+校验失败不调用 onFinish，字段错误由表单展示。未配置 onFinish 时，校验成功会触发 finish 并关闭。业务保存请使用 onFinish，异步事件监听器的返回值不会被等待。组件不自动展示请求错误提示，请监听 finishFailed。
 
 ## Events
 
@@ -58,8 +72,8 @@ group:
 | 方法 | 说明 |
 | --- | --- |
 | submit(): Promise<boolean> | 校验并提交，成功返回 true，校验失败、业务失败或重复提交返回 false |
-| validate() | 调用 ElForm.validate；未挂载时返回 undefined |
+| validate() | 校验全部字段；未挂载时返回 undefined |
 | resetFields() | 重置字段到挂载时的初始值并清除校验 |
 | clearValidate(fields?) | 清除指定字段或全部字段校验 |
 
-`model` 不会因容器 destroyOnClose 自动清空。需要关闭后重置时使用 resetOnClose；需要编辑回填时，在打开前修改 model。两个组件均支持独立 `app.use`全量注册。
+`model` 不会因容器 destroyOnClose 自动清空。需要关闭后重置时使用 resetOnClose；需要编辑回填时，在打开前修改 model。

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ElButton, ElForm, ElDialog } from 'element-plus'
+import { ElButton, ElDialog } from 'element-plus'
 import { useConfig } from '../ConfigProvider/context'
+import ProForm from '../ProForm/index.vue'
 import type { ModalFormProps } from '../shared/overlayForm/types'
 import { useOverlayForm } from '../shared/overlayForm/useOverlayForm'
 
@@ -10,6 +11,7 @@ const props = withDefaults(defineProps<ModalFormProps>(), {
   cancelText: '取消',
   submitter: true,
   resetOnClose: false,
+  readonly: false,
 })
 const emit = defineEmits<{
   'update:open': [value: boolean]
@@ -50,17 +52,19 @@ defineExpose({ submit, resetFields, validate, clearValidate })
         v-bind="scope"
       ></slot>
     </template>
-    <ElForm
+    <ProForm
       ref="formRef"
       v-bind="formProps"
       :model="model"
+      :readonly="readonly"
+      :label-width="labelWidth"
       @submit.prevent="submit"
     >
       <slot
         :model="model"
         :submitting="submitting"
       ></slot>
-    </ElForm>
+    </ProForm>
     <template
       v-if="$slots.footer || submitter"
       #footer

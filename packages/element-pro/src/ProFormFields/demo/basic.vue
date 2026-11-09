@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { ElButton, ElConfigProvider, ElForm, ElMessage, ElRow } from 'element-plus'
+import { ElButton, ElConfigProvider, ElMessage, ElRow } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
-import type { FormInstance } from 'element-plus'
+import type { ProFormAction } from '@wapri/element-pro'
 import {
+  ProForm,
   ProFormCascader,
   ProFormDatePicker,
   ProFormDateRangePicker,
@@ -20,7 +21,7 @@ import {
   ProFormTreeSelect,
 } from '@wapri/element-pro'
 
-const formRef = ref<FormInstance>()
+const formRef = ref<ProFormAction>()
 
 const model = reactive<Record<string, unknown>>({
   username: '',
@@ -80,20 +81,20 @@ const areaEnum = [
   },
 ]
 
-async function submit(): Promise<void> {
+const submit = async (): Promise<void> => {
   const valid = await formRef.value?.validate().catch(() => false)
   if (!valid) return
   ElMessage.success(`提交成功：${JSON.stringify(model)}`)
 }
 
-function reset(): void {
+const reset = (): void => {
   formRef.value?.resetFields()
 }
 </script>
 
 <template>
   <ElConfigProvider :locale="zhCn">
-    <ElForm
+    <ProForm
       ref="formRef"
       :model="model"
       label-width="120px"
@@ -186,7 +187,7 @@ function reset(): void {
           :col-props="{ span: 12 }"
         />
       </ElRow>
-    </ElForm>
+    </ProForm>
     <ElButton
       type="primary"
       @click="submit"

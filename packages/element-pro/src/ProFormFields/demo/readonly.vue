@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { ElConfigProvider, ElForm } from 'element-plus'
+import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
-import { ProFormDateRangePicker, ProFormSelect, ProFormSwitch, ProFormTag, ProFormText } from '@wapri/element-pro'
+import {
+  ProForm,
+  ProFormDateRangePicker,
+  ProFormSelect,
+  ProFormSwitch,
+  ProFormTag,
+  ProFormText,
+} from '@wapri/element-pro'
 
 const model = reactive<Record<string, unknown>>({
   status: 'processing',
@@ -28,7 +35,7 @@ const tagEnum = {
 
 <template>
   <ElConfigProvider :locale="zhCn">
-    <ElForm
+    <ProForm
       :model="model"
       label-width="120px"
     >
@@ -65,6 +72,6 @@ const tagEnum = {
         readonly
         empty-text="暂无"
       />
-    </ElForm>
+    </ProForm>
   </ElConfigProvider>
 </template>

@@ -19,6 +19,7 @@ Guidance for coding agents working in this repository.
   - 使用模板更优时,实现使用模板方式
   - 使用tsx更优时,实现使用tsx方式
   - 表单: 容器用 `ModalForm` / `DrawerForm`,字段用 `ProFormFields`(`ProFormText`、`ProFormSelect` 等,通过 `name` 读写 `ElForm` 的 `model`)
+  - 表单的联动与数组字段用 `ProFormDependency` / `ProFormList`;`ProFormList` 行内字段用相对名,路径前缀由容器注入,不要手拼 `users.${index}`
   - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
@@ -65,3 +66,18 @@ Guidance for coding agents working in this repository.
 - 除非明确要求，否则不要提交、推送或打开拉取请求,这一切都由你来申请,我来执行
 - 在提交之前，确保格式化、lint、类型检查和测试都通过。
 - 在完成之前，报告运行的命令和无法运行的任何检查。
+
+## Document specifications
+
+- md文档的目的是快速帮助别人上手,api说明与demo展示,不要标注一些多余的代码设计的文字说明
+
+## Coding Standards
+
+- 使用 interface 定义 Props
+- 组件命名：PascalCase，文件名 index.tsx
+- Never 使用 any 类型
+- Never 使用内联样式,除非需要动态计算
+- 减少funtion的使用,使用箭头函数
+- 功能函数开发前,先检查base中是否有实现,有的话直接使用已有的实现,不要每次都重新开发
+- 在功能开发时,将能落地到基础能力@base包中的实现维护到base中实现并导出
+- utils包默认导出了base中的所有能力,所以在新增了base的实现时,请将md文档写入utils包中

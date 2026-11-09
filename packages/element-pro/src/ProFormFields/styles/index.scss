@@ -1,5 +1,15 @@
 // 与 ProTable 一致：SCSS 里直接使用默认前缀，运行时前缀由 ConfigProvider 的 class 承担。
 .wa-ui-pro-form-field {
+  // ElFormItem 的 label 是 `align-items: flex-start` 的 flex 容器，
+  // 图标直接放进去会贴顶；这里包一层居中的 flex，让文字与图标同基线。
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    line-height: inherit;
+  }
+
   &__readonly {
     display: inline-flex;
     align-items: center;
@@ -9,8 +19,8 @@
   }
 
   &__tip {
-    margin-left: 4px;
     color: var(--el-text-color-placeholder);
     cursor: help;
+    flex-shrink: 0;
   }
 }

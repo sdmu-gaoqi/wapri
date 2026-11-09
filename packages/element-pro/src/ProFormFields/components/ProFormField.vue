@@ -23,12 +23,15 @@ import { formatCellValue, getValueEnumOptions, toTreeOptions } from '../../share
 import type { ValueEnum } from '../../shared/field/types'
 import { useConfig } from '../../ConfigProvider/context'
 import { fieldEmptyText, fieldMoneyCurrency, fieldMoneyPrecision, fieldTextAreaAutosize } from '../../constant'
+import { useProFormPath, useProFormReadonly } from '../../shared/form/context'
+import { joinPath } from '../../shared/form/path'
+import { omitUndefined } from '../../shared/form/props'
+import { hasRequiredRule } from '../../shared/form/rules'
 import {
   getDatePickerType,
   getDateValueFormat,
   getFieldPlaceholder,
   getFieldWidthStyle,
-  hasRequiredRule,
   isDateValueType,
   optionsToValueEnum,
 } from '../utils'
@@ -36,7 +39,9 @@ import type { ProFormFieldProps, ProFormFieldValueType } from '../types'
 
 const props = withDefaults(defineProps<ProFormFieldProps & { valueType: ProFormFieldValueType }>(), {
   readonly: false,
-  disabled: false,
+  // Boolean 类型的 prop 未传时 Vue 会 cast 成 false，显式 undefined 才能拿到「未设置」，
+  // 否则 `disabled: false` 会短路 Element Plus 的表单级回退。
+  disabled: undefined,
   emptyText: fieldEmptyText,
   options: () => [],
   colProps: () => ({}),
@@ -47,6 +52,32 @@ defineOptions({ name: 'ProFormField' })
 
 const { prefix } = useConfig()
 const { form } = useFormItem()
+const pathContext = useProFormPath()
+const formReadonly = useProFormReadonly()
+
+/**
+ * 字段的完整路径：`ProFormList` 行内时拼上行前缀，否则等价于自身 `name`。
+ * 值读写与 `ElFormItem.prop` 共用这一份，保证校验与重置按行唯一。
+ */
+const resolvedName = computed(() => joinPath(pathContext?.value.prefix, props.name))
+
+/** 交给 `ElFormItem` 的 `prop`：空路径传 `undefined`，避免注册一个 `propString` 为空的字段。 */
+const propPath = computed(() => (resolvedName.value.length > 0 ? resolvedName.value : undefined))
+
+/**
+ * 只读 / 禁用按「字段显式值 > 列表级 > 表单级」继承。
+ *
+ * `disabled` 未显式传值时保持 `undefined` 交给控件，让 Element Plus 的 `useFormDisabled`
+ * 回退到表单级 `disabled`；传 `false` 会短路这条回退链。
+ */
+const isReadonly = computed(
+  () => props.readonly || pathContext?.value.readonly === true || formReadonly?.value === true,
+)
+const isDisabled = computed<boolean | undefined>(() => {
+  if (props.disabled !== undefined) return props.disabled
+  if (pathContext?.value.disabled !== undefined) return pathContext.value.disabled
+  return undefined
+})
 
 /** `ElForm.model` 的类型是 `Record<string, any>`，这里一次性收窄，后续读写不再出现 any。 */
 const model = computed<Record<string, unknown> | undefined>(() => {
@@ -58,8 +89,8 @@ const colSpan = computed(() => props.colProps?.span ?? 24)
 
 const value = computed<unknown>(() => {
   const target = model.value
-  if (!target || props.name === undefined) return undefined
-  return get(target, props.name) as unknown
+  if (!target || resolvedName.value.length === 0) return undefined
+  return get(target, resolvedName.value) as unknown
 })
 
 const effectiveValueEnum = computed<ValueEnum | undefined>(() => optionsToValueEnum(props.options) ?? props.valueEnum)
@@ -81,60 +112,59 @@ const widthStyle = computed(() => getFieldWidthStyle(props.width))
 const requiredOf = computed(() => (props.required === true || hasRequiredRule(props.rules) ? true : undefined))
 const fieldPlaceholder = computed(() => getFieldPlaceholder(props.valueType, props.label, props.placeholder))
 
-/** 合并控件属性：组件基础属性 < width < fieldProps（fieldProps 优先级最高，与文档一致）。 */
-function controlPropsOf(base: Record<string, unknown> = {}): Record<string, unknown> {
+/**
+ * 合并控件属性：组件基础属性 < width < fieldProps（fieldProps 优先级最高，与文档一致）。
+ *
+ * 值为 `undefined` 的键会被剔除：Vue 认为「键存在」即已赋值，会跳过控件自身的默认值，
+ * 也会短路 Element Plus 的表单级回退（例如 `disabled`）。
+ */
+const controlPropsOf = (base: Record<string, unknown> = {}): Record<string, unknown> => {
   const fieldProps = props.fieldProps ?? {}
   const fieldStyle = fieldProps['style']
   const styleOverride: CSSProperties | undefined =
     typeof fieldStyle === 'object' && fieldStyle !== null ? (fieldStyle as CSSProperties) : undefined
   const mergedStyle = { ...widthStyle.value, ...styleOverride }
   const { style: _style, ...restFieldProps } = fieldProps
-  return {
+  return omitUndefined({
     ...base,
     ...(Object.keys(mergedStyle).length > 0 ? { style: mergedStyle } : {}),
     ...restFieldProps,
-  }
+  })
 }
 
-function update(next: unknown): void {
+const update = (next: unknown): void => {
   const target = model.value
-  if (!target || props.name === undefined) return
-  set(target, props.name, next)
+  if (!target || resolvedName.value.length === 0) return
+  set(target, resolvedName.value, next)
 }
 
 onMounted(() => {
   const target = model.value
-  if (!target || props.name === undefined || props.initialValue === undefined) return
-  if (get(target, props.name) !== undefined) return
-  set(target, props.name, props.initialValue)
+  if (!target || resolvedName.value.length === 0 || props.initialValue === undefined) return
+  if (get(target, resolvedName.value) !== undefined) return
+  set(target, resolvedName.value, props.initialValue)
 })
 
-function asString(): string {
-  return typeof value.value === 'string' ? value.value : ''
-}
+const asString = (): string => (typeof value.value === 'string' ? value.value : '')
 
-function asNumber(): number | undefined {
-  return typeof value.value === 'number' ? value.value : undefined
-}
+const asNumber = (): number | undefined => (typeof value.value === 'number' ? value.value : undefined)
 
-function asBoolean(): boolean {
-  return value.value === true
-}
+const asBoolean = (): boolean => value.value === true
 
-function asKeyArray(): Array<string | number> | undefined {
+const asKeyArray = (): Array<string | number> | undefined => {
   const current = value.value
   if (!Array.isArray(current)) return undefined
   const items = current.filter((item): item is string | number => typeof item === 'string' || typeof item === 'number')
   return items.length === current.length ? items : undefined
 }
 
-function asSelectValue(): string | number | Array<string | number> | undefined {
+const asSelectValue = (): string | number | Array<string | number> | undefined => {
   const current = value.value
   if (typeof current === 'string' || typeof current === 'number') return current
   return asKeyArray()
 }
 
-function asDateValue(): string | string[] | undefined {
+const asDateValue = (): string | string[] | undefined => {
   const current = value.value
   if (typeof current === 'string') return current
   if (!Array.isArray(current)) return undefined
@@ -142,21 +172,21 @@ function asDateValue(): string | string[] | undefined {
   return items.length === current.length ? items : undefined
 }
 
-function inputPropsOf(): Record<string, unknown> {
+const inputPropsOf = (): Record<string, unknown> => {
   const base: Record<string, unknown> = {
     type: props.valueType === 'textarea' ? 'textarea' : props.valueType === 'password' ? 'password' : 'text',
     placeholder: fieldPlaceholder.value,
-    disabled: props.disabled,
+    disabled: isDisabled.value,
   }
   if (props.valueType === 'password') base['showPassword'] = true
   if (props.valueType === 'textarea') base['autosize'] = fieldTextAreaAutosize
   return controlPropsOf(base)
 }
 
-function numberPropsOf(): Record<string, unknown> {
+const numberPropsOf = (): Record<string, unknown> => {
   const base: Record<string, unknown> = {
     placeholder: fieldPlaceholder.value,
-    disabled: props.disabled,
+    disabled: isDisabled.value,
   }
   if (props.valueType === 'money') {
     const symbol = fieldMoneyCurrency
@@ -168,34 +198,34 @@ function numberPropsOf(): Record<string, unknown> {
   return controlPropsOf(base)
 }
 
-function datePropsOf(): Record<string, unknown> {
+const datePropsOf = (): Record<string, unknown> => {
   const isRange = props.valueType === 'dateRange' || props.valueType === 'timeRange'
   const placeholder = fieldPlaceholder.value
   return controlPropsOf({
     type: getDatePickerType(props.valueType),
     valueFormat: getDateValueFormat(props.valueType),
     ...(isRange ? { startPlaceholder: placeholder, endPlaceholder: placeholder } : { placeholder }),
-    disabled: props.disabled,
+    disabled: isDisabled.value,
   })
 }
 
-function selectPropsOf(): Record<string, unknown> {
-  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: props.disabled })
+const selectPropsOf = (): Record<string, unknown> => {
+  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: isDisabled.value })
 }
 
-function treeSelectPropsOf(): Record<string, unknown> {
-  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: props.disabled })
+const treeSelectPropsOf = (): Record<string, unknown> => {
+  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: isDisabled.value })
 }
 
-function cascaderPropsOf(): Record<string, unknown> {
-  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: props.disabled })
+const cascaderPropsOf = (): Record<string, unknown> => {
+  return controlPropsOf({ placeholder: fieldPlaceholder.value, disabled: isDisabled.value })
 }
 
-function switchPropsOf(): Record<string, unknown> {
-  return controlPropsOf({ disabled: props.disabled })
+const switchPropsOf = (): Record<string, unknown> => {
+  return controlPropsOf({ disabled: isDisabled.value })
 }
 
-function tagPropsOf(): Record<string, unknown> {
+const tagPropsOf = (): Record<string, unknown> => {
   return controlPropsOf({})
 }
 </script>
@@ -207,7 +237,7 @@ function tagPropsOf(): Record<string, unknown> {
   >
     <ElFormItem
       v-bind="formItemProps"
-      :prop="name"
+      :prop="propPath"
       :label="label"
       :rules="rules"
       :required="requiredOf"
@@ -216,19 +246,21 @@ function tagPropsOf(): Record<string, unknown> {
         v-if="tooltip && label"
         #label
       >
-        <span>{{ label }}</span>
-        <ElTooltip
-          :content="tooltip"
-          placement="top"
-        >
-          <ElIcon :class="`${prefix}-pro-form-field__tip`">
-            <QuestionFilled />
-          </ElIcon>
-        </ElTooltip>
+        <span :class="`${prefix}-pro-form-field__label`">
+          {{ label }}
+          <ElTooltip
+            :content="tooltip"
+            placement="top"
+          >
+            <ElIcon :class="`${prefix}-pro-form-field__tip`">
+              <QuestionFilled />
+            </ElIcon>
+          </ElTooltip>
+        </span>
       </template>
 
       <span
-        v-if="readonly"
+        v-if="isReadonly"
         :class="`${prefix}-pro-form-field__readonly`"
       >
         {{ readonlyText }}
