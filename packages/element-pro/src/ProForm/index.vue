@@ -9,9 +9,14 @@ import type { ProFormAction, ProFormProps } from './types'
 
 const props = withDefaults(defineProps<ProFormProps>(), {
   readonly: false,
-  // Boolean 类型的 prop 未传时 Vue 会 cast 成 false，显式 undefined 才能拿到「未设置」，
-  // 否则 `disabled: false` 会短路 Element Plus 的表单级回退。
+  // Boolean 类型的 prop 未传时 Vue 会 cast 成 false。这些项显式声明 undefined，
+  // 一是让 `disabled` 能回退到 Element Plus 的表单级判断，
+  // 二是避免默认的 false 顶掉 `formProps` 里的同名配置。
   disabled: undefined,
+  inline: undefined,
+  showMessage: undefined,
+  hideRequiredAsterisk: undefined,
+  scrollToError: undefined,
   formProps: () => ({}),
 })
 
@@ -37,14 +42,14 @@ provide(
 )
 
 /**
- * 表单属性：`formProps` 打底，显式 props 覆盖。
+ * 表单属性：`formProps` 打底，显式 props 只在有值时覆盖。
  *
- * 值为 `undefined` 的键会被剔除，否则 `v-bind` 展开后 Vue 认为该 prop 已赋值，
- * 会跳过 `ElForm` 自身的默认值。
+ * 两组值分开合并：若把 `undefined` 一起展开，它会顶掉 `formProps` 里的同名配置
+ * （`disabled`、`inline` 这类布尔项尤其明显）。
  */
-const formPropsOf = computed<Record<string, unknown>>(() =>
-  omitUndefined({
-    ...props.formProps,
+const formPropsOf = computed<Record<string, unknown>>(() => ({
+  ...props.formProps,
+  ...omitUndefined({
     labelWidth: props.labelWidth,
     labelPosition: props.labelPosition,
     labelSuffix: props.labelSuffix,
@@ -56,7 +61,7 @@ const formPropsOf = computed<Record<string, unknown>>(() =>
     requireAsteriskPosition: props.requireAsteriskPosition,
     scrollToError: props.scrollToError,
   }),
-)
+}))
 
 defineExpose<ProFormAction>({
   validate: (...args) => formRef.value?.validate(...args) as ReturnType<FormInstance['validate']>,

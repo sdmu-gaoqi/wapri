@@ -1,5 +1,18 @@
 # @wapri/element-pro
 
+## 3.3.1
+
+### Patch Changes
+
+- 修复 `ProForm` 合并 `formProps` 时，显式 props 的默认值把 `formProps` 同名配置顶掉的问题。
+
+  3.3.0 里 `formPropsOf` 把两组值一次性展开后过滤 `undefined`，导致：
+  - `formProps.disabled` 被 `disabled: undefined` 覆盖后被删掉，`ElForm` 收不到禁用；
+  - `formProps.inline`、`formProps.showMessage`、`formProps.hideRequiredAsterisk`、`formProps.scrollToError` 被 Boolean 默认值 `false` 覆盖，永远不生效；
+  - `ModalForm` / `DrawerForm` 的 `formProps.labelWidth` 被同名 `labelWidth` 的 `undefined` 覆盖。
+
+  改为 `formProps` 打底、显式 props 只在有值时覆盖，并给上述 Boolean props 补 `default: undefined`。显式 prop 仍然优先。
+
 ## 3.3.0
 
 ### Minor Changes
