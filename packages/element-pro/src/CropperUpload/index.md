@@ -89,6 +89,7 @@ const onCrop = (file: File, rawFile: File) => {
 | `cropper`       | 是否启用裁剪，置 `false` 时退化为原生 `ElUpload`                | `boolean`             | `true`                 |
 | `aspectRatio`   | 初始裁剪比例，也支持 `4/3` 写法；需出现在 `ratios` 中，否则以 `ratios` 第一项为准 | `number \| string` | `1` |
 | `ratios`        | 弹窗内可切换的比例列表，`0` 表示自由比例；只传一项时隐藏比例切换 | `number[]`            | `[1, 4/3, 16/9, 9/16]` |
+| `ratioLabels`   | 比例按钮文案，与 `ratios` 一一对应；未传项按比例自动生成（`0` → `自由`） | `string[]`  | -                      |
 | `cropperOptions` | 透传给 vue-cropper 的配置，见下表 | `CropperOptions` | `{}` |
 | `preview`       | 是否展示右侧实时预览与输出尺寸提示                               | `boolean`             | `true`                 |
 | `outputWidth`   | 固定输出宽度（px），高度按裁剪比例换算；不传时按裁剪框尺寸 × dpr 输出 | `number`         | -                      |
@@ -147,7 +148,7 @@ const onCrop = (file: File, rawFile: File) => {
 
 - 裁剪弹窗通过 `append-to-body` 挂载到 `body`，样式使用固定的 `wa-ui-cropper-upload-` 前缀类名。
 - 弹窗主体分两栏：左侧裁剪区 + 工具栏，右侧实时预览；`preview` 置为 `false` 时收窄为单栏（弹窗宽度 680px，带预览时 900px）。
-- 工具栏从左到右依次为「重新选择」、缩放/旋转按钮组、比例切换按钮组（只有多项比例时出现）。
+- 工具栏从左到右依次为「重新选择」、缩放/旋转按钮组、比例切换按钮组（只有多项比例时出现）。比例按钮默认按比例生成文案，可用 `ratioLabels` 覆盖成业务文案，例如把自由比例显示成「自定义」。
 - 预览使用 vue-cropper 的 `real-time` 事件，按裁剪比例等比缩放到右侧面板；尺寸提示与导出算法一致（`outputWidth` 优先，其次 `enlarge` / dpr）。
 - 预览图按裁剪窗口的原始像素渲染后整体缩放，已屏蔽宿主 `img { max-width: 100% }` 这类全局样式，保证预览与裁剪框始终一致。
 - 裁剪框默认按所选比例居中生成并限制在图片范围内；切换比例后会按新比例重建裁剪框。

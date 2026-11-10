@@ -2,15 +2,18 @@
 import { computed, provide, ref } from 'vue'
 import { ElButton, ElTabs } from 'element-plus'
 import { useConfig } from '../ConfigProvider/context'
+import { tabFormNavWidth } from '../constant'
 import { tabFormContextKey } from './context'
-import { collectInvalidTabs, snapshotModel } from './utils'
+import { collectInvalidTabs, snapshotModel, toCssSize } from './utils'
 import type { TabFormItemRegistration, TabFormRegisterResult } from './context'
 import type { ProFormAction } from '../ProForm'
-import type { TabFormAction, TabFormProps, TabFormSubmitter } from './types'
+import type { TabFormAction, TabFormProps, TabFormSubmitter, TabFormTabPosition } from './types'
 
 const props = withDefaults(defineProps<TabFormProps>(), {
   active: undefined,
   defaultActive: undefined,
+  tabPosition: undefined,
+  navWidth: tabFormNavWidth,
   readonly: false,
   // 未设置时保持 undefined，让分段内的 ProForm 回退到 Element Plus 的表单级判断。
   disabled: undefined,
@@ -35,6 +38,16 @@ const items = ref<ItemEntry[]>([])
 const innerActive = ref<string | number | undefined>(props.defaultActive)
 const invalidTabs = ref<string[]>([])
 const pending = ref(false)
+
+/** 导航位置：显式 prop > `tabsProps.tabPosition` > `top`。 */
+const tabPosition = computed<TabFormTabPosition>(() => props.tabPosition ?? props.tabsProps?.tabPosition ?? 'top')
+
+/** 垂直导航：导航列在左侧或右侧，内容列与底部按钮让位给导航列。 */
+const isVertical = computed(() => tabPosition.value === 'left' || tabPosition.value === 'right')
+
+const rootStyle = computed<Record<string, string> | undefined>(() =>
+  isVertical.value ? { '--wa-ui-tab-form-nav-width': toCssSize(props.navWidth) } : undefined,
+)
 
 /**
  * 激活项：受控值 > 内部值 > 第一个分段的 name。
@@ -132,9 +145,17 @@ defineExpose<TabFormAction>({
 </script>
 
 <template>
-  <div :class="`${prefix}-tab-form`">
+  <div
+    :class="[
+      `${prefix}-tab-form`,
+      isVertical && `${prefix}-tab-form--vertical`,
+      isVertical && `${prefix}-tab-form--vertical-${tabPosition}`,
+    ]"
+    :style="rootStyle"
+  >
     <ElTabs
       v-bind="tabsProps"
+      :tab-position="tabPosition"
       :model-value="active"
       :class="`${prefix}-tab-form__tabs`"
       @update:model-value="(value: string | number) => (active = value)"

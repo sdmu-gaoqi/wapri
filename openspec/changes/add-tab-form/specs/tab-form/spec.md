@@ -116,6 +116,40 @@
 - **THEN** 返回当前存在校验错误的分段 `name` 列表
 - **AND** 不触发新的校验
 
+### Requirement: 垂直 tab 布局
+
+`TabForm` SHALL 支持把 tab 导航渲染为垂直方向，`tabPosition` 取值 `left` / `right` 时进入垂直布局。
+
+#### Scenario: 左侧垂直导航
+
+- **WHEN** `<TabForm tab-position="left">` 内声明三个分段
+- **THEN** 导航列渲染在内容区左侧，三个标签上下排列
+- **AND** 导航列宽度为 `navWidth`，默认 `160`
+- **AND** 每个导航项占满导航列宽度且文案左对齐
+
+#### Scenario: 右侧垂直导航
+
+- **WHEN** `<TabForm tab-position="right">`
+- **THEN** 导航列渲染在内容区右侧
+- **AND** 内容区占满导航列之外的宽度
+
+#### Scenario: 导航位置切换
+
+- **WHEN** 把 `tabPosition` 从 `top` 改为 `left`（或反向）
+- **THEN** 导航方向随之切换
+- **AND** 当前激活的分段与已填数据保持不变
+
+#### Scenario: tabPosition 的来源优先级
+
+- **WHEN** 同时传入 `tabPosition="left"` 与 `:tabs-props="{ tabPosition: 'top' }"`
+- **THEN** 以 `tabPosition` prop 为准
+- **AND** 只传 `tabsProps.tabPosition` 时同样进入垂直布局
+
+#### Scenario: 底部按钮与内容列对齐
+
+- **WHEN** 垂直导航下渲染内置按钮
+- **THEN** 按钮行与内容列左右边界对齐，不覆盖导航列
+
 ### Requirement: 文档与发布
 
 `TabForm` SHALL 提供 dumi 文档页与可运行示例，并通过 changeset 以次版本号发布。
@@ -124,7 +158,7 @@
 
 - **WHEN** 执行 `pnpm dev` 并访问 `/element-pros/tab-form`
 - **THEN** 渲染 `packages/element-pro/src/TabForm/index.md`
-- **AND** 页面包含基础用法、跨 tab 联动与提交错误跳转三个可运行示例
+- **AND** 页面包含基础用法、跨 tab 联动、垂直 tab 与提交错误跳转四个可运行示例
 
 #### Scenario: 版本记录
 

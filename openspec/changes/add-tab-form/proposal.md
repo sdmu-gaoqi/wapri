@@ -16,7 +16,8 @@
   - **所有 tab 共用调用方传入的 `model`**，每个 tab 内是一个独立的 `ProForm`（独立 `ElForm` 实例），因此跨 tab 的 `ProFormDependency` 天然成立，同时校验按 tab 隔离。
   - `submit()` 按声明顺序逐个校验，任一失败就切到第一个出错的 tab 并返回 `false`；全部通过时把 `{ ...model }` 交给 `onFinish`。
   - 提交失败后，出错的 tab 标题上展示红点；下一次提交时重算。
-- `TabForm` props：`model`、`active`、`defaultActive`、`tabsProps`、`formProps`、`submitter`、`readonly`、`disabled`、`onFinish`。
+- `TabForm` props：`model`、`active`、`defaultActive`、`tabPosition`、`navWidth`、`tabsProps`、`formProps`、`submitter`、`readonly`、`disabled`、`onFinish`。
+- `tabPosition` 支持 `top` / `right` / `bottom` / `left`，`left` / `right` 即垂直导航：导航列定宽（`navWidth`，默认 `160`）左对齐排布，内容列占满剩余宽度，底部按钮让位给导航列。
 - `TabFormItem` props：`name`、`title`、`disabled`，以及 `ProForm` 的表单级配置（`rules`、`labelWidth` 等）。
 - `TabForm` 暴露：`active`、`submit`、`resetFields`、`getFormInstance`、`getInvalidTabs`。
 - 通过既有 `withInstall(main, extra)` 把 `TabFormItem` 挂到 `TabForm.Item` 并随主组件一起注册。
@@ -40,7 +41,7 @@
 - Affected code:
   - 新增 `packages/element-pro/src/TabForm/{index.ts,index.md,types.ts,context.ts,utils.ts}`
   - 新增 `packages/element-pro/src/TabForm/components/TabFormItem.vue`
-  - 新增 `packages/element-pro/src/TabForm/demo/{basic.vue,cross-tab.vue,error-jump.vue}`
+  - 新增 `packages/element-pro/src/TabForm/demo/{basic.vue,cross-tab.vue,error-jump.vue,vertical.vue}`
   - 新增 `packages/element-pro/src/TabForm/styles/index.scss`
   - 新增 `packages/element-pro/tests/tab-form.test.mjs`
   - 修改 `packages/element-pro/src/index.ts`（import、`export *`、具名导出、`components` 注册数组）

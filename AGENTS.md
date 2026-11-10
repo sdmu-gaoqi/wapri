@@ -21,7 +21,7 @@ Guidance for coding agents working in this repository.
   - 表单: 容器用 `ModalForm` / `DrawerForm`,字段用 `ProFormFields`(`ProFormText`、`ProFormSelect` 等,通过 `name` 读写 `ElForm` 的 `model`)
   - 表单的联动与数组字段用 `ProFormDependency` / `ProFormList`;`ProFormList` 行内字段用相对名,路径前缀由容器注入,不要手拼 `users.${index}`
   - 分步表单用 `StepsForm` + `StepsForm.StepForm`,每步独立 `model`;`name` 在同一容器内唯一,最后一步合并后交给 `onFinish`
-  - 多 tab 表单用 `TabForm` + `TabForm.Item`,所有 tab 共用一份 `model`;提交时校验全部 tab,失败自动跳到第一个出错的分段
+  - 多 tab 表单用 `TabForm` + `TabForm.Item`,所有 tab 共用一份 `model`;提交时校验全部 tab,失败自动跳到第一个出错的分段;`tabPosition` 为 `left`/`right` 时是垂直导航,`navWidth` 控制导航列宽度
   - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
@@ -52,7 +52,7 @@ Guidance for coding agents working in this repository.
 - 避免添加依赖项，除非任务明确需要它们，而现有的工具链无法覆盖它们。
 - 所有修改都要严格遵守 `.oxlintrc.json`（继承 `@wagq/lint-ox/oxlint/vue.json`）的配置,不得使用any
 - element-pro 组件的 class 命名,必须使用 `packages\element-pro\src\constant\index.ts` 统一的 `prefix` 做为前缀
-- 每次修改完,都要同步下文档与skill
+- 每次修改完,都要同步下文档
 - ui组件可以直接使用element-plus的直接使用element-plus的
 - 不允许使用localStorage或sessionStorage,必须使用@wapri/gbase packages\@base\src\storage.ts中的导出
 - 复杂的代码,类型超过三个的,不要把类型和实现写在一个文件里,放在同级目录的types/下维护

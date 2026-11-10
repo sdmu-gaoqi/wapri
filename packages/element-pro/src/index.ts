@@ -2,6 +2,7 @@ import { CheckCard } from './CheckCard'
 import { ModalForm } from './ModalForm'
 import { DrawerForm } from './DrawerForm'
 import { Ellipsis } from './Ellipsis'
+import { FileModal } from './FileModal'
 import type { App } from 'vue'
 import { DateQuickSelect } from './DateQuickSelect'
 import { ProTable } from './ProTable'
@@ -52,6 +53,7 @@ export * from './ConfigProvider'
 export * from './SvgIcon'
 export * from './CheckCard'
 export * from './Ellipsis'
+export * from './FileModal'
 export * from './Layout'
 export * from './MainContent'
 export * from './ShareButton'
@@ -113,6 +115,7 @@ const components = [
   DrawerForm,
   CheckCard,
   Ellipsis,
+  FileModal,
   DateQuickSelect,
   TagSelector,
   Sidebar,

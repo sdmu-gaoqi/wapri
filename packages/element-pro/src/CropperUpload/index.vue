@@ -183,6 +183,7 @@ defineExpose({ uploadRef })
     :visible="visible"
     :file="rawFile"
     :ratios="ratios"
+    :ratio-labels="ratioLabels"
     :aspect-ratio="aspectRatio"
     :cropper-options="cropperOptions"
     :accept="accept"

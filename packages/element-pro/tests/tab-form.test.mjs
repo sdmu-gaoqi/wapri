@@ -445,6 +445,53 @@ test('TabForm exposes Item as a registered sub component', async () => {
   assert.equal(TabForm.Item, TabFormItem)
 })
 
+test('defaults to a horizontal tab nav', async (t) => {
+  const model = reactive({})
+  const root = mount(t, () => buildTabs({ model }))
+  await nextTick()
+  assert.equal(collect(root, (node) => hasClass(node, 'wa-ui-tab-form--vertical')).length, 0)
+  assert.equal(collect(root, (node) => hasClass(node, 'el-tabs--left')).length, 0)
+})
+
+test('tabPosition left turns the nav vertical and writes the nav width', async (t) => {
+  const model = reactive({})
+  const root = mount(t, () => buildTabs({ model, tabFormProps: { tabPosition: 'left', navWidth: 200 } }))
+  await nextTick()
+  const container = root.children[0]
+  assert.ok(hasClass(container, 'wa-ui-tab-form--vertical'))
+  assert.ok(hasClass(container, 'wa-ui-tab-form--vertical-left'))
+  assert.equal(container.props.style['--wa-ui-tab-form-nav-width'], '200px')
+  // 透传给 ElTabs，Element Plus 用 el-tabs--left 表达垂直导航
+  assert.equal(collect(root, (node) => hasClass(node, 'el-tabs--left')).length, 1)
+})
+
+test('tabPosition right renders the nav on the right side', async (t) => {
+  const model = reactive({})
+  const root = mount(t, () => buildTabs({ model, tabFormProps: { tabPosition: 'right' } }))
+  await nextTick()
+  const container = root.children[0]
+  assert.ok(hasClass(container, 'wa-ui-tab-form--vertical-right'))
+  assert.equal(container.props.style['--wa-ui-tab-form-nav-width'], '160px')
+  assert.equal(collect(root, (node) => hasClass(node, 'el-tabs--right')).length, 1)
+})
+
+test('tabPosition prop wins over tabsProps.tabPosition', async (t) => {
+  const model = reactive({})
+  const root = mount(t, () =>
+    buildTabs({ model, tabFormProps: { tabPosition: 'left', tabsProps: { tabPosition: 'top' } } }),
+  )
+  await nextTick()
+  assert.ok(hasClass(root.children[0], 'wa-ui-tab-form--vertical-left'))
+  assert.equal(collect(root, (node) => hasClass(node, 'el-tabs--left')).length, 1)
+})
+
+test('tabsProps.tabPosition still switches to a vertical nav', async (t) => {
+  const model = reactive({})
+  const root = mount(t, () => buildTabs({ model, tabFormProps: { tabsProps: { tabPosition: 'left' } } }))
+  await nextTick()
+  assert.ok(hasClass(root.children[0], 'wa-ui-tab-form--vertical-left'))
+})
+
 test('collectInvalidTabs keeps declaration order', async () => {
   const calls = []
   const items = [

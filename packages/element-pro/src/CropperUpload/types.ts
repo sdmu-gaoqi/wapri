@@ -76,6 +76,11 @@ export interface CropperUploadProps {
   aspectRatio?: number | string
   /** 弹窗内可切换的比例列表，`0` 表示自由比例；只传一项时不展示比例切换 */
   ratios?: number[]
+  /**
+   * 比例按钮文案，与 `ratios` 一一对应；未传时按比例自动生成（`1` → `1:1`、`0` → `自由`）。
+   * 用于把自由比例显示成「自定义」这类业务文案。
+   */
+  ratioLabels?: string[]
   /** 透传给 vue-cropper 的配置，如 `canMove`、`fixedBox`、`mode` */
   cropperOptions?: CropperOptions
   /** 是否展示右侧实时预览与输出尺寸提示 */
@@ -116,6 +121,8 @@ export interface CropperDialogProps {
   /** 待裁剪的原始文件 */
   file?: File
   ratios: number[]
+  /** 比例按钮文案，与 `ratios` 一一对应 */
+  ratioLabels?: string[]
   aspectRatio: number | string
   cropperOptions?: CropperOptions
   /** 「重新选择」时的文件过滤，跟随 ElUpload 的 accept */

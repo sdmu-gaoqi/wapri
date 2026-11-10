@@ -87,6 +87,12 @@ const ratios = computed(() => props.ratios.filter((ratio) => ratio >= 0))
 const showRatios = computed(() => ratios.value.length > 1)
 const currentRatio = computed(() => ratios.value[ratioIndex.value] ?? 0)
 
+/** 比例按钮文案：优先取 `ratioLabels` 同位置的值，未传时按比例自动生成 */
+const ratioLabelOf = (index: number, ratio: number): string => {
+  const label = props.ratioLabels?.[index]
+  return label ? label : formatRatio(ratio)
+}
+
 /**
  * vue-cropper 用 `fixed` + `fixedNumber` 锁定裁剪框比例：
  * `fixed` 关闭时裁剪框可任意拉伸，即自由比例。
@@ -204,7 +210,7 @@ const exportSize = computed(() => {
 })
 
 const sizeHint = computed(() => {
-  const ratioText = currentRatio.value > 0 ? `固定 ${formatRatio(currentRatio.value)}` : '自由比例'
+  const ratioText = currentRatio.value > 0 ? `固定 ${ratioLabelOf(ratioIndex.value, currentRatio.value)}` : '自由比例'
   return exportSize.value ? `${ratioText}，确认后输出 ${exportSize.value}` : ratioText
 })
 
@@ -400,7 +406,7 @@ const handleClose = () => {
               :type="index === ratioIndex ? 'primary' : undefined"
               @click="handleRatioChange(index)"
             >
-              {{ formatRatio(ratio) }}
+              {{ ratioLabelOf(index, ratio) }}
             </ElButton>
           </ElButtonGroup>
 

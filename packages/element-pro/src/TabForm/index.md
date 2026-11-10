@@ -32,6 +32,12 @@ group:
 
 <code src="./demo/cross-tab.vue" title="跨 tab 联动"></code>
 
+## 垂直 tab
+
+`tabPosition` 传 `left` / `right` 时导航列竖排，`navWidth` 控制导航列宽度（默认 `160`），底部按钮自动让位给导航列。
+
+<code src="./demo/vertical.vue" title="垂直 tab"></code>
+
 ## 提交错误跳转
 
 第 1 与第 3 个 tab 留空后提交，会跳到第 1 个 tab，两个 tab 标题都带红点。
@@ -45,7 +51,9 @@ group:
 | `model` | `Record<string, unknown>` | 必填 | 全部 tab 共享的数据对象。 |
 | `active` | `string \| number` | - | 当前激活的 tab；传 `v-model:active` 可受控。 |
 | `defaultActive` | `string \| number` | 第一个分段 | 非受控模式下的初始激活 tab。 |
-| `tabsProps` | `Partial<TabsProps>` | `{}` | 透传给 `ElTabs`，如 `type`、`tabPosition`。 |
+| `tabPosition` | `'top' \| 'right' \| 'bottom' \| 'left'` | `top` | 导航位置，`left` / `right` 为垂直导航；优先级高于 `tabsProps.tabPosition`。 |
+| `navWidth` | `string \| number` | `160` | 垂直导航的导航列宽度，数字按 `px` 处理。 |
+| `tabsProps` | `Partial<TabsProps>` | `{}` | 透传给 `ElTabs`，如 `type`、`stretch`。 |
 | `submitter` | `false \| TabFormSubmitter` | `{}` | 底部按钮配置；传 `false` 不渲染内置按钮。 |
 | `readonly` | `boolean` | `false` | 全部 tab 只读，分段显式传值时以分段为准。 |
 | `disabled` | `boolean` | - | 全部 tab 禁用，分段显式传值时以分段为准。 |
@@ -94,3 +102,4 @@ group:
 - 分段 `name` 必须唯一；重复时保留先注册的分段并给出警告。
 - 所有 tab 共用一份 `model`，字段名跨 tab 应保持唯一，否则会互相覆盖。
 - tab 切换不校验，校验只发生在提交时。
+- 垂直导航下导航列宽度由 `navWidth` 决定，标题过长会被压缩换行；导航列内部滚动沿用 `ElTabs` 的能力。

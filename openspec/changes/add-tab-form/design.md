@@ -84,6 +84,25 @@ submit()
 
 **理由：** 与 `StepsForm` 的 `current` 保持一致的手感，业务想同步到 URL 或外部状态时不需要额外适配。
 
+### 7. 垂直导航交给 `ElTabs`，只补布局
+
+`tabPosition` 直接透传给 `ElTabs`，`left` / `right` 就是它原生的垂直导航；`TabForm` 不自己实现导航条，只在根节点加修饰类并补三件事：
+
+```text
+.wa-ui-tab-form--vertical-left
+  .el-tabs__header   导航列定宽 = --wa-ui-tab-form-nav-width
+  .el-tabs__item     占满整列 + 左对齐 + 允许换行
+  .wa-ui-tab-form__actions   padding-left = 导航列宽 + 10px
+```
+
+**为什么导航项要改左对齐：** `ElTabs` 垂直模式把 `is-left` 的标签右对齐、`is-right` 左边距，那是给「右侧贴内容」的短标签用的。表单导航列固定宽度后，标题会左右跳动且长标题溢出 40px 行高，所以统一改左对齐并按内容撑高。
+
+**为什么按钮要按导航列让位：** 按钮行是 `ElTabs` 的兄弟节点，宽度覆盖整行；垂直布局下右对齐的按钮会压到右置导航列上。用同一个 CSS 变量做 `padding`，导航列宽与按钮让位宽度天然同步，`navWidth` 改一处即可。
+
+**为什么用 CSS 变量传宽度：** `navWidth` 可能是 `180`、`12rem` 或 `40%`，写死类名组合表达不了；CSS 变量既能让 scss 里的 `calc()` 复用同一份宽度，也避免每个取值生成一条规则。
+
+**优先级：** `tabPosition` prop > `tabsProps.tabPosition` > `top`。垂直分支同时看这两处来源，所以老代码只写 `:tabs-props="{ tabPosition: 'left' }"` 也能拿到完整垂直布局，不会出现「导航竖排但按钮没让位」的半吊子状态。
+
 ## Risks / Trade-offs
 
 **[同名 `name` 跨 tab 覆盖]** → 文档写明「分段内字段名应唯一」；这是共享模型的固有代价，换来的是跨 tab 联动成立。
@@ -95,6 +114,10 @@ submit()
 **[`TabForm.Item` 脱离 `TabForm` 单独使用拿不到注册上下文]** → 给出警告并退化为只渲染 `ProForm`，不抛错。
 
 **[错误标记只在提交时重算，用户手动改完字段后红点仍在]** → 与「提交时校验」的语义一致；需要实时清除时业务可调 `getInvalidTabs()` 后自行处理，或调用 `resetFields()`。
+
+**[垂直导航下导航项占满整列后，标签文字的点击热区变大]** → 这是表单导航列期望的行为（整行可点）；只想要短标签时可继续用 `tabPosition="top"`。
+
+**[垂直导航列宽固定，标题过长会换行增高]** → 与「定宽导航列」是同一个取舍；`navWidth` 可放宽，或把长标题缩短后放进 `title`。
 
 ## Migration Plan
 

@@ -1,0 +1,257 @@
+.wa-ui-file-modal {
+  .el-dialog__body {
+    padding-top: 8px;
+  }
+}
+
+.wa-ui-file-modal__body {
+  display: flex;
+  gap: 16px;
+  min-height: 420px;
+}
+
+.wa-ui-file-modal__aside {
+  display: flex;
+  flex: 0 0 180px;
+  flex-direction: column;
+  gap: 10px;
+  width: 180px;
+  padding-right: 16px;
+  border-right: 1px solid var(--el-border-color-lighter);
+}
+
+.wa-ui-file-modal__group-list {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.wa-ui-file-modal__group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background: var(--el-fill-color-light);
+  }
+}
+
+.wa-ui-file-modal__group--active {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+  font-weight: 500;
+}
+
+.wa-ui-file-modal__group-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+.wa-ui-file-modal__group-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wa-ui-file-modal__group-empty {
+  margin: 12px 0;
+  color: var(--el-text-color-placeholder);
+  font-size: 12px;
+  text-align: center;
+}
+
+.wa-ui-file-modal__add-group {
+  width: 100%;
+}
+
+.wa-ui-file-modal__create {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wa-ui-file-modal__create-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.wa-ui-file-modal__create-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-ui-file-modal__create-color-label {
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+}
+
+.wa-ui-file-modal__create-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wa-ui-file-modal__main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.wa-ui-file-modal__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wa-ui-file-modal__filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-ui-file-modal__search {
+  width: 200px;
+}
+
+.wa-ui-file-modal__sort {
+  width: 132px;
+}
+
+.wa-ui-file-modal__file {
+  display: none;
+}
+
+.wa-ui-file-modal__table {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+
+  /* 弹窗内不需要 ProTable 自己的工具栏与卡片外框 */
+  .wa-ui-pro-table__toolbar,
+  .wa-ui-pro-table__tabs-row,
+  .wa-ui-pro-table__tabs-search {
+    display: none;
+  }
+
+  .wa-ui-pro-table {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .wa-ui-pro-table__list {
+    max-height: 440px;
+    padding-right: 4px;
+    overflow-y: auto;
+  }
+
+  .wa-ui-pro-table__list-empty {
+    padding: 80px 0;
+    color: var(--el-text-color-placeholder);
+    font-size: 13px;
+    text-align: center;
+  }
+}
+
+.wa-ui-file-modal__card {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    border-color: var(--el-color-primary-light-5);
+  }
+}
+
+.wa-ui-file-modal__card--active {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+}
+
+.wa-ui-file-modal__thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--el-fill-color-light);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.wa-ui-file-modal__check {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--el-color-primary);
+  color: #fff;
+  font-size: 12px;
+}
+
+.wa-ui-file-modal__name {
+  margin: 6px 2px 0;
+  overflow: hidden;
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wa-ui-file-modal__meta {
+  margin: 2px 2px 0;
+  overflow: hidden;
+  color: var(--el-text-color-placeholder);
+  font-size: 11px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wa-ui-file-modal__empty {
+  color: var(--el-text-color-placeholder);
+  font-size: 13px;
+}

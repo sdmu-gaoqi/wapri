@@ -57,6 +57,18 @@
 - [x] 8.1 新增 `.changeset/tab-form.md`，内容为 `"@wapri/element-pro": minor` 并说明新增多 tab 表单，验证 `pnpm changeset status` 能识别
 - [x] 8.2 在根 `AGENTS.md` 的 Repository Map 与 `openspec/project.md` 的表单说明中补充 `TabForm`，验证两处描述一致
 
+## 9. 垂直 tab
+
+- [x] 9.1 在 `types.ts` 增加 `TabFormTabPosition` 与 `TabFormProps.tabPosition`、`navWidth`，验证类型从 `@wapri/element-pro` 可导入
+- [x] 9.2 在 `constant/index.ts` 增加 `tabFormNavWidth`（默认 160），验证 `navWidth` 未传时取该默认值
+- [x] 9.3 `index.vue` 解析导航位置：`tabPosition` prop > `tabsProps.tabPosition` > `top`，并透传给 `ElTabs`，验证两种来源都能进入垂直布局
+- [x] 9.4 垂直布局时在根节点挂 `--vertical` / `--vertical-left` / `--vertical-right` 修饰类并写入 `--wa-ui-tab-form-nav-width`，验证 `navWidth` 数字按 px、字符串原样输出
+- [x] 9.5 `styles/index.scss` 实现垂直布局：导航列定宽、导航项占满整列且左对齐、标题超长换行、内容列 `min-width: 0`，验证窄容器下不横向溢出
+- [x] 9.6 底部按钮行按导航列让位（左导航 `padding-left`、右导航 `padding-right`），验证按钮不与导航列重叠
+- [x] 9.7 新增 `demo/vertical.vue`：可切换左/右导航，验证运行时切换不丢激活分段与已填数据
+- [x] 9.8 在 `index.md` 增加「垂直 tab」章节与 Props 表 `tabPosition`、`navWidth` 两行，验证文档页可访问
+- [x] 9.9 在 `tests/tab-form.test.mjs` 覆盖默认横向、左/右垂直、修饰类、CSS 变量、prop 优先级与 `tabsProps` 回落，验证全部用例通过
+
 ## Workflow follow-up
 
 - 实施完成后运行 `npx -y @fission-ai/openspec@latest validate add-tab-form --strict`。

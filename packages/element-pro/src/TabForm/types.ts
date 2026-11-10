@@ -1,6 +1,9 @@
 import type { TabsProps } from 'element-plus'
 import type { ProFormAction, ProFormProps } from '../ProForm'
 
+/** tab 导航位置；`left` / `right` 为垂直导航。 */
+export type TabFormTabPosition = 'top' | 'right' | 'bottom' | 'left'
+
 /** 底部按钮配置。 */
 export interface TabFormSubmitter {
   /** 提交按钮文案，默认「提交」。 */
@@ -21,6 +24,13 @@ export interface TabFormProps {
   active?: string | number
   /** 非受控模式下的初始激活 tab，默认第一个分段。 */
   defaultActive?: string | number
+  /**
+   * tab 导航位置，默认 `top`；`left` / `right` 即垂直导航。
+   * 优先级高于 `tabsProps.tabPosition`。
+   */
+  tabPosition?: TabFormTabPosition
+  /** 垂直导航的导航列宽度，数字按 `px` 处理，默认 `160`。 */
+  navWidth?: string | number
   /** 透传给 `ElTabs` 的属性，如 `type: 'border-card'`。 */
   tabsProps?: Partial<TabsProps>
   /** 底部按钮配置；传 `false` 不渲染内置按钮。 */
