@@ -1,0 +1,31 @@
+.wa-ui-tab-form {
+  display: flex;
+  flex-direction: column;
+
+  &__tabs {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__pane {
+    min-width: 0;
+  }
+
+  &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__badge {
+    display: inline-flex;
+    line-height: 1;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+  }
+}

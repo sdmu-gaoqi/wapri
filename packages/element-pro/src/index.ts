@@ -19,6 +19,7 @@ import { ProForm } from './ProForm'
 import { ProFormDependency } from './ProFormDependency'
 import { ProFormList } from './ProFormList'
 import { StepsForm, StepsFormStep } from './StepsForm'
+import { TabForm, TabFormItem } from './TabForm'
 import {
   ProFormCascader,
   ProFormDatePicker,
@@ -62,6 +63,7 @@ export * from './ProForm'
 export * from './ProFormList'
 export * from './ProFormDependency'
 export * from './StepsForm'
+export * from './TabForm'
 export {
   ConfigProvider,
   SvgIcon,
@@ -97,6 +99,8 @@ export {
   ProFormDependency,
   StepsForm,
   StepsFormStep,
+  TabForm,
+  TabFormItem,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
@@ -136,6 +140,8 @@ const components = [
   ProFormDependency,
   StepsForm,
   StepsFormStep,
+  TabForm,
+  TabFormItem,
 ]
 
 const install = (app: App): void => {

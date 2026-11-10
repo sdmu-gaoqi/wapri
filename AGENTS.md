@@ -21,6 +21,7 @@ Guidance for coding agents working in this repository.
   - 表单: 容器用 `ModalForm` / `DrawerForm`,字段用 `ProFormFields`(`ProFormText`、`ProFormSelect` 等,通过 `name` 读写 `ElForm` 的 `model`)
   - 表单的联动与数组字段用 `ProFormDependency` / `ProFormList`;`ProFormList` 行内字段用相对名,路径前缀由容器注入,不要手拼 `users.${index}`
   - 分步表单用 `StepsForm` + `StepsForm.StepForm`,每步独立 `model`;`name` 在同一容器内唯一,最后一步合并后交给 `onFinish`
+  - 多 tab 表单用 `TabForm` + `TabForm.Item`,所有 tab 共用一份 `model`;提交时校验全部 tab,失败自动跳到第一个出错的分段
   - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
