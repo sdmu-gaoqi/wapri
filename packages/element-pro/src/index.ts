@@ -18,6 +18,7 @@ import { UmdComponent } from './UmdComponent'
 import { ProForm } from './ProForm'
 import { ProFormDependency } from './ProFormDependency'
 import { ProFormList } from './ProFormList'
+import { StepsForm, StepsFormStep } from './StepsForm'
 import {
   ProFormCascader,
   ProFormDatePicker,
@@ -60,6 +61,7 @@ export * from './ProFormFields'
 export * from './ProForm'
 export * from './ProFormList'
 export * from './ProFormDependency'
+export * from './StepsForm'
 export {
   ConfigProvider,
   SvgIcon,
@@ -93,6 +95,8 @@ export {
   ProFormSwitch,
   ProFormList,
   ProFormDependency,
+  StepsForm,
+  StepsFormStep,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
@@ -130,6 +134,8 @@ const components = [
   ProFormSwitch,
   ProFormList,
   ProFormDependency,
+  StepsForm,
+  StepsFormStep,
 ]
 
 const install = (app: App): void => {

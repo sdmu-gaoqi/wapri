@@ -34,6 +34,7 @@
 - 类型超过三个或实现较长时，类型放同级 `types/` 目录，不与实现混在一个文件。
 - 组件 class 命名以 `packages/element-pro/src/constant/index.ts` 的 `defaultPrefix`（`wa-ui`）为前缀。
 - `element-pro` 的表单由两部分组成：容器是 `ModalForm` / `DrawerForm`，字段是 `ProFormFields` 目录下的一组组件（`ProFormText`、`ProFormSelect` 等）。字段组件通过 `name` 读写 `ElForm` 的 `model`，`name` 同时是 `ElFormItem` 的 `prop`。
+- 向导式录入用 `StepsForm` + `StepsForm.StepForm`：每个步骤有独立的 `model`，`next()` 先校验当前步，最后一步把各步字段合并后交给 `onFinish`；`name` 在同一容器内必须唯一。
 - 表单的联动与数组字段由 `ProFormFields` 目录下的 `ProFormDependency`、`ProFormList` 承担：前者按 `names` 订阅字段子集，后者在行内注入路径前缀，字段的 `name` 在列表内是相对当前行的路径。
 - 字段级能力（`ValueType`、`ValueEnum`、`formatCellValue` 等）放在 `packages/element-pro/src/shared/field/`，`ProTable/types.ts` 与 `ProTable/utils.ts` 只做 re-export，保证表格与表单共用同一份解析。
 - 禁止直接使用 `localStorage` / `sessionStorage`，统一走 `@wapri/gbase` 的 `storage` / `MyStorage`。

@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url)
 
 /** `@wapri/gutils` 从 workspace 源码导出，测试里用等价的最小实现代替。 */
 const gutilsStubSource = `
-const toPath = (path) => (Array.isArray(path) ? path : String(path).split('.').filter(Boolean))
+export const toPath = (value) => (Array.isArray(value) ? value.map(String) : String(value).split('.').filter(Boolean))
 export function get(target, path, fallback) {
   let current = target
   for (const key of toPath(path)) {

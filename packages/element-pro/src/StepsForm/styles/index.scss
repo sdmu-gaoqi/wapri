@@ -1,0 +1,30 @@
+.wa-ui-steps-form {
+  display: flex;
+  flex-direction: column;
+
+  &__steps {
+    margin-bottom: 24px;
+  }
+
+  &__steps-inner--selectable {
+    .wa-ui-steps-form__step {
+      cursor: pointer;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__panel {
+    min-width: 0;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+  }
+}
