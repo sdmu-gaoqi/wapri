@@ -1,5 +1,17 @@
 # @wapri/element-pro
 
+## 3.4.0
+
+### Minor Changes
+
+- 573266a: 新增分步表单 `StepsForm`：用 `<StepsForm>` 包住若干 `<StepsForm.StepForm>`，每步一个独立表单，点「下一步」先校验当前步，最后一步把所有步骤的字段合并后交给 `onFinish`。
+
+  支持 `v-model:current`、`stepsProps` 透传、`allowStepSelect` 点击切换、`submitter` 按钮配置，以及 `next` / `prev` / `submit` / `resetFields` / `getAllFieldsValue` / `getFormInstance` 实例方法。
+
+- c775508: 新增多 tab 表单 `TabForm`：用 `<TabForm>` 包住若干 `<TabForm.Item>`，所有 tab 共用一份 `model`，可自由切换；提交时校验全部 tab，失败自动跳到第一个出错的分段并在标题上显示红点。
+
+  支持 `v-model:active`、`tabsProps` 透传、`submitter` 按钮配置，以及 `submit` / `resetFields` / `getFormInstance` / `getInvalidTabs` 实例方法。
+
 ## 3.3.1
 
 ### Patch Changes
