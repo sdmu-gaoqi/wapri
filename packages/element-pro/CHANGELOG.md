@@ -1,5 +1,12 @@
 # @wapri/element-pro
 
+## 3.5.0
+
+### Minor Changes
+
+- a5c5c04: 新增 `FileModal` 素材选择弹窗（复用 ProTable 列表模式，支持分组、搜索、排序、分页、新建分组与裁剪上传），并为 `CropperUpload` 增加 `ratioLabels` 以覆盖比例按钮文案。
+- a5c5c04: TabForm 新增垂直 tab：`tabPosition` 支持 `left` / `right`，`navWidth` 控制导航列宽度，导航项左对齐并自动换行，底部按钮随导航列让位。
+
 ## 3.4.0
 
 ### Minor Changes
