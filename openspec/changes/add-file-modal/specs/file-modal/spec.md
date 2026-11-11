@@ -206,6 +206,47 @@
 - **THEN** 触发 `cancel`
 - **AND** 不触发 `confirm`
 
+### Requirement: 内置预览
+
+`FileModal` SHALL 在图片与视频素材卡片上提供**唯一一个**预览入口，并由组件自己完成预览展示，不需要业务接入。
+
+#### Scenario: 预览图片
+
+- **WHEN** 用户点击某张图片卡片上的预览按钮
+- **THEN** 组件用图片查看器展示该素材的预览地址
+- **AND** 不改变该素材的选中状态
+
+#### Scenario: 预览视频
+
+- **WHEN** 素材的 `type` 为 `video/*`，或 `url` / `name` 的扩展名属于视频
+- **THEN** 卡片只渲染一个预览按钮，不再额外渲染播放角标之类的第二个图标入口
+- **AND** 点击后组件用弹窗内的播放器展示该素材
+
+#### Scenario: 预览地址取 previewUrl
+
+- **WHEN** 素材传入了 `previewUrl`
+- **THEN** 点击预览展示的是 `previewUrl`
+- **AND** 未传或为空时退回 `url`
+
+#### Scenario: 卡片预览图取 abbreviateUrl
+
+- **WHEN** 素材是图片或视频，且传入了 `abbreviateUrl`
+- **THEN** 卡片的预览图使用 `abbreviateUrl`
+- **AND** 未传或为空时退回 `url`
+- **AND** 组件不自行解析视频首帧
+
+#### Scenario: 不支持的类型不展示入口
+
+- **WHEN** 素材既不是图片也不是视频（如 `application/pdf`）
+- **THEN** 卡片不渲染预览按钮
+- **AND** 业务仍可通过 `confirm` 拿到该记录自行处理
+
+#### Scenario: 类型判断优先 MIME
+
+- **WHEN** 素材的 `type` 为 `image/png` 但 `url` 是 `.mp4`
+- **THEN** 按 `image` 处理
+- **AND** `type` 缺失时按 `url` / `name` 的扩展名兜底
+
 ### Requirement: 分组与上传能力可选
 
 `FileModal` SHALL 根据 `createGroup` 与 `upload` 是否传入决定对应按钮的显隐，未传入时不渲染入口。

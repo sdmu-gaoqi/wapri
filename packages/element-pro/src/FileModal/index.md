@@ -89,6 +89,33 @@ const upload = async (file: File, context: { groupId?: string }): Promise<FileMo
 <FileModal :cropper-ratios="[0, 1]" :cropper-ratio-labels="['原图比例', '正方形']" />
 ```
 
+## 预览
+
+每张图片 / 视频卡片右下角有一个预览按钮，点击后由**组件自己**展示预览：图片用 `ElImageViewer`，视频用弹窗内的 `<video>`。业务不需要自己实现预览。
+
+素材上两个地址字段分工明确：
+
+| 字段 | 用途 |
+| --- | --- |
+| `abbreviateUrl` | 卡片里的预览图，图片与视频都用它（视频填封面帧）；未传时退回 `url` |
+| `previewUrl` | 点击预览时展示的地址；未传时退回 `url` |
+
+组件不会自己解析视频首帧：视频卡片用 `<video preload="metadata">` 拉取首帧，`abbreviateUrl` 作为 `poster` 兜底；接口能给出封面帧时优先填 `abbreviateUrl`。
+
+类型判断优先信任 `asset.type`（MIME），拿不到时按 `url` / `name` 的扩展名兜底；只有图片与视频展示预览按钮，其它类型不渲染入口。
+
+```ts
+import { getAssetMediaType, isAssetPreviewable, getAssetPreviewUrl } from '@wapri/element-pro'
+
+getAssetMediaType(asset) // 'image' | 'video' | 'other'
+isAssetPreviewable(asset) // 是否属于图片/视频
+getAssetPreviewUrl(asset) // previewUrl || url
+```
+
+```vue | pure
+<FileModal :request="request" />
+```
+
 ## 一组关键的交互约定
 
 - **新建分组**：`createGroup` 返回的记录会插入左侧分组列表，并**自动切换到该分组**。
@@ -142,7 +169,10 @@ interface FileModalAsset {
   id: string | number
   name: string
   url: string
-  thumbUrl?: string
+  /** 卡片里展示的预览图，图片与视频都用它；未传时退回 url */
+  abbreviateUrl?: string
+  /** 点击预览时展示的地址；未传时退回 url */
+  previewUrl?: string
   size?: number
   createdAt?: string | number
   groupId?: string

@@ -208,7 +208,8 @@
   border-radius: 4px;
   background: var(--el-fill-color-light);
 
-  img {
+  img,
+  video {
     display: block;
     width: 100%;
     height: 100%;
@@ -216,6 +217,7 @@
   }
 }
 
+/* 视频角标已移除：卡片右下角只保留唯一的预览按钮，视频不再单独渲染播放图标 */
 .wa-ui-file-modal__check {
   position: absolute;
   top: 4px;
@@ -229,6 +231,31 @@
   background: var(--el-color-primary);
   color: #fff;
   font-size: 12px;
+}
+
+/* 预览入口：独立于选中，点击不冒泡 */
+.wa-ui-file-modal__preview {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 55%);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--el-color-primary);
+  }
 }
 
 .wa-ui-file-modal__name {
@@ -254,4 +281,11 @@
 .wa-ui-file-modal__empty {
   color: var(--el-text-color-placeholder);
   font-size: 13px;
+}
+
+.wa-ui-file-modal__video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  background: #000;
 }

@@ -1,10 +1,16 @@
-import { dayjs } from '@wapri/gutils'
+import { dayjs, getFileExtension } from '@wapri/gutils'
 import { formatRatio } from '../CropperUpload/utils'
 import { fileModalCustomRatio, fileModalCustomRatioLabel } from '../constant'
 import type { Key } from '../shared/field/types'
-import type { FileModalAsset, FileModalGroup } from './types'
+import type { FileModalAsset, FileModalAssetMediaType, FileModalGroup } from './types'
 
 const SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const
+
+/** 可预览的图片扩展名 */
+const IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg', 'avif'] as const
+
+/** 可预览的视频扩展名 */
+const VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogv', 'ogg', 'mov', 'm4v', 'avi', 'mkv'] as const
 
 /** 字节数转可读大小，如 `349.8 KB`；整数不带小数，非法值返回空串。 */
 export const formatFileSize = (size?: number): string => {
@@ -25,13 +31,34 @@ export const formatFileTime = (value?: string | number, template = 'YYYY-MM-DD H
   return date.isValid() ? date.format(template) : ''
 }
 
-/** 素材缩略图地址，优先 `thumbUrl`。 */
-export const getAssetThumb = (asset: FileModalAsset): string => asset.thumbUrl || asset.url
+/** 卡片里展示的预览图：图片与视频统一取 `abbreviateUrl`，未传时退回 `url`。 */
+export const getAssetThumb = (asset: FileModalAsset): string => asset.abbreviateUrl || asset.url
+
+/** 点击预览时展示的地址：优先 `previewUrl`，未传时退回 `url`。 */
+export const getAssetPreviewUrl = (asset: FileModalAsset): string => asset.previewUrl || asset.url
 
 /** 素材卡片副标题：大小与时间用 `·` 连接，缺省项自动省略。 */
 export const getAssetMeta = (asset: FileModalAsset): string => {
   return [formatFileSize(asset.size), formatFileTime(asset.createdAt)].filter(Boolean).join(' · ')
 }
+
+/**
+ * 素材的媒体类型，供业务判断该用哪种预览方式。
+ * 优先信任 `type`（MIME），拿不到时按 `url` / `name` 的扩展名兜底。
+ */
+export const getAssetMediaType = (asset: FileModalAsset): FileModalAssetMediaType => {
+  const mime = typeof asset.type === 'string' ? asset.type.toLowerCase() : ''
+  if (mime.startsWith('image/')) return 'image'
+  if (mime.startsWith('video/')) return 'video'
+
+  const extension = getFileExtension(asset.url) || getFileExtension(asset.name)
+  if ((IMAGE_EXTENSIONS as readonly string[]).includes(extension)) return 'image'
+  if ((VIDEO_EXTENSIONS as readonly string[]).includes(extension)) return 'video'
+  return 'other'
+}
+
+/** 是否属于当前支持预览的类型（图片、视频）。 */
+export const isAssetPreviewable = (asset: FileModalAsset): boolean => getAssetMediaType(asset) !== 'other'
 
 /** 分组搜索：按名称做本地不区分大小写的包含匹配。 */
 export const filterGroups = (groups: FileModalGroup[], keyword: string): FileModalGroup[] => {

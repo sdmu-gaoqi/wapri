@@ -8,10 +8,18 @@ import { build } from 'vite'
 const dayjsPath = createRequire(new URL('../../@base/package.json', import.meta.url)).resolve('dayjs')
 
 /**
- * `@wapri/gutils` 从 workspace 源码导出，测试里只替换成本文件用到的 `dayjs` 出口，
+ * `@wapri/gutils` 从 workspace 源码导出，测试里只替换成本文件用到的两个出口，
  * 其余能力由真实实现提供会拉起整条依赖链，没必要。
  */
-const gutilsStubSource = `export { default as dayjs } from 'dayjs'`
+const gutilsStubSource = `
+export { default as dayjs } from 'dayjs'
+/** 与 packages/@base/src/fileType.ts 的实现保持一致 */
+export const getFileExtension = (nameOrUrl = '') => {
+  const clean = nameOrUrl.split(/[?#]/)[0].split('/').pop() ?? ''
+  const dot = clean.lastIndexOf('.')
+  return dot > 0 ? clean.slice(dot + 1).toLowerCase() : ''
+}
+`
 
 const gutilsStub = {
   name: 'gutils-stub',
@@ -69,10 +77,18 @@ test('formatFileTime 默认输出到分钟，非法值返回空串', () => {
   assert.equal(utils.formatFileTime('not-a-date'), '')
 })
 
-test('getAssetThumb 优先使用 thumbUrl', () => {
-  const asset = { id: 'a', name: 'a.png', url: 'https://cdn/a.png', thumbUrl: 'https://cdn/a-thumb.png' }
-  assert.equal(utils.getAssetThumb(asset), 'https://cdn/a-thumb.png')
-  assert.equal(utils.getAssetThumb({ ...asset, thumbUrl: undefined }), 'https://cdn/a.png')
+test('getAssetThumb 图片与视频统一取 abbreviateUrl', () => {
+  const asset = { id: 'a', name: 'a.mp4', url: 'https://cdn/a.mp4', abbreviateUrl: 'https://cdn/a-poster.jpg' }
+  assert.equal(utils.getAssetThumb(asset), 'https://cdn/a-poster.jpg')
+  assert.equal(utils.getAssetThumb({ ...asset, abbreviateUrl: undefined }), 'https://cdn/a.mp4')
+  assert.equal(utils.getAssetThumb({ ...asset, abbreviateUrl: '' }), 'https://cdn/a.mp4')
+})
+
+test('getAssetPreviewUrl 点击预览优先取 previewUrl', () => {
+  const asset = { id: 'a', name: 'a.mp4', url: 'https://cdn/a.mp4', previewUrl: 'https://cdn/a-hd.mp4' }
+  assert.equal(utils.getAssetPreviewUrl(asset), 'https://cdn/a-hd.mp4')
+  assert.equal(utils.getAssetPreviewUrl({ ...asset, previewUrl: undefined }), 'https://cdn/a.mp4')
+  assert.equal(utils.getAssetPreviewUrl({ ...asset, previewUrl: '' }), 'https://cdn/a.mp4')
 })
 
 test('getAssetMeta 只拼接存在的项', () => {
@@ -155,4 +171,23 @@ test('resolveCropperRatios 只允许固定比例时不出现自定义', () => {
   const resolved = utils.resolveCropperRatios([9 / 16], [], 1.5)
   assert.deepEqual(resolved.ratios, [9 / 16])
   assert.deepEqual(resolved.labels, ['9:16'])
+})
+
+test('getAssetMediaType 优先按 MIME 判断', () => {
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', type: 'image/png' }), 'image')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', type: 'video/mp4' }), 'video')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', type: 'application/pdf' }), 'other')
+})
+
+test('getAssetMediaType 无 MIME 时按扩展名兜底', () => {
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/a.webp' }), 'image')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/a.MOV?x=1' }), 'video')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a.png', url: 'https://cdn/file' }), 'image')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a.docx', url: 'https://cdn/file' }), 'other')
+})
+
+test('isAssetPreviewable 只对图片与视频为真', () => {
+  assert.equal(utils.isAssetPreviewable({ id: 'a', name: 'a.png', url: 'u' }), true)
+  assert.equal(utils.isAssetPreviewable({ id: 'a', name: 'a.mp4', url: 'u' }), true)
+  assert.equal(utils.isAssetPreviewable({ id: 'a', name: 'a.pdf', url: 'u' }), false)
 })

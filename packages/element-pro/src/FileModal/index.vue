@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends FileModalAsset">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { ElButton, ElDialog, ElInput, ElOption, ElSelect, vLoading } from 'element-plus'
+import { ElButton, ElDialog, ElImageViewer, ElInput, ElOption, ElSelect, vLoading } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useLockFn } from '@wapri/ghooks'
 import { debounce } from '@wapri/gutils'
@@ -16,7 +16,13 @@ import {
   fileModalSortOptions,
   fileModalUploadText,
 } from '../constant'
-import { isAssetSelected, pickSelectedAssets, resolveNextSelected } from './utils'
+import {
+  getAssetMediaType,
+  getAssetPreviewUrl,
+  isAssetSelected,
+  pickSelectedAssets,
+  resolveNextSelected,
+} from './utils'
 import type {
   ActionType,
   FilterState,
@@ -169,6 +175,26 @@ const handleLoad = (rows: object[]): void => {
 
 const handleToggle = (asset: T): void => {
   updateSelected(resolveNextSelected(selectedKeys.value, asset.id, props.multiple))
+}
+
+/** 内置预览：图片走 ElImageViewer，视频走弹窗内的 <video> */
+const previewVisible = ref(false)
+const previewKind = ref<'image' | 'video'>('image')
+const previewSrc = ref('')
+const previewTitle = ref('')
+
+const handlePreview = (asset: T): void => {
+  const mediaType = getAssetMediaType(asset)
+  if (mediaType === 'other') return
+  previewKind.value = mediaType
+  previewSrc.value = getAssetPreviewUrl(asset)
+  previewTitle.value = asset.name
+  previewVisible.value = true
+}
+
+const closePreview = (): void => {
+  previewVisible.value = false
+  previewSrc.value = ''
 }
 
 const handleGroupChange = (id: string | undefined): void => {
@@ -332,6 +358,7 @@ onBeforeUnmount(() => {
               :asset="toAsset(item)"
               :active="isAssetSelected(selectedKeys, toAsset(item).id)"
               @toggle="handleToggle(toAsset(item))"
+              @preview="handlePreview(toAsset(item))"
             />
           </template>
           <template #empty>
@@ -356,5 +383,29 @@ onBeforeUnmount(() => {
         {{ confirmText }}
       </ElButton>
     </template>
+  </ElDialog>
+
+  <ElImageViewer
+    v-if="previewVisible && previewKind === 'image'"
+    :url-list="[previewSrc]"
+    teleported
+    @close="closePreview"
+  />
+
+  <ElDialog
+    :class="`${base}__preview-dialog`"
+    :model-value="previewVisible && previewKind === 'video'"
+    :title="previewTitle"
+    width="720px"
+    append-to-body
+    destroy-on-close
+    @update:model-value="closePreview"
+  >
+    <video
+      :class="`${base}__video`"
+      :src="previewSrc"
+      controls
+      autoplay
+    ></video>
   </ElDialog>
 </template>

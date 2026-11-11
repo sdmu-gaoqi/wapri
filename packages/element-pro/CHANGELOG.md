@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.5.1
+
+### Patch Changes
+
+- 为 FileModal 添加内置预览功能，支持图片和视频的预览展示
+
 ## 3.5.0
 
 ### Minor Changes

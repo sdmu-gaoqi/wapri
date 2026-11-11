@@ -10,8 +10,13 @@ export interface FileModalAsset {
   name: string
   /** 素材地址 */
   url: string
-  /** 缩略图地址，未传时使用 `url` */
-  thumbUrl?: string
+  /**
+   * 卡片里展示的预览图地址，图片与视频都用它。
+   * 视频填封面帧、图片填缩略图；未传时退回 `url`。
+   */
+  abbreviateUrl?: string
+  /** 点击预览时展示的地址，未传时退回 `url` */
+  previewUrl?: string
   /** 文件大小（字节） */
   size?: number
   /** 上传时间，支持时间戳或可被 dayjs 解析的字符串 */
@@ -29,6 +34,12 @@ export interface FileModalGroup {
   color?: string
   [key: string]: unknown
 }
+
+/**
+ * 素材的媒体类型。
+ * `image` / `video` 支持预览触发，`other` 不展示预览入口。
+ */
+export type FileModalAssetMediaType = 'image' | 'video' | 'other'
 
 /** 新建分组的提交参数。 */
 export interface FileModalGroupPayload {
