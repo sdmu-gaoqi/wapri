@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.5.3
+
+### Patch Changes
+
+- FileModal的分组支持了编辑与表格列表模式切换
+
 ## 3.5.2
 
 ### Patch Changes

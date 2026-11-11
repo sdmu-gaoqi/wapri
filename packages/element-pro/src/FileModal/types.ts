@@ -1,6 +1,6 @@
 import type { DialogProps } from 'element-plus'
 import type { Key } from '../shared/field/types'
-import type { RequestFn } from '../ProTable/types'
+import type { ProTableMode, RequestFn } from '../ProTable/types'
 
 /** 素材记录，业务可扩展额外字段。 */
 export interface FileModalAsset {
@@ -32,6 +32,8 @@ export interface FileModalGroup {
   name: string
   /** 分组标识色，用于左侧色点 */
   color?: string
+  /** 子分组，层级结构由它表达；左侧列表按它缩进展开 */
+  children?: FileModalGroup[]
   [key: string]: unknown
 }
 
@@ -41,10 +43,22 @@ export interface FileModalGroup {
  */
 export type FileModalAssetMediaType = 'image' | 'video' | 'other'
 
-/** 新建分组的提交参数。 */
+/** 新建 / 编辑分组的提交参数。 */
 export interface FileModalGroupPayload {
   name: string
   color: string
+  /** 上级分组 id，未传表示一级分组 */
+  parentId?: string
+}
+
+/**
+ * 分类弹窗收集到的字段，与 `FileModalGroupPayload` 的差别是不带颜色：
+ * 颜色由组件按默认值补齐，弹窗只负责层级与名称。
+ */
+export interface FileModalGroupFormValue {
+  name: string
+  /** 上级分组 id，未传表示一级分组 */
+  parentId?: string
 }
 
 /** 排序方式，作为 `sortBy` 传给 `request`。 */
@@ -72,8 +86,23 @@ export interface FileModalUploadContext {
 /** 列表请求，直接透传给内部 ProTable。 */
 export type FileModalRequest<T extends FileModalAsset = FileModalAsset> = RequestFn<T, FileModalQuery>
 
-/** 新建分组，返回值会插入到分组数据内并自动选中。 */
+/** 新建分组 */
 export type FileModalCreateGroup = (payload: FileModalGroupPayload) => Promise<FileModalGroup>
+
+/**
+ * 编辑分组，改名逻辑完全由使用方实现：调接口、刷新自有分组数据都在这里完成。
+ * 组件只负责弹窗输入与按钮 loading，成功后用返回的分组替换左侧列表中的同名项。
+ */
+export type FileModalUpdateGroup = (
+  group: FileModalGroup,
+  payload: FileModalGroupPayload,
+) => Promise<FileModalGroup> | FileModalGroup
+
+/**
+ * 删除分组，删除逻辑完全由使用方实现：调接口、刷新自有分组数据都在这里完成。
+ * 组件只负责二次确认与按钮 loading，成功后把该分组移出左侧列表。
+ */
+export type FileModalRemoveGroup = (group: FileModalGroup) => Promise<void> | void
 
 /** 上传裁剪结果，返回值会插入列表并自动选中。 */
 export type FileModalUpload<T extends FileModalAsset = FileModalAsset> = (
@@ -90,12 +119,21 @@ export interface FileModalProps<T extends FileModalAsset = FileModalAsset> {
   columns?: number
   /** 分组初始数据 */
   groups?: FileModalGroup[]
-  /** 新建分组，不传时隐藏「添加分组」 */
+  /** 新建分组，不传时隐藏「添加分类」 */
   createGroup?: FileModalCreateGroup
+  /** 编辑分组，不传时「更多操作」里隐藏「编辑分类」 */
+  updateGroup?: FileModalUpdateGroup
+  /** 删除分组，不传时「更多操作」里隐藏「删除分类」 */
+  removeGroup?: FileModalRemoveGroup
   /** 上传裁剪结果，不传时隐藏「上传图片」 */
   upload?: FileModalUpload<T>
   /** 是否多选 */
   multiple?: boolean
+  /**
+   * 可用的展示模式，第一项为初始模式。
+   * `list` 为宫格卡片、`table` 为表格；只传一项时不展示切换按钮。
+   */
+  modes?: ProTableMode[]
   /** 已选素材 id，配合 `v-model:selected` 使用 */
   selected?: Key[]
   /** 弹窗标题 */
@@ -108,6 +146,12 @@ export interface FileModalProps<T extends FileModalAsset = FileModalAsset> {
   uploadText?: string
   /** 新建分组按钮文案 */
   addGroupText?: string
+  /** 编辑分组按钮文案 */
+  editGroupText?: string
+  /** 删除分组按钮文案，同时作为确认弹窗标题 */
+  removeGroupText?: string
+  /** 删除分组的确认提示文案 */
+  removeGroupConfirmText?: string
   /** 空数据文案 */
   emptyText?: string
   /**
@@ -132,8 +176,12 @@ export interface FileModalEmits<T extends FileModalAsset = FileModalAsset> {
   'cancel': []
   /** 切换分组 */
   'groupChange': [groupId: string | undefined]
-  /** 新建分组成功 */
-  'groupCreated': [group: FileModalGroup]
+  /** 新建分组成功，第二个参数是它挂在哪一级分类下 */
+  'groupCreated': [group: FileModalGroup, parentId?: string]
+  /** 编辑分组成功，第二个参数是变更后的上级分类 */
+  'groupUpdated': [group: FileModalGroup, parentId?: string]
+  /** 删除分组成功 */
+  'groupRemoved': [group: FileModalGroup]
   /** 上传成功 */
   'uploaded': [asset: T]
   /** 上传失败 */

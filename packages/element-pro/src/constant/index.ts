@@ -42,6 +42,24 @@ export const fileModalPageSizeOptions = [12, 18, 24, 36]
 /** 新建分组名称的最大长度。 */
 export const fileModalGroupNameMaxLength = 10
 
+/**
+ * 分类的最大层级。达到这一级的分类不再作为「上级分类」出现，
+ * 也就不允许在它下面继续新建。
+ */
+export const fileModalGroupMaxDepth = 3
+
+/** 分类弹窗里「上级分类」的标签文案。 */
+export const fileModalGroupParentLabel = '上级分类'
+
+/** 分类弹窗里「分类名称」的标签文案。 */
+export const fileModalGroupNameLabel = '分类名称'
+
+/** 分类弹窗里「上级分类」的占位文案。 */
+export const fileModalGroupParentPlaceholder = '不选则为一级分类'
+
+/** 分类弹窗里「分类名称」的占位文案，同时作为必填校验提示。 */
+export const fileModalGroupNamePlaceholder = '请输入分类名称'
+
 /** 新建分组的默认颜色。 */
 export const fileModalDefaultGroupColor = '#409eff'
 
@@ -56,6 +74,28 @@ export const fileModalCustomRatioLabel = '自定义'
 
 /** FileModal 上传按钮的默认文案。 */
 export const fileModalUploadText = '上传素材'
+
+/** FileModal 分组新建按钮的默认文案。 */
+export const fileModalAddGroupText = '添加分类'
+
+/** FileModal 分组编辑按钮的默认文案。 */
+export const fileModalEditGroupText = '编辑分类'
+
+/** FileModal 分组删除按钮的默认文案。 */
+export const fileModalRemoveGroupText = '删除分类'
+
+/** FileModal 分组删除确认弹窗的默认提示文案。 */
+export const fileModalRemoveGroupConfirmText = '确定删除该分类吗？分类下的素材不会被删除。'
+
+/** FileModal 左侧分组的「更多操作」按钮文案。 */
+export const fileModalGroupMoreText = '更多操作'
+
+/** FileModal 表格视图的默认列配置标题。 */
+export const fileModalTableNameText = '图片名称'
+export const fileModalTableSizeText = '大小'
+export const fileModalTableTimeText = '上传时间'
+export const fileModalTableActionText = '操作'
+export const fileModalPreviewActionText = '预览'
 
 /** FileModal 排序选项，`value` 会作为 `sortBy` 参数传给 request。 */
 export const fileModalSortOptions = [

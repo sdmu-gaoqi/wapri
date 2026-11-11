@@ -1,4 +1,18 @@
+import type { Component } from 'vue'
+import { Menu, Operation } from '@element-plus/icons-vue'
 import type { DataIndex, Key } from '../shared/field/types'
+import type { ProTableMode } from './types'
+
+/**
+ * 表格 / 列表两种展示模式的图标。
+ *
+ * 模式切换按钮在 ProTable 与 FileModal 里各有一份布局，图标统一从这里取，
+ * 免得两边各写一套映射后图标对不上（出现过方向相反的情况）。
+ */
+export const proTableModeIcons: Record<ProTableMode, Component> = {
+  table: Menu,
+  list: Operation,
+}
 
 // 字段级工具已上移到 shared/field，这里保持原有导出名，表格内部与业务的 import 路径不变。
 export {

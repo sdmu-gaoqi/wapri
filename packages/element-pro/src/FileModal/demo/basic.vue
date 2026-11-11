@@ -2,7 +2,14 @@
 import { ref } from 'vue'
 import { ElButton, ElTag } from 'element-plus'
 import 'element-plus/dist/index.css'
-import { FileModal, type FileModalAsset, type FileModalGroup, type FileModalQuery } from '@wapri/element-pro'
+import {
+  FileModal,
+  type FileModalAsset,
+  type FileModalGroup,
+  type FileModalGroupPayload,
+  type FileModalQuery,
+} from '@wapri/element-pro'
+import { addGroupToTree, removeGroupFromTree } from '@wapri/element-pro'
 import type { RequestResult } from '@wapri/element-pro'
 
 const open = ref(false)
@@ -10,7 +17,13 @@ const selected = ref<Array<string | number>>([])
 const lastConfirm = ref('尚未确认')
 
 const groups = ref<FileModalGroup[]>([
-  { id: 'g-1', name: '商品主图', color: '#409eff' },
+  {
+    id: 'g-1',
+    name: '商品主图',
+    color: '#409eff',
+    // 子分类：左侧会缩进挂在「商品主图」下面
+    children: [{ id: 'g-3', name: '白底图', color: '#409eff' }],
+  },
   { id: 'g-2', name: '详情素材', color: '#67c23a' },
 ])
 
@@ -49,10 +62,26 @@ const request = async (
   return { data: rows.slice(start, start + params.pageSize), total: rows.length }
 }
 
-/** 新建分组：返回的记录会插入左侧分组并自动选中 */
-const createGroup = async (payload: { name: string; color: string }): Promise<FileModalGroup> => {
+/** 新建分组：`parentId` 决定挂到哪个分类下，本地用工具函数把它插进分类树 */
+const createGroup = async (payload: FileModalGroupPayload): Promise<FileModalGroup> => {
   await new Promise((resolve) => setTimeout(resolve, 400))
-  return { id: `g-${Date.now()}`, name: payload.name, color: payload.color }
+  const group: FileModalGroup = { id: `g-${Date.now()}`, name: payload.name, color: payload.color }
+  groups.value = addGroupToTree(groups.value, group, payload.parentId)
+  return group
+}
+
+/** 编辑分组：先从树里摘掉再按新的上级挂回，改层级也能生效 */
+const updateGroup = async (group: FileModalGroup, payload: FileModalGroupPayload): Promise<FileModalGroup> => {
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  const next: FileModalGroup = { ...group, name: payload.name, color: payload.color }
+  groups.value = addGroupToTree(removeGroupFromTree(groups.value, group.id), next, payload.parentId)
+  return next
+}
+
+/** 删除分组：删除逻辑由使用方自己实现，这里直接改本地分类树 */
+const removeGroup = async (group: FileModalGroup): Promise<void> => {
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  groups.value = removeGroupFromTree(groups.value, group.id)
 }
 
 /** 上传裁剪结果：返回的素材会插入列表并自动选中 */
@@ -94,7 +123,10 @@ const handleConfirm = (assets: DemoAsset[]) => {
       :request="request"
       :groups="groups"
       :columns="6"
+      :modes="['list', 'table']"
       :create-group="createGroup"
+      :update-group="updateGroup"
+      :remove-group="removeGroup"
       :upload="upload"
       multiple
       @confirm="handleConfirm"

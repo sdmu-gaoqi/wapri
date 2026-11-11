@@ -13,12 +13,7 @@ import {
   ElTabPane,
   ElTabs,
 } from 'element-plus'
-import {
-  ArrowDown,
-  Menu as GridIcon,
-  Loading as LoadingIcon,
-  Operation as OperationIcon,
-} from '@element-plus/icons-vue'
+import { ArrowDown, Loading as LoadingIcon } from '@element-plus/icons-vue'
 import type { Sort, TableInstance } from 'element-plus'
 import ProTablePagination from './components/ProTablePagination.vue'
 import ProTableSearchForm from './components/ProTableSearchForm.vue'
@@ -28,7 +23,7 @@ import ProTableToolbar from './components/ProTableToolbar.vue'
 import { useProTableData } from './composables/useProTableData'
 import { useProTableSelection } from './composables/useProTableSelection'
 import { useStickyTable } from './composables/useStickyTable'
-import { formatCellValue, getDataIndexKey, getDataIndexValue, getRecordKey } from './utils'
+import { formatCellValue, getDataIndexKey, getDataIndexValue, getRecordKey, proTableModeIcons } from './utils'
 import type {
   ActionRef,
   Key,
@@ -56,6 +51,10 @@ const props = withDefaults(defineProps<ProTableProps<T, U>>(), {
 
 defineOptions({ name: 'ProTable' })
 
+const emit = defineEmits<{
+  'update:mode': [mode: ProTableMode]
+}>()
+
 const { prefix, size } = useConfig()
 
 const sizeClass = computed(() => {
@@ -73,7 +72,9 @@ function normalizeModes(modes: ProTableMode[]): ProTableMode[] {
 }
 
 const availableModes = computed(() => normalizeModes(props.modes))
-const innerMode = ref<ProTableMode>(availableModes.value[0])
+const innerMode = ref<ProTableMode>(
+  props.mode && availableModes.value.includes(props.mode) ? props.mode : availableModes.value[0],
+)
 const tabMoreOptions = computed(() => props.tabMore?.options ?? [])
 
 /** Tab 激活态：受控优先，其次默认值，最后第一项。 */
@@ -278,9 +279,19 @@ const listStyle = computed(() => {
 watch(
   availableModes,
   (modes) => {
-    if (!modes.includes(innerMode.value)) innerMode.value = modes[0]
+    if (modes.includes(innerMode.value)) return
+    innerMode.value = props.mode && modes.includes(props.mode) ? props.mode : modes[0]
   },
   { deep: true },
+)
+
+/** 受控模式：外部 `v-model:mode` 变化时同步到内部，非法值忽略。 */
+watch(
+  () => props.mode,
+  (mode) => {
+    if (!mode || mode === innerMode.value) return
+    if (availableModes.value.includes(mode)) innerMode.value = mode
+  },
 )
 
 const toolbarItems = computed<VNodeChild[]>(() => {
@@ -344,6 +355,7 @@ function handleTabMoreChange(key: string | number): void {
 function handleModeChange(mode: ProTableMode): void {
   if (mode === innerMode.value) return
   innerMode.value = mode
+  emit('update:mode', mode)
   props.onModeChange?.(mode)
 }
 
@@ -640,7 +652,7 @@ function handleDownload(): void | Promise<void> {
             :key="mode"
             :class="`${prefix}-pro-table__mode-button`"
             :type="innerMode === mode ? 'primary' : 'default'"
-            :icon="mode === 'table' ? GridIcon : OperationIcon"
+            :icon="proTableModeIcons[mode]"
             plain
             circle
             :aria-label="mode === 'table' ? '表格模式' : '列表模式'"

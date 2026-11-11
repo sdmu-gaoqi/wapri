@@ -1,23 +1,56 @@
+/* 弹窗整体最高 80vh：标题与底部按钮不参与伸缩，剩余高度全部交给内容区；
+   内容很少时也保留一个下限高度，避免弹窗忽高忽低 */
 .wa-ui-file-modal {
+  display: flex;
+  flex-direction: column;
+  min-height: min(560px, 80vh);
+  max-height: 80vh;
+  overflow: hidden;
+
+  /* 默认 15vh 的顶边距叠上 80vh 会溢出视口：这里把它压到 9vh，
+     业务通过 modalProps.top 指定了更小的值仍以业务为准；
+     align-center 时由 ElDialog 自己的 margin: auto 居中 */
+  &:not(.is-align-center) {
+    margin-top: min(var(--el-dialog-margin-top, 15vh), 9vh);
+    margin-bottom: 9vh;
+  }
+
+  .el-dialog__header,
+  .el-dialog__footer {
+    flex: 0 0 auto;
+  }
+
   .el-dialog__body {
-    padding-top: 8px;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
   }
 }
 
 .wa-ui-file-modal__body {
   display: flex;
+  flex: 1 1 auto;
   gap: 16px;
-  min-height: 420px;
+  min-height: 0;
 }
 
+/* 左侧分组区：自身定高，只有分组列表滚动，搜索框与「添加分类」始终可见 */
 .wa-ui-file-modal__aside {
   display: flex;
   flex: 0 0 180px;
   flex-direction: column;
   gap: 10px;
   width: 180px;
+  min-height: 0;
   padding-right: 16px;
+  overflow: hidden;
   border-right: 1px solid var(--el-border-color-lighter);
+}
+
+.wa-ui-file-modal__group-search,
+.wa-ui-file-modal__add-group {
+  flex: 0 0 auto;
 }
 
 .wa-ui-file-modal__group-list {
@@ -32,6 +65,7 @@
 .wa-ui-file-modal__group {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 8px;
   width: 100%;
   height: 32px;
@@ -58,6 +92,72 @@
   font-weight: 500;
 }
 
+/* 分组行：名称与「更多操作」共用同一块底色，hover 时整行一起变色才像一个元素 */
+.wa-ui-file-modal__group-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: var(--el-fill-color-light);
+  }
+
+  &:hover .wa-ui-file-modal__group-more {
+    opacity: 1;
+  }
+}
+
+/* 行内按钮不再自己上色，底色统一交给整行，避免「⋯」露在底色外面 */
+.wa-ui-file-modal__group-row .wa-ui-file-modal__group {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  background: transparent;
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+.wa-ui-file-modal__group-row--active,
+.wa-ui-file-modal__group-row--active:hover {
+  background: var(--el-color-primary-light-9);
+}
+
+/* 子分组弱化一档，层级同时靠缩进与颜色表达；选中态仍走主题色 */
+.wa-ui-file-modal__group-row--nested .wa-ui-file-modal__group:not(.wa-ui-file-modal__group--active) {
+  color: var(--el-text-color-secondary);
+}
+
+/* hover 才显形的「更多操作」按钮：位置恒定占位，避免出现/消失时名字被挤得跳动 */
+.wa-ui-file-modal__group-row .wa-ui-file-modal__group-more {
+  flex: 0 0 auto;
+  color: var(--el-text-color-placeholder);
+  opacity: 0;
+  transition:
+    opacity 0.2s,
+    color 0.2s;
+
+  &:hover,
+  &:focus-visible {
+    background: transparent;
+    color: var(--el-color-primary);
+  }
+}
+
+/* 当前分组常驻显示，避免切走后找不到入口 */
+.wa-ui-file-modal__group-row--active .wa-ui-file-modal__group-more {
+  opacity: 1;
+}
+
+/* 图标默认是三横点，转 90 度变成竖排的三个点 */
+.wa-ui-file-modal__group-more .el-icon {
+  transform: rotate(90deg);
+}
+
 .wa-ui-file-modal__group-dot {
   flex: 0 0 auto;
   width: 8px;
@@ -82,34 +182,18 @@
   width: 100%;
 }
 
-.wa-ui-file-modal__create {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+/* 分类弹窗：字段之间留出固定间距（业务全局样式常把 el-form-item 的间距清掉），
+   最后一个字段不再多留下边距，避免底部按钮离字段太远 */
+.wa-ui-file-modal__group-dialog {
+  /* 每个字段外面还包着一层 ElCol，所以「最后一个字段」要按 ElCol 判断，
+     直接写 .el-form-item:last-child 会命中每个字段（各自都是父元素的独子） */
+  .wa-ui-file-modal__group-form .el-form-item {
+    margin-bottom: 20px;
+  }
 
-.wa-ui-file-modal__create-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.wa-ui-file-modal__create-color {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.wa-ui-file-modal__create-color-label {
-  color: var(--el-text-color-regular);
-  font-size: 13px;
-}
-
-.wa-ui-file-modal__create-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  .wa-ui-file-modal__group-form .el-col:last-child .el-form-item {
+    margin-bottom: 0;
+  }
 }
 
 .wa-ui-file-modal__main {
@@ -118,6 +202,7 @@
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+  min-height: 0;
 }
 
 .wa-ui-file-modal__toolbar {
@@ -158,18 +243,49 @@
     display: none;
   }
 
+  /* 模式切换条直接用 ProTable 内置的那一组，只把内嵌时的右内边距去掉，
+     让它和上方的搜索 / 排序、下方的宫格右边缘对齐 */
+  .wa-ui-pro-table__mode-bar {
+    padding-right: 0;
+  }
+
   .wa-ui-pro-table {
+    display: flex;
     flex: 1 1 auto;
+    flex-direction: column;
     min-height: 0;
     padding: 0;
     border: none;
     background: transparent;
   }
 
-  .wa-ui-pro-table__list {
-    max-height: 440px;
-    padding-right: 4px;
+  /* 宫格与表格共用一块滚动区：分页固定在内容区底部，不跟着列表滚走 */
+  .wa-ui-pro-table__table-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
+  }
+
+  .wa-ui-pro-table__sticky-footer {
+    flex: 0 0 auto;
+  }
+
+  /* 表格视图的滚动落在 table-wrap 上：表格自身不再裁剪，表头才能吸附在内容区顶部 */
+  .el-table,
+  .el-table__inner-wrapper {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .el-table__header-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: var(--el-table-header-bg-color, var(--el-fill-color-light));
+  }
+
+  .wa-ui-pro-table__list {
+    padding-right: 4px;
   }
 
   .wa-ui-pro-table__list-empty {
@@ -178,6 +294,40 @@
     font-size: 13px;
     text-align: center;
   }
+}
+
+/* 表格视图：整行可点选，选中行给一层浅色底 */
+.wa-ui-file-modal__table .el-table__body tr {
+  cursor: pointer;
+}
+
+.wa-ui-file-modal__row--active > td.el-table__cell {
+  background-color: var(--el-color-primary-light-9);
+}
+
+.wa-ui-file-modal__table-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.wa-ui-file-modal__table-thumb {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--el-fill-color-light);
+  object-fit: cover;
+}
+
+.wa-ui-file-modal__table-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--el-text-color-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .wa-ui-file-modal__card {

@@ -33,19 +33,29 @@ const buildFileName = (raw: File, type: string): string => {
 
 /**
  * canvas → File；画布过大等导致 toBlob 返回空时抛出错误。
- * `outputType` 可强制指定输出类型，圆形裁剪需要输出 png 保留透明四角。
+ * `outputType` 可强制指定输出类型，圆形裁剪需要输出 png 保留透明四角；
+ * `quality` 仅 jpeg / webp 生效，与原 vue-cropper 的 `outputSize` 对齐。
  */
-export const canvasToFile = (canvas: HTMLCanvasElement, raw: File, outputType?: string): Promise<File> =>
+export const canvasToFile = (
+  canvas: HTMLCanvasElement,
+  raw: File,
+  outputType?: string,
+  quality?: number,
+): Promise<File> =>
   new Promise<File>((resolve, reject) => {
     const type = outputType ?? getOutputType(raw)
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        reject(new Error('裁剪失败，图片过大无法生成文件'))
-        return
-      }
-      const mimeType = blob.type || type
-      resolve(new File([blob], buildFileName(raw, mimeType), { type: mimeType }))
-    }, type)
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          reject(new Error('裁剪失败，图片过大无法生成文件'))
+          return
+        }
+        const mimeType = blob.type || type
+        resolve(new File([blob], buildFileName(raw, mimeType), { type: mimeType }))
+      },
+      type,
+      quality,
+    )
   })
 
 /** 裁剪结果是 Blob 时直接转成 File，文件名与扩展名跟随实际编码格式 */
@@ -79,6 +89,63 @@ export const blobToCanvas = (blob: Blob): Promise<HTMLCanvasElement> =>
     }
     image.src = url
   })
+
+/** 裁剪区域在原图中的像素坐标 */
+export interface SourceRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+/**
+ * 按原图像素裁出指定区域。
+ *
+ * vue-cropper 的 `getCropBlob` 按「裁剪框显示尺寸 × dpr」导出，大图缩小显示（scale < 1）时
+ * 导出分辨率远低于原图，确认后会明显发糊；这里直接用原图 + 原图坐标重绘，
+ * 保证导出始终是原图分辨率。
+ * `fillColor` 与原 vue-cropper 的 `fillColor` 对齐，用于给透明区域铺底色。
+ */
+export const cropImageCanvas = (
+  image: HTMLImageElement | HTMLCanvasElement,
+  rect: SourceRect,
+  fillColor?: string,
+): HTMLCanvasElement => {
+  const sourceWidth = image instanceof HTMLImageElement ? image.naturalWidth || image.width : image.width
+  const sourceHeight = image instanceof HTMLImageElement ? image.naturalHeight || image.height : image.height
+  // 浮点误差可能让矩形越界，这里夹回图片范围内
+  const x = Math.min(Math.max(rect.x, 0), Math.max(sourceWidth - 1, 0))
+  const y = Math.min(Math.max(rect.y, 0), Math.max(sourceHeight - 1, 0))
+  const width = Math.min(rect.width, sourceWidth - x)
+  const height = Math.min(rect.height, sourceHeight - y)
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.max(1, Math.round(width))
+  canvas.height = Math.max(1, Math.round(height))
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return canvas
+  if (fillColor) {
+    ctx.fillStyle = fillColor
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+  }
+  ctx.drawImage(image, x, y, width, height, 0, 0, canvas.width, canvas.height)
+  return canvas
+}
+
+/** 把画布按 90° 的倍数旋转（正数为顺时针，与 vue-cropper 的 rotate 一致） */
+export const rotateCanvas = (source: HTMLCanvasElement, rotate: number): HTMLCanvasElement => {
+  const turns = ((rotate % 4) + 4) % 4
+  if (turns === 0) return source
+  const swap = turns % 2 === 1
+  const canvas = document.createElement('canvas')
+  canvas.width = swap ? source.height : source.width
+  canvas.height = swap ? source.width : source.height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return canvas
+  ctx.translate(canvas.width / 2, canvas.height / 2)
+  ctx.rotate((turns * Math.PI) / 2)
+  ctx.drawImage(source, -source.width / 2, -source.height / 2)
+  return canvas
+}
 
 /** 按目标尺寸重绘画布，用于把裁剪结果锁定成固定输出宽度 */
 export const resizeCanvas = (canvas: HTMLCanvasElement, width: number, height: number): HTMLCanvasElement => {

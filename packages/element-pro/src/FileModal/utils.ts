@@ -1,6 +1,7 @@
 import { dayjs, getFileExtension } from '@wapri/gutils'
 import { formatRatio } from '../CropperUpload/utils'
-import { fileModalCustomRatio, fileModalCustomRatioLabel } from '../constant'
+import { fileModalCustomRatio, fileModalCustomRatioLabel, fileModalGroupMaxDepth } from '../constant'
+import type { ProFormFieldOption } from '../ProFormFields/types'
 import type { Key } from '../shared/field/types'
 import type { FileModalAsset, FileModalAssetMediaType, FileModalGroup } from './types'
 
@@ -88,6 +89,79 @@ export const filterGroups = (groups: FileModalGroup[], keyword: string): FileMod
   const text = keyword.trim().toLowerCase()
   if (!text) return groups
   return groups.filter((group) => group.name.toLowerCase().includes(text))
+}
+
+/** 左侧列表的一行：分组本身加上层级深度，深度用于缩进。 */
+export interface FileModalGroupRow {
+  group: FileModalGroup
+  depth: number
+}
+
+/** 把分类树按展示顺序展开成带层级的行，深度用于左侧缩进。 */
+export const flattenGroupTree = (groups: FileModalGroup[], depth = 0): FileModalGroupRow[] =>
+  groups.flatMap((group) => [{ group, depth }, ...flattenGroupTree(group.children ?? [], depth + 1)])
+
+/** 分类的完整层级路径（从一级分组到自身），未命中返回空数组。 */
+export const getGroupPath = (groups: FileModalGroup[], id?: string): FileModalGroup[] => {
+  if (!id) return []
+  for (const group of groups) {
+    if (group.id === id) return [group]
+    const subPath = getGroupPath(group.children ?? [], id)
+    if (subPath.length) return [group, ...subPath]
+  }
+  return []
+}
+
+/** 展开分类树里的全部分组，顺序与左侧列表一致。 */
+export const listGroups = (groups: FileModalGroup[]): FileModalGroup[] =>
+  groups.flatMap((group) => [group, ...listGroups(group.children ?? [])])
+
+/**
+ * 分类弹窗「上级分类」的可选树，结构与级联控件要求的 `label` / `value` / `children` 一致。
+ *
+ * - `excludeId` 用于编辑：整棵子树都不出现，避免把分类挂到自己下面。
+ * - 最深一级不再展开子级，让「上级分类」最多只到 `fileModalGroupMaxDepth - 1` 层，
+ *   也就是三级分类下面不能再新建。
+ */
+export const buildGroupTree = (groups: FileModalGroup[], excludeId?: string, depth = 1): ProFormFieldOption[] =>
+  groups
+    .filter((group) => group.id !== excludeId)
+    .map((group) => {
+      const children =
+        depth < fileModalGroupMaxDepth - 1 ? buildGroupTree(group.children ?? [], excludeId, depth + 1) : []
+      return { label: group.name, value: group.id, children: children.length ? children : undefined }
+    })
+
+/** 从分类树里移除某个分组（连同它的子分组）。 */
+export const removeGroupFromTree = (groups: FileModalGroup[], id: string): FileModalGroup[] =>
+  groups
+    .filter((group) => group.id !== id)
+    .map((group) => (group.children?.length ? { ...group, children: removeGroupFromTree(group.children, id) } : group))
+
+/**
+ * 把分组挂到指定上级下；上级不存在（或未传）时退回一级分组。
+ * 树里已有同 id 分组时原样返回，避免使用方回写 `groups` 后出现重复项。
+ */
+export const addGroupToTree = (
+  groups: FileModalGroup[],
+  group: FileModalGroup,
+  parentId?: string,
+): FileModalGroup[] => {
+  if (listGroups(groups).some((item) => item.id === group.id)) return groups
+  if (!parentId) return [...groups, group]
+
+  let found = false
+  const insert = (list: FileModalGroup[]): FileModalGroup[] =>
+    list.map((item) => {
+      if (item.id === parentId) {
+        found = true
+        return { ...item, children: [...(item.children ?? []), group] }
+      }
+      return item.children?.length ? { ...item, children: insert(item.children) } : item
+    })
+
+  const next = insert(groups)
+  return found ? next : [...groups, group]
 }
 
 /** 是否已经选中某个素材。 */

@@ -259,6 +259,8 @@ export interface ProTableProps<
   tabMore?: ProTableTabMoreConfig
   /** 可用的数据展示模式，默认仅展示表格。 */
   modes?: ProTableMode[]
+  /** 受控的展示模式，配合 `v-model:mode` 使用；不传时由组件内部维护。 */
+  mode?: ProTableMode
   /** 列表模式的内置网格配置。 */
   listProps?: ProTableListProps
   tabActiveKey?: Key
@@ -307,5 +309,5 @@ export interface ProTableProps<
   /**
    * 可透传给Table的props
    * */
-  tableProps?: TableProps
+  tableProps?: ProComponentProps<TableProps>
 }

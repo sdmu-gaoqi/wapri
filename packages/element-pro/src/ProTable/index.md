@@ -37,6 +37,12 @@ Vue 3 版本的高级数据表格，基于 [Element Plus](https://element-plus.o
 
 通过 `modes` 配置可用展示模式。模式数组的第一项为初始模式；配置多个模式时，数据区顶部会显示切换按钮组，配置单个模式时不显示按钮。列表模式由组件内置网格容器，使用 `listProps.columns` 配置列数、`listProps.gap` 配置间距，通过 `itemRender` 插槽自定义每一项内容；空数据时 `empty` 插槽会跨满全部网格列。`selectModeBefore` 和 `selectModeAfter` 分别渲染在切换按钮组前后。
 
+需要把模式切换放到自己的工具栏里时，用 `mode` + `v-model:mode` 受控当前模式，内部按钮组仍会保留（可按需隐藏），两侧状态保持一致。
+
+```vue | pure
+<ProTable v-model:mode="mode" :modes="['table', 'list']" :columns="columns" :request="request" />
+```
+
 <code src="./demo/modes.vue" title="表格 / 列表切换"></code>
 
 ProTable 支持以下布局插槽：
@@ -94,6 +100,7 @@ ProTable 支持以下布局插槽：
 | `tabs` | `ProTableTabItem[]` | `[]` | 顶部状态筛选 Tab。每项包含 `key`、`tab`，可选 `count`、`disabled`；配置 `count` 时自动显示数量徽标，激活项会以 `tabActiveKey` 并入请求参数。 |
 | `tabMore` | `ProTableTabMoreConfig` | - | 顶部“更多状态”无边框下拉菜单配置，内部使用 `ElDropdown`。`options` 复用 `ProTableTabItem`，可显示更多状态及数量徽标；选择后与普通 Tab 一样触发 `onTabChange` 并刷新数据。 |
 | `modes` | `Array<'table' \| 'list'>` | `['table']` | 可用的数据展示模式。第一项为初始模式；包含多个模式时显示模式切换按钮组，只有一个模式时隐藏按钮组。 |
+| `mode` | `'table' \| 'list'` | 第一项 `modes` | 受控的展示模式，配合 `v-model:mode` 使用；不传时由组件内部维护。切换到未包含在 `modes` 里的值会被忽略。 |
 | `listProps` | `ProTableListProps` | `{ columns: 3, gap: '12px' }` | 列表模式的内置网格配置；`columns` 控制列数，`gap` 控制网格间距。 |
 | `tabActiveKey` | `Key` | - | 受控的激活 Tab，变化后自动刷新。与 `defaultTabActiveKey` 同时传入时优先使用此值。 |
 | `defaultTabActiveKey` | `Key` | 第一项的 `key` | 非受控模式下的初始激活 Tab。未传时使用 `tabs` 第一项。 |
@@ -116,7 +123,7 @@ ProTable 支持以下布局插槽：
 | `loading` | `boolean` | `false` | 外部加载状态；为 `true` 时在表格区域显示加载遮罩，可与 `request` 内部加载状态同时使用。 |
 | `sticky` | `boolean` 或 `StickyConfig` | `true` | 粘性布局：表格模式下表头随页面滚动吸顶，存在横向溢出时显示底部同步滚动条；列表模式下分页 footer 仍吸底。`true` 等同 `{ offsetHeader: 0, offsetScroll: 0 }`。 |
 | `showRequestError` | `boolean` | `false` | 是否在请求失败时展示错误 Alert（`type="error"`，显示 `error.message`）。 |
-| `tableProps` | `TableProps`（来自 Element Plus） | - | 透传给底层 `ElTable`，用于补充未单独暴露的表格能力，如 `height`、`border`、`stripe`、`size` 等。 |
+| `tableProps` | `TableProps`（来自 Element Plus） | - | 透传给底层 `ElTable`，用于补充未单独暴露的表格能力，如 `height`、`border`、`stripe`、`size` 等；也可以传 `onRowClick`、`rowClassName` 等事件与回调。 |
 | `onLoad` | `(data: T[]) => void` | - | 请求成功并更新数据后触发。 |
 | `onRequestError` | `(error: Error) => void` | - | 请求失败后触发；回调执行前 ProTable 已自动清空表格数据和分页总数。 |
 | `onSubmit` | `(params) => void` | - | 搜索提交、请求发起前触发，参数已经过 `beforeSearchSubmit` 转换。 |
@@ -124,6 +131,7 @@ ProTable 支持以下布局插槽：
 | `onFieldChange` | `(fieldKey: string, value: unknown, context: ProTableRequestContext) => void \| Promise<void>` | - | 查询表单字段值发生变化时触发，传入字段键、值和请求上下文；可通过 `context.quickDateSelections` 区分快速日期和手动日期。 |
 | `onTabChange` | `(key: Key) => void` | - | Tab 切换时触发。 |
 | `onModeChange` | `(mode: 'table' \| 'list') => void` | - | 数据展示模式切换时触发。 |
+| `update:mode` | `(mode: 'table' \| 'list') => void` | - | 受控模式下的模式变化事件，配合 `v-model:mode` 使用。 |
 | `onDataSourceChange` | `(data: T[]) => void` | - | 表格数据源发生变化后触发，静态数据和请求数据都适用。 |
 | `onDownload` | `(params, sort, filter, context) => void \| Promise<void>` | - | 点击工具栏导出按钮时触发，参数与 `request` 一致：包含请求参数、排序、筛选和日期快捷选择上下文。 |
 

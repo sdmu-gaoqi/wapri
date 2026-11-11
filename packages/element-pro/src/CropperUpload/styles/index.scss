@@ -124,23 +124,14 @@
   border-radius: 50%;
 }
 
-.wa-ui-cropper-upload-preview__inner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  transform-origin: top left;
-}
-
 /**
- * 预览图按裁剪窗口的原始像素尺寸渲染，再整体缩放，
- * 因此必须屏蔽宿主项目的 `img { max-width: 100%; height: auto }` 这类全局样式：
- * 否则图片会被压进取景框，预览看到的区域和裁剪框对不上。
+ * 预览画布按裁剪结果等比缩放，内容由组件按原图裁切后绘制，
+ * 与确认导出的像素完全同源。
  */
-.wa-ui-cropper-upload-preview__inner img {
+.wa-ui-cropper-upload-preview__canvas {
   display: block;
-  max-width: none;
-  max-height: none;
+  width: 100%;
+  height: 100%;
 }
 
 .wa-ui-cropper-upload-preview__hint {

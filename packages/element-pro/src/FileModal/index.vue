@@ -1,32 +1,48 @@
 <script setup lang="ts" generic="T extends FileModalAsset">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { ElButton, ElDialog, ElImageViewer, ElInput, ElOption, ElSelect, vLoading } from 'element-plus'
+import { ElButton, ElCheckbox, ElDialog, ElImageViewer, ElInput, ElOption, ElSelect, vLoading } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import { useLockFn } from '@wapri/ghooks'
-import { debounce } from '@wapri/gutils'
+import { debounce, uniqBy } from '@wapri/gutils'
 import ProTable from '../ProTable/index.vue'
 import FileModalAssetCard from './components/FileModalAssetCard.vue'
 import FileModalGroupPanel from './components/FileModalGroupPanel.vue'
 import FileModalUploadButton from './components/FileModalUploadButton.vue'
 import { useConfig } from '../ConfigProvider/context'
 import {
+  fileModalAddGroupText,
   fileModalDefaultColumns,
   fileModalDefaultPageSize,
+  fileModalEditGroupText,
   fileModalPageSizeOptions,
+  fileModalPreviewActionText,
+  fileModalRemoveGroupConfirmText,
+  fileModalRemoveGroupText,
   fileModalSortOptions,
+  fileModalTableActionText,
+  fileModalTableNameText,
+  fileModalTableSizeText,
+  fileModalTableTimeText,
   fileModalUploadText,
 } from '../constant'
 import {
+  addGroupToTree,
+  formatFileSize,
+  formatFileTime,
   getAssetMediaType,
   getAssetPreviewUrl,
+  getAssetThumb,
   isAssetSelected,
   pickSelectedAssets,
+  removeGroupFromTree,
   resolveNextSelected,
 } from './utils'
 import type {
   ActionType,
   FilterState,
   Key,
+  ProColumn,
+  ProTableMode,
   ProTableRequestContext,
   RequestParams,
   RequestResult,
@@ -49,11 +65,15 @@ const props = withDefaults(defineProps<FileModalProps<T>>(), {
   columns: fileModalDefaultColumns,
   groups: () => [],
   multiple: false,
+  modes: () => ['list', 'table'],
   title: '选择素材',
   confirmText: '确定',
   cancelText: '取消',
   uploadText: fileModalUploadText,
-  addGroupText: '添加分组',
+  addGroupText: fileModalAddGroupText,
+  editGroupText: fileModalEditGroupText,
+  removeGroupText: fileModalRemoveGroupText,
+  removeGroupConfirmText: fileModalRemoveGroupConfirmText,
   emptyText: '暂无素材',
   // 默认不裁剪：选完图片直接上传原图
   cropperRatios: () => [],
@@ -101,6 +121,32 @@ const sortBy = ref<FileModalSortValue>('latest')
 const handleSortChange = (value: unknown): void => {
   if (value === 'latest' || value === 'name' || value === 'size') sortBy.value = value
 }
+
+/** 可用的展示模式，去重后第一项即默认视图；切换按钮直接用 ProTable 内置的那一组 */
+const availableModes = computed<ProTableMode[]>(() => {
+  const modes = [...new Set(props.modes ?? [])]
+  return modes.length ? modes : ['list', 'table']
+})
+
+/** 表格视图的列：勾选、名称、大小、上传时间、操作 */
+const tableColumns = computed<ProColumn<T>[]>(() => [
+  { title: '', dataIndex: 'selected', width: 48 },
+  { title: fileModalTableNameText, dataIndex: 'name' },
+  { title: fileModalTableSizeText, dataIndex: 'size', width: 120 },
+  { title: fileModalTableTimeText, dataIndex: 'createdAt', width: 180 },
+  { title: fileModalTableActionText, dataIndex: 'actions', width: 80 },
+])
+
+/**
+ * 表格行：勾选与卡片点击走同一套选中逻辑（`selectedKeys` 是唯一真源），
+ * 因此单选/多选都不会出现表格内部选中态和外部不一致的问题。
+ * 不设 `maxHeight`：内容区高度由弹窗的 80vh 上限决定，滚动交给内容区自己处理。
+ */
+const tableProps = computed(() => ({
+  rowClassName: ({ row }: { row: T }): string =>
+    isAssetSelected(selectedKeys.value, row.id) ? `${base.value}__row--active` : '',
+  onRowClick: (row: T): void => handleToggle(row),
+}))
 
 /** 传给 ProTable 的业务参数，params 变化会自动回到第一页并重新请求 */
 const queryParams = computed<FileModalQuery>(() => ({
@@ -156,8 +202,22 @@ const innerSelected = ref<Key[]>([])
 const selectedKeys = computed<Key[]>(() => props.selected ?? innerSelected.value)
 
 const updateSelected = (keys: Key[]): void => {
-  innerSelected.value = keys
-  emit('update:selected', keys)
+  const result = [...new Set(keys)]
+  // 表格勾选与卡片点击可能回传同一组 id，内容一致时不重复派发，避免来回触发
+  const same =
+    result.length === selectedKeys.value.length && result.every((key, index) => key === selectedKeys.value[index])
+  if (same) return
+  innerSelected.value = result
+  emit('update:selected', result)
+}
+
+/** 表格行的勾选框：勾上按单选/多选合并，取消就移出选中 */
+const handleRowCheck = (asset: T, checked: boolean): void => {
+  if (!checked) {
+    updateSelected(selectedKeys.value.filter((key) => key !== asset.id))
+    return
+  }
+  updateSelected(props.multiple ? [...selectedKeys.value, asset.id] : [asset.id])
 }
 
 /** 已加载过的素材按 id 缓存，跨页选择后仍能回传完整记录 */
@@ -212,11 +272,27 @@ const handleCreateGroup = async (payload: FileModalGroupPayload): Promise<FileMo
   }
 }
 
-const handleGroupCreated = (group: FileModalGroup): void => {
-  groupList.value = [...groupList.value, group]
-  // 新建后直接切到该分组，否则用户看不到刚建出来的分组有什么用
-  handleGroupChange(group.id)
-  emit('groupCreated', group)
+const handleGroupCreated = (group: FileModalGroup, parentId?: string): void => {
+  // 业务可能没有回写 `groups`，这里补到本地副本，新建完立刻能在左侧看到
+  groupList.value = addGroupToTree(groupList.value, group, parentId)
+  emit('groupCreated', group, parentId)
+}
+
+/** 编辑成功：先摘掉旧位置再按新的上级挂回去，改上级时同样能移动 */
+const handleGroupUpdated = (group: FileModalGroup, parentId?: string): void => {
+  const rest = removeGroupFromTree(groupList.value, group.id)
+  groupList.value = addGroupToTree(rest, group, parentId)
+  emit('groupUpdated', group, parentId)
+}
+
+/**
+ * 删除分组成功后：从左侧列表移除该分组（连同子分组）；
+ * 删掉的正好是当前分组时切回「全部」，列表随之重新请求。
+ */
+const handleGroupRemoved = (group: FileModalGroup): void => {
+  groupList.value = removeGroupFromTree(groupList.value, group.id)
+  if (activeGroupId.value === group.id) handleGroupChange(undefined)
+  emit('groupRemoved', group)
 }
 
 const handleUploaded = async (asset: T): Promise<void> => {
@@ -231,7 +307,9 @@ const handleUploadError = (error: Error): void => {
 }
 
 const handleConfirm = (): void => {
-  emit('confirm', pickSelectedAssets(assetCache, selectedKeys.value))
+  const result = pickSelectedAssets(assetCache, selectedKeys.value)
+  const uniqResut = uniqBy(result, 'id')
+  emit('confirm', uniqResut)
   emit('update:open', false)
 }
 
@@ -292,9 +370,16 @@ onBeforeUnmount(() => {
         :groups="groupList"
         :active-id="activeGroupId"
         :create-group="createGroup ? handleCreateGroup : undefined"
+        :update-group="updateGroup"
+        :remove-group="removeGroup"
         :add-text="addGroupText"
+        :edit-text="editGroupText"
+        :remove-text="removeGroupText"
+        :remove-confirm-text="removeGroupConfirmText"
         @select="handleGroupChange"
         @created="handleGroupCreated"
+        @updated="handleGroupUpdated"
+        @removed="handleGroupRemoved"
       />
 
       <div :class="`${base}__main`">
@@ -340,11 +425,12 @@ onBeforeUnmount(() => {
         <ProTable
           ref="tableRef"
           :class="`${base}__table`"
-          :columns="[]"
+          :columns="tableColumns"
           :request="request"
           :params="queryParams"
-          :modes="['list']"
+          :modes="availableModes"
           :list-props="{ columns, gap: 12 }"
+          :table-props="tableProps"
           :search="false"
           :options="false"
           :sticky="false"
@@ -359,6 +445,44 @@ onBeforeUnmount(() => {
               @toggle="handleToggle(toAsset(item))"
               @preview="handlePreview(toAsset(item))"
             />
+          </template>
+          <template #selected="{ record }">
+            <ElCheckbox
+              :model-value="isAssetSelected(selectedKeys, toAsset(record).id)"
+              :aria-label="toAsset(record).name"
+              @change="handleRowCheck(toAsset(record), Boolean($event))"
+              @click.stop
+            />
+          </template>
+          <template #name="{ record }">
+            <div :class="`${base}__table-name`">
+              <img
+                :class="`${base}__table-thumb`"
+                :src="getAssetThumb(toAsset(record))"
+                :alt="toAsset(record).name"
+                loading="lazy"
+              />
+              <span
+                :class="`${base}__table-text`"
+                :title="toAsset(record).name"
+              >
+                {{ toAsset(record).name }}
+              </span>
+            </div>
+          </template>
+          <template #size="{ record }">{{ formatFileSize(toAsset(record).size) }}</template>
+          <template #createdAt="{ record }">
+            {{ formatFileTime(toAsset(record).createdAt, 'YYYY-MM-DD HH:mm:ss') }}
+          </template>
+          <template #actions="{ record }">
+            <ElButton
+              v-if="getAssetPreviewUrl(toAsset(record))"
+              link
+              type="primary"
+              @click.stop="handlePreview(toAsset(record))"
+            >
+              {{ fileModalPreviewActionText }}
+            </ElButton>
           </template>
           <template #empty>
             <span :class="`${base}__empty`">{{ emptyText }}</span>

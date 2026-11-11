@@ -32,13 +32,26 @@ export interface CropperOptions {
   fillColor?: string
 }
 
-/** Cropper 实例上用到的方法与只读状态，避免直接依赖 vue-cropper 宽松的组件类型。 */
+/** Cropper 实例上用到的方法与状态，避免直接依赖 vue-cropper 宽松的组件类型。 */
 export interface CropperInstance {
-  /** 图片显示尺寸（已按 maxImgSize 压缩） */
+  /** 图片原始尺寸（已按 maxImgSize 压缩） */
   readonly trueWidth: number
   readonly trueHeight: number
-  /** 当前缩放比例，由裁剪器内部维护 */
-  readonly scale: number
+  /** 当前缩放比例，由裁剪器内部维护；容器被测成 0 时会异常，需要时可直接写回 */
+  scale: number
+  /** 裁剪器内部记录的容器尺寸，可能因测量时机不当为 0，可直接写回校正 */
+  w: number
+  h: number
+  /** 裁剪器内部记录的图片偏移，决定图片在容器内的位置，可直接写回校正 */
+  x: number
+  y: number
+  /** 裁剪框在容器坐标系中的位置与尺寸（px） */
+  readonly cropOffsertX: number
+  readonly cropOffsertY: number
+  readonly cropW: number
+  readonly cropH: number
+  /** 当前旋转次数（0-3，即 90° 的倍数） */
+  readonly rotate: number
   /** 导出裁剪结果为 Blob，回调参数为 null 表示导出失败 */
   getCropBlob: (callback: (blob: Blob | null) => void) => void
   /** 缩放图片，正数放大、负数缩小；步长按 `20 / 图片短边` 换算 */
@@ -47,8 +60,8 @@ export interface CropperInstance {
   rotateLeft: () => void
   /** 顺时针旋转 90° */
   rotateRight: () => void
-  /** 按当前 fixed / fixedNumber 重新生成并居中裁剪框 */
-  goAutoCrop: () => void
+  /** 重新生成裁剪框，可指定初始宽高；不传时回退到容器 80% 的默认值 */
+  goAutoCrop: (width?: number, height?: number) => void
 }
 
 /** vue-cropper `real-time` 事件回传的预览数据，用于右侧实时预览 */

@@ -48,8 +48,10 @@ group:
 
 导出尺寸规则：
 
-- 不传 `outputWidth` 时按裁剪框的显示尺寸 × dpr 输出高清图（`high` 默认开启），提示里的数字就是最终像素，例如 231px 的裁剪框在 125% 缩放的屏幕上导出 289 × 289；
+- 不传 `outputWidth` 时按**原图像素**导出（裁剪框显示尺寸 ÷ 当前缩放比例），提示里的数字就是最终像素；大图缩小显示也不会降采样，导出分辨率等于原图对应区域，不会发糊；
 - 传 `outputWidth` 时按该宽度等比缩放导出，高度由裁剪比例换算，与屏幕尺寸、dpr 无关，适合「固定输出 750 × 1334」这类有明确规格的场景。
+
+> 图片旋转过 90° 时导出会走 vue-cropper 自带的算法（分辨率按裁剪框显示尺寸 × dpr），未旋转时一律按原图像素导出。
 
 原图超过 `maxImgSize`（默认 4096）时会先等比压缩再裁剪，避免超大图占用过多内存。
 
@@ -92,7 +94,7 @@ const onCrop = (file: File, rawFile: File) => {
 | `ratioLabels`   | 比例按钮文案，与 `ratios` 一一对应；未传项按比例自动生成（`0` → `自由`） | `string[]`  | -                      |
 | `cropperOptions` | 透传给 vue-cropper 的配置，见下表 | `CropperOptions` | `{}` |
 | `preview`       | 是否展示右侧实时预览与输出尺寸提示                               | `boolean`             | `true`                 |
-| `outputWidth`   | 固定输出宽度（px），高度按裁剪比例换算；不传时按裁剪框尺寸 × dpr 输出 | `number`         | -                      |
+| `outputWidth`   | 固定输出宽度（px），高度按裁剪比例换算；不传时按原图像素输出 | `number`         | -                      |
 | `circle`        | 圆形裁剪，用于头像等场景；裁剪结果四角透明（输出 png），上传列表缩略图同步按圆形展示 | `boolean`             | `false`                 |
 | `canvasHeight`  | 裁剪区域高度，也可通过 CSS 变量 `--wa-ui-cropper-upload-canvas-height` 覆盖 | `number \| string` | `'420px'` |
 | `title`         | 弹窗标题                                                         | `string`              | `'裁剪图片'`           |
@@ -113,8 +115,8 @@ const onCrop = (file: File, rawFile: File) => {
 | `info`       | 是否显示裁剪框尺寸提示                           | `boolean` | `true`      |
 | `canScale`   | 是否支持滚轮 / 双指缩放                          | `boolean` | `true`      |
 | `mode`       | 图片布局方式，`contain` 居中留白、`cover` 填满容器 | `string`  | `'contain'` |
-| `high`       | 是否按 dpr 输出高清结果                          | `boolean` | `true`      |
-| `enlarge`    | 导出放大倍数                                     | `number`  | `1`         |
+| `high`       | 兼容字段：未旋转时按原图像素导出，不再受 dpr 影响；旋转后走 vue-cropper 算法时生效 | `boolean` | `true` |
+| `enlarge`    | 兼容字段：未旋转时导出按原图像素，不再按倍数放大；旋转后走 vue-cropper 算法时生效 | `number` | `1` |
 | `maxImgSize` | 图片最大尺寸，超过该边长会先等比压缩再裁剪       | `number`  | `4096`      |
 | `outputSize` | 导出图片质量，`0`-`1`，仅 jpeg / webp 生效       | `number`  | `1`         |
 | `fillColor`  | 导出时填充的背景色，如 `#fff`；不传时透明区域保持透明 | `string` | `''`        |
@@ -149,9 +151,9 @@ const onCrop = (file: File, rawFile: File) => {
 - 裁剪弹窗通过 `append-to-body` 挂载到 `body`，样式使用固定的 `wa-ui-cropper-upload-` 前缀类名。
 - 弹窗主体分两栏：左侧裁剪区 + 工具栏，右侧实时预览；`preview` 置为 `false` 时收窄为单栏（弹窗宽度 680px，带预览时 900px）。
 - 工具栏从左到右依次为「重新选择」、缩放/旋转按钮组、比例切换按钮组（只有多项比例时出现）。比例按钮默认按比例生成文案，可用 `ratioLabels` 覆盖成业务文案，例如把自由比例显示成「自定义」。
-- 预览使用 vue-cropper 的 `real-time` 事件，按裁剪比例等比缩放到右侧面板；尺寸提示与导出算法一致（`outputWidth` 优先，其次 `enlarge` / dpr）。
-- 预览图按裁剪窗口的原始像素渲染后整体缩放，已屏蔽宿主 `img { max-width: 100% }` 这类全局样式，保证预览与裁剪框始终一致。
-- 裁剪框默认按所选比例居中生成并限制在图片范围内；切换比例后会按新比例重建裁剪框。
+- 预览不再消费 vue-cropper 的 `real-time` 中间态（该事件内部有节流，会丢最后一帧），改为读取裁剪框状态（`cropOffsertX/Y`、`cropW/H`）反算出它在原图上的源区域，再用同一套裁剪逻辑绘制到 `<canvas>` 上，因此和最终导出像素一一对应；尺寸提示与实际导出算法一致（`outputWidth` 优先，否则按原图像素）。
+- 拖动、缩放、旋转、切换比例都会触发预览重绘（`requestAnimationFrame` 合并同一帧内的多次调用），预览画布按容器尺寸自适应，不再受宿主 `img { max-width: 100% }` 这类全局样式影响。
+- 裁剪框默认按所选比例居中生成并限制在图片范围内（固定比例默认占图片可用区域的 90%）；自由比例（`0`）直接铺满整张图片；切换比例后会按新比例重建裁剪框。图片加载后组件会自动校正缩放与居中位置，不受弹窗打开时测量时机的影响。
 - 图片未加载完成时「确定」按钮禁用、预览区显示比例占位，避免导出空白画布。
 - 裁剪弹窗每次打开都会按 `aspectRatio` 重置比例；图片对象地址（`blob:`）在换图或组件卸载时释放。
 - 一次选择多张图片时会依次弹出裁剪框，逐张确认。
