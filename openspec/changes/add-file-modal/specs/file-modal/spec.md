@@ -235,9 +235,15 @@
 - **AND** 未传或为空时退回 `url`
 - **AND** 组件不自行解析视频首帧
 
+#### Scenario: 预览入口不依赖类型识别
+
+- **WHEN** 素材有预览地址（`previewUrl` 或 `url`），但类型识别不出是图片还是视频
+- **THEN** 卡片仍然展示预览按钮
+- **AND** 点击后按图片查看器展示
+
 #### Scenario: 不支持的类型不展示入口
 
-- **WHEN** 素材既不是图片也不是视频（如 `application/pdf`）
+- **WHEN** 素材既没有 `previewUrl` 也没有 `url`
 - **THEN** 卡片不渲染预览按钮
 - **AND** 业务仍可通过 `confirm` 拿到该记录自行处理
 
@@ -245,7 +251,8 @@
 
 - **WHEN** 素材的 `type` 为 `image/png` 但 `url` 是 `.mp4`
 - **THEN** 按 `image` 处理
-- **AND** `type` 缺失时按 `url` / `name` 的扩展名兜底
+- **AND** MIME 缺失时依次按 `url` / `previewUrl` / `abbreviateUrl` / `name` 的扩展名兜底
+- **AND** `data:` 开头的地址按前缀判断
 
 ### Requirement: 分组与上传能力可选
 

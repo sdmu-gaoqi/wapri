@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.5.2
+
+### Patch Changes
+
+- 修复了问题,素材选择无法预览的问题
+
 ## 3.5.1
 
 ### Patch Changes

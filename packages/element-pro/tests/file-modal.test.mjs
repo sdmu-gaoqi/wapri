@@ -179,11 +179,32 @@ test('getAssetMediaType 优先按 MIME 判断', () => {
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', type: 'application/pdf' }), 'other')
 })
 
+test('getAssetMediaType 兼容其它 MIME 字段名', () => {
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', mimeType: 'image/jpeg' }), 'image')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'u', contentType: 'video/webm' }), 'video')
+})
+
 test('getAssetMediaType 无 MIME 时按扩展名兜底', () => {
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/a.webp' }), 'image')
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/a.MOV?x=1' }), 'video')
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a.png', url: 'https://cdn/file' }), 'image')
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a.docx', url: 'https://cdn/file' }), 'other')
+})
+
+test('getAssetMediaType 也看 previewUrl / abbreviateUrl 的扩展名', () => {
+  assert.equal(
+    utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/sign?x=1', previewUrl: 'https://cdn/a.mp4' }),
+    'video',
+  )
+  assert.equal(
+    utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/sign?x=1', abbreviateUrl: 'https://cdn/a.png' }),
+    'image',
+  )
+})
+
+test('getAssetMediaType 识别 data URL', () => {
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'data:image/svg+xml;utf8,<svg/>' }), 'image')
+  assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a', url: 'data:video/mp4;base64,AAA' }), 'video')
 })
 
 test('isAssetPreviewable 只对图片与视频为真', () => {

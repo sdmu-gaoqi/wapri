@@ -102,7 +102,9 @@ const upload = async (file: File, context: { groupId?: string }): Promise<FileMo
 
 组件不会自己解析视频首帧：视频卡片用 `<video preload="metadata">` 拉取首帧，`abbreviateUrl` 作为 `poster` 兜底；接口能给出封面帧时优先填 `abbreviateUrl`。
 
-类型判断优先信任 `asset.type`（MIME），拿不到时按 `url` / `name` 的扩展名兜底；只有图片与视频展示预览按钮，其它类型不渲染入口。
+类型判断优先信任 MIME（`type` / `mime` / `mimeType` / `contentType` / `fileType`），拿不到时按 `url` / `previewUrl` / `abbreviateUrl` / `name` 的扩展名兜底，`data:` 开头的地址直接看前缀。
+
+**预览按钮的显隐只看有没有预览地址**（`previewUrl || url`），不依赖类型识别结果；类型只决定用哪种查看器：识别为视频走播放器，其余一律按图片查看。这样接口字段命名不统一或地址没有扩展名时，按钮也不会消失。
 
 ```ts
 import { getAssetMediaType, isAssetPreviewable, getAssetPreviewUrl } from '@wapri/element-pro'

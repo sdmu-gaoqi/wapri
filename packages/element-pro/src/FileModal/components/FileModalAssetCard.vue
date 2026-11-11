@@ -25,8 +25,8 @@ const base = computed(() => `${prefix.value}-file-modal`)
 /** 卡片里的预览图：图片与视频统一取 `abbreviateUrl` */
 const thumb = computed(() => getAssetThumb(props.asset))
 const meta = computed(() => getAssetMeta(props.asset))
-/** 图片与视频才展示预览入口；其它类型交给业务在选中后自行处理 */
-const previewable = computed(() => getAssetMediaType(props.asset) !== 'other')
+/** 只要有预览地址就展示入口；类型只决定用哪种查看器，避免识别不到类型时按钮消失 */
+const previewable = computed(() => Boolean(getAssetPreviewUrl(props.asset)))
 /** 视频卡片用 <video> 取首帧，图片仍用 <img> */
 const isVideo = computed(() => getAssetMediaType(props.asset) === 'video')
 /** 视频直接播 `previewUrl`；没有时退回缩略地址 */

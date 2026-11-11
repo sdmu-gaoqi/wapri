@@ -42,18 +42,41 @@ export const getAssetMeta = (asset: FileModalAsset): string => {
   return [formatFileSize(asset.size), formatFileTime(asset.createdAt)].filter(Boolean).join(' · ')
 }
 
+/** 可能承载 MIME 的字段名，业务接口命名不统一，这里都认 */
+const MIME_FIELDS = ['type', 'mime', 'mimeType', 'contentType', 'fileType'] as const
+
+/** data URL 直接看前缀，扩展名解析对它没有意义 */
+const mediaTypeOfDataUrl = (value: string): FileModalAssetMediaType | undefined => {
+  if (!value.startsWith('data:')) return undefined
+  if (value.startsWith('data:image/')) return 'image'
+  if (value.startsWith('data:video/')) return 'video'
+  return 'other'
+}
+
 /**
  * 素材的媒体类型，供业务判断该用哪种预览方式。
- * 优先信任 `type`（MIME），拿不到时按 `url` / `name` 的扩展名兜底。
+ * 先看 MIME（`type` / `mime` / `mimeType` / `contentType` / `fileType`），
+ * 再按 `url` / `previewUrl` / `abbreviateUrl` / `name` 的扩展名兜底。
  */
 export const getAssetMediaType = (asset: FileModalAsset): FileModalAssetMediaType => {
-  const mime = typeof asset.type === 'string' ? asset.type.toLowerCase() : ''
-  if (mime.startsWith('image/')) return 'image'
-  if (mime.startsWith('video/')) return 'video'
+  for (const field of MIME_FIELDS) {
+    const value = asset[field]
+    if (typeof value !== 'string') continue
+    const mime = value.toLowerCase()
+    if (mime.startsWith('image/')) return 'image'
+    if (mime.startsWith('video/')) return 'video'
+  }
 
-  const extension = getFileExtension(asset.url) || getFileExtension(asset.name)
-  if ((IMAGE_EXTENSIONS as readonly string[]).includes(extension)) return 'image'
-  if ((VIDEO_EXTENSIONS as readonly string[]).includes(extension)) return 'video'
+  const sources = [asset.url, asset.previewUrl, asset.abbreviateUrl, asset.name]
+  for (const source of sources) {
+    if (typeof source !== 'string' || !source) continue
+    const fromDataUrl = mediaTypeOfDataUrl(source)
+    if (fromDataUrl) return fromDataUrl
+    const extension = getFileExtension(source)
+    if (!extension) continue
+    if ((IMAGE_EXTENSIONS as readonly string[]).includes(extension)) return 'image'
+    if ((VIDEO_EXTENSIONS as readonly string[]).includes(extension)) return 'video'
+  }
   return 'other'
 }
 

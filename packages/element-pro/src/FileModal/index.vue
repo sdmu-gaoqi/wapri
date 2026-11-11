@@ -183,10 +183,9 @@ const previewKind = ref<'image' | 'video'>('image')
 const previewSrc = ref('')
 const previewTitle = ref('')
 
+/** 内置预览：识别为视频走弹窗播放器，其余一律按图片查看器展示 */
 const handlePreview = (asset: T): void => {
-  const mediaType = getAssetMediaType(asset)
-  if (mediaType === 'other') return
-  previewKind.value = mediaType
+  previewKind.value = getAssetMediaType(asset) === 'video' ? 'video' : 'image'
   previewSrc.value = getAssetPreviewUrl(asset)
   previewTitle.value = asset.name
   previewVisible.value = true
