@@ -70,6 +70,7 @@ const props = withDefaults(defineProps<FileModalProps<T>>(), {
   confirmText: '确定',
   cancelText: '取消',
   uploadText: fileModalUploadText,
+  accept: 'image/*',
   addGroupText: fileModalAddGroupText,
   editGroupText: fileModalEditGroupText,
   removeGroupText: fileModalRemoveGroupText,
@@ -392,7 +393,7 @@ onBeforeUnmount(() => {
             :ratios="cropperRatios"
             :ratio-labels="cropperRatioLabels"
             :title="cropperTitle"
-            accept="image/*"
+            :accept="accept"
             @uploaded="handleUploaded"
             @error="handleUploadError"
           />

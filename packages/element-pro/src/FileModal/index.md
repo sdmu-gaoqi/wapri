@@ -170,7 +170,7 @@ getAssetPreviewUrl(asset) // previewUrl || url
 - **最多三级**：三级分类不再出现在「上级分类」的候选里，行内菜单的「添加分类」在三级分类上置灰，也就是三级分类下不能再新建。
 - **添加 / 编辑分类**：`createGroup` / `updateGroup`，弹窗表单只有「上级分类」与「分类名称」（最多 10 个字）。从某一行的「添加分类」进入时会把该分类预填为上级，底部按钮进入则创建一级分类；编辑时回填当前层级，且候选项已隐去自身与子孙，不会出现把自己挂到自己下面。
 - **删除分类**：`removeGroup`，删除逻辑完全由使用方实现（调接口、刷新自有分类数据）。点击先弹确认；删除中按钮转圈，成功后把该分类（连同子分类）从左侧移出；删掉的若是当前选中分类，会自动切回「全部」并重新请求列表。
-- **上传**：裁剪确认后调用 `upload(file, { groupId })`，返回的素材会**自动选中**并刷新到第一页，同时带上当前分类 id。
+- **上传**：裁剪确认后调用 `upload(file, { groupId })`，返回的素材会**自动选中**并刷新到第一页，同时带上当前分类 id。`accept` 为 `video/*` 等非图片类型时不做裁剪，选完文件直接调 `upload`。
 - **多选**：`multiple` 为 `false`（默认）时点击即替换选中；为 `true` 时点击切换。
 - **确认**：`confirm` 回传完整的素材记录（不是 id）。组件内部按 id 缓存已加载过的素材，因此跨页选择也能拿到完整对象。
 - **选中态**：`v-model:selected` 收的是 id 数组，与 `confirm` 返回的记录一一对应。
@@ -190,7 +190,8 @@ getAssetPreviewUrl(asset) // previewUrl || url
 | `createGroup` | `(payload) => Promise<FileModalGroup>` | - | 添加分类；不传时隐藏相关入口 |
 | `updateGroup` | `(group, payload) => Promise<FileModalGroup> \| FileModalGroup` | - | 编辑分类；不传时菜单里不展示「编辑分类」 |
 | `removeGroup` | `(group) => Promise<void> \| void` | - | 删除分类；不传时菜单里不展示「删除分类」 |
-| `upload` | `(file, context) => Promise<T>` | - | 上传裁剪结果；不传时隐藏「上传素材」 |
+| `upload` | `(file, context) => Promise<T>` | - | 上传回调；不传时隐藏「上传素材」。图片按 `cropperRatios` 裁剪，其余类型直传 |
+| `accept` | `string` | `'image/*'` | 文件选择框的类型限制，同时决定校验的大类：`image/*` 只收图片，`video/*` 只收视频并跳过裁剪 |
 | `multiple` | `boolean` | `false` | 是否多选 |
 | `selected` | `Key[]` | - | 已选 id，配合 `v-model:selected` |
 | `title` | `string` | `'选择素材'` | 弹窗标题 |

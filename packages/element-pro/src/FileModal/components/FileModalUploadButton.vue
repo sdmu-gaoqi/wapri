@@ -7,8 +7,11 @@ import { useConfig } from '../../ConfigProvider/context'
 import { resolveCropperRatios } from '../utils'
 import type { FileModalAsset, FileModalUpload } from '../types'
 
+/** 文件大类的中文名，仅用于类型校验失败时的提示文案 */
+const KIND_LABELS: Record<string, string> = { image: '图片', video: '视频', audio: '音频' }
+
 const props = defineProps<{
-  /** 上传裁剪结果，未传时不渲染按钮 */
+  /** 上传回调，未传时不渲染按钮 */
   upload?: FileModalUpload<T>
   /** 当前分组 id，随上传一起回传 */
   groupId?: string
@@ -22,6 +25,7 @@ const props = defineProps<{
   /** 与 `ratios` 一一对应的按钮文案，缺省项按比例自动生成 */
   ratioLabels: string[]
   title: string
+  /** 可选的文件类型，同时决定要求的文件大类（如 `image/*`、`video/*`） */
   accept: string
 }>()
 
@@ -37,7 +41,7 @@ defineOptions({ name: 'FileModalUploadButton' })
 const base = computed(() => `${prefix.value}-file-modal`)
 
 const fileInputRef = ref<HTMLInputElement>()
-/** 裁剪弹窗只看图片，非图片文件在选文件阶段就拦下 */
+/** 裁剪弹窗只处理图片，视频等其它类型选完直接上传 */
 const cropperVisible = ref(false)
 const rawFile = ref<File>()
 const uploading = ref(false)
@@ -85,6 +89,9 @@ const pick = (): void => {
 /** 是否启用裁剪：`ratios` 为空表示不裁剪，选完直接上传原图 */
 const cropperEnabled = computed(() => props.ratios.length > 0)
 
+/** `accept` 里声明的文件大类，如 `image/*` 取 image；未按 `类型/*` 声明时不做类型校验 */
+const acceptKind = computed(() => /^(\w+)\/\*$/.exec(props.accept.trim())?.[1])
+
 /** 真正发起上传，裁剪与不裁剪两条路径共用 */
 const submitUpload = async (file: File): Promise<void> => {
   if (!props.upload) return
@@ -104,15 +111,16 @@ const submitUpload = async (file: File): Promise<void> => {
 const handleFileChange = async (event: Event): Promise<void> => {
   const input = event.target as HTMLInputElement
   const file = input.files?.[0]
-  // 清空 value，允许再次选择同一张图
+  // 清空 value，允许再次选择同一个文件
   input.value = ''
   if (!file) return
-  if (!file.type.startsWith('image/')) {
-    ElMessage.warning('请选择图片文件')
+  const kind = file.type.split('/')[0] || ''
+  if (acceptKind.value && kind !== acceptKind.value) {
+    ElMessage.warning(`请选择${KIND_LABELS[acceptKind.value] ?? acceptKind.value}文件`)
     return
   }
-  // 未配置比例：不弹裁剪框，原图直传
-  if (!cropperEnabled.value) {
+  // 只有图片参与裁剪，视频等其它类型原文件直传
+  if (kind !== 'image' || !cropperEnabled.value) {
     await submitUpload(file)
     return
   }

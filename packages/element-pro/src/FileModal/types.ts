@@ -125,8 +125,10 @@ export interface FileModalProps<T extends FileModalAsset = FileModalAsset> {
   updateGroup?: FileModalUpdateGroup
   /** 删除分组，不传时「更多操作」里隐藏「删除分类」 */
   removeGroup?: FileModalRemoveGroup
-  /** 上传裁剪结果，不传时隐藏「上传图片」 */
+  /** 上传回调，不传时隐藏「上传素材」；图片按 cropperRatios 裁剪，其余类型直传 */
   upload?: FileModalUpload<T>
+  /** 上传可选的文件类型，传给文件选择框；`image/*`（默认）会校验图片类型并允许裁剪，`video/*` 等非图片类型直传 */
+  accept?: string
   /** 是否多选 */
   multiple?: boolean
   /**

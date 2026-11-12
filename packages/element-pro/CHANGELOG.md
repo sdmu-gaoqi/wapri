@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.6.0
+
+### Minor Changes
+
+- FileModal 新增 `accept` prop：上传按钮按文件大类校验，图片仍走裁剪流程，视频等非图片素材选完直接上传
+
 ## 3.5.3
 
 ### Patch Changes
