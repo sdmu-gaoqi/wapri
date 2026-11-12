@@ -15,6 +15,7 @@ import { MainContent } from './MainContent'
 import { ShareButton } from './ShareButton'
 import { Sidebar } from './Sidebar'
 import { CropperUpload } from './CropperUpload'
+import { DragSortTable } from './DragSortTable'
 import { UmdComponent } from './UmdComponent'
 import { ProForm } from './ProForm'
 import { ProFormDependency } from './ProFormDependency'
@@ -59,6 +60,7 @@ export * from './MainContent'
 export * from './ShareButton'
 export * from './Sidebar'
 export * from './CropperUpload'
+export * from './DragSortTable'
 export * from './UmdComponent'
 export * from './ProFormFields'
 export * from './ProForm'
@@ -81,6 +83,7 @@ export {
   Layout,
   ShareButton,
   CropperUpload,
+  DragSortTable,
   UmdComponent,
   ProForm,
   ProFormText,
@@ -123,6 +126,7 @@ const components = [
   Layout,
   ShareButton,
   CropperUpload,
+  DragSortTable,
   UmdComponent,
   ProForm,
   ProFormText,

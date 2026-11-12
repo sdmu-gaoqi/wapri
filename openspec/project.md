@@ -38,6 +38,7 @@
 - 多 tab 编辑用 `TabForm` + `TabForm.Item`：所有 tab 共用一份 `model`，切换不校验，提交时校验全部 tab 并跳到第一个出错的分段；字段名跨 tab 应保持唯一。`tabPosition` 取 `left` / `right` 时为垂直导航，导航列宽度由 `navWidth` 控制。
 - 表单的联动与数组字段由 `ProFormFields` 目录下的 `ProFormDependency`、`ProFormList` 承担：前者按 `names` 订阅字段子集，后者在行内注入路径前缀，字段的 `name` 在列表内是相对当前行的路径。
 - 字段级能力（`ValueType`、`ValueEnum`、`formatCellValue` 等）放在 `packages/element-pro/src/shared/field/`，`ProTable/types.ts` 与 `ProTable/utils.ts` 只做 re-export，保证表格与表单共用同一份解析。
+- 拖拽排序统一走 `@vue-dnd-kit/core`：表格用 `DragSortTable`（`dragSortKey` 指定把手列，`onDragSortEnd` 拿新顺序），上传列表用 `CropperUpload` 的 `sortable`。两个组件各自持有私有 `DnDProvider`，业务不需要在应用根部包 provider；`shared/dnd/SortableItemRegistrar.vue` 是「目标元素不在自己的组件里」时的通用注册器。
 - 禁止直接使用 `localStorage` / `sessionStorage`，统一走 `@wapri/gbase` 的 `storage` / `MyStorage`。
 - 业务域名、桶名、网关前缀、Token 键、App 通道名一律走配置或环境变量，不写进源码与文档示例。
 - 优先复用 `@wapri/*` 工作区别名，不引入新的相对路径穿透。

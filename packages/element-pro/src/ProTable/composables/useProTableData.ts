@@ -148,6 +148,14 @@ export function useProTableData<T extends object, U extends Record<string, unkno
     if (nextPage.total !== undefined) pageInfo.value.total = Math.max(0, nextPage.total)
   }
 
+  /**
+   * 直接替换当前页数据：不重新请求，也不动分页。
+   * 拖拽排序这类「顺序变了但数据没变」的场景用它回写，避免整张表重新请求。
+   */
+  function setDataSource(rows: T[]): void {
+    dataSource.value = rows
+  }
+
   function getAction(formRef: ProTableFormAction): ActionType<T> {
     return {
       reload,
@@ -155,6 +163,7 @@ export function useProTableData<T extends object, U extends Record<string, unkno
       reset: resetSearch,
       clearSelected: () => undefined,
       setPageInfo,
+      setDataSource,
       toggleRowExpansion: () => undefined,
       expandAll: () => undefined,
       collapseAll: () => undefined,
@@ -213,6 +222,7 @@ export function useProTableData<T extends object, U extends Record<string, unkno
     reload,
     reloadAndRest,
     setPageInfo,
+    setDataSource,
     getAction,
   }
 }

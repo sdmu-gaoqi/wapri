@@ -55,6 +55,17 @@ group:
 
 原图超过 `maxImgSize`（默认 4096）时会先等比压缩再裁剪，避免超大图占用过多内存。
 
+## 拖拽排序
+
+`sortable` 打开后，上传列表的每一项都可以拖动调整顺序（商品图集、轮播图这类「顺序即语义」的场景）：
+
+- 松手后按新顺序回写 `file-list`：受控用法触发 `update:fileList`，非受控用法更新组件内部列表；
+- 排序只改列表顺序，不会重新上传、也不会重新裁剪，`beforeUpload`、`remove` 等原有链路按新列表照常执行；
+- 拖拽底座是 [@vue-dnd-kit/core](https://www.npmjs.com/package/@vue-dnd-kit/core)（需要 `vue >= 3.5`），组件自带 `DnDProvider`，业务不用另外包；
+- 截图墙（`list-type="picture-card"`）与文字列表都支持；触屏长按、键盘聚焦后按空格 + 方向键同样可用。
+
+<code src="./demo/sortable.vue" title="拖拽调整顺序"></code>
+
 ## 使用
 
 ```vue | pure
@@ -101,6 +112,8 @@ const onCrop = (file: File, rawFile: File) => {
 | `confirmText`   | 确认按钮文案                                                     | `string`              | `'确定'`               |
 | `cancelText`    | 取消按钮文案                                                     | `string`              | `'取消'`               |
 | `reselectText`  | 「重新选择」按钮文案                                             | `string`              | `'重新选择'`           |
+| `sortable`      | 上传列表是否可拖拽调整顺序，松手后按新顺序回写 `file-list`       | `boolean`             | `false`                |
+| `sortableDisabled` | 关闭拖拽排序（仅 `sortable` 为 `true` 时生效）                 | `boolean`             | `false`                |
 
 ### cropperOptions
 

@@ -1,0 +1,74 @@
+/**
+ * DragSortTable 样式。
+ *
+ * 行、单元格仍是 ElTable 的类名，这里只补三块：
+ * 把手、占位行、拖拽浮层。
+ */
+.wa-ui-drag-sort-table {
+  &__handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: var(--el-text-color-secondary);
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: grab;
+    outline: none;
+    transition:
+      color 0.15s,
+      background-color 0.15s;
+
+    &:hover {
+      color: var(--el-color-primary);
+      background-color: var(--el-fill-color-light);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px var(--el-color-primary-light-5);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__handle--disabled {
+    color: var(--el-text-color-disabled);
+    cursor: not-allowed;
+
+    &:hover {
+      color: var(--el-text-color-disabled);
+      background-color: transparent;
+    }
+  }
+
+  /**
+   * 起拖后原位置留下的占位行：整行内容淡出，只留一条虚线示意「这一格是空的」。
+   * 具体的透明度由 @vue-dnd-kit/core 的默认样式给出，这里只补空位观感。
+   */
+  .el-table__body tr[data-dnd-placeholder] > td {
+    background-color: var(--el-fill-color-lighter);
+  }
+
+  .el-table__body tr[data-dnd-dragging] {
+    cursor: grabbing;
+  }
+
+  /** 拖拽中其它行不响应 hover，避免和落点动画抢视觉。 */
+  .el-table__body tr[data-dnd-placeholder]:hover > td {
+    background-color: var(--el-fill-color-lighter);
+  }
+}
+
+/**
+ * 拖拽浮层：克隆出来的一行。浮层被 teleport 到 body，所以用固定前缀选择器。
+ * 列宽由克隆的 colgroup 决定，因此这里必须 table-layout: fixed。
+ */
+.wa-ui-drag-sort-table__overlay {
+  table-layout: fixed;
+  background-color: var(--el-bg-color);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 12%);
+  opacity: 0.95;
+}

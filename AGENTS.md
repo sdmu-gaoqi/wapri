@@ -23,6 +23,7 @@ Guidance for coding agents working in this repository.
   - 分步表单用 `StepsForm` + `StepsForm.StepForm`,每步独立 `model`;`name` 在同一容器内唯一,最后一步合并后交给 `onFinish`
   - 多 tab 表单用 `TabForm` + `TabForm.Item`,所有 tab 共用一份 `model`;提交时校验全部 tab,失败自动跳到第一个出错的分段;`tabPosition` 为 `left`/`right` 时是垂直导航,`navWidth` 控制导航列宽度
   - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
+  - 拖拽排序用 `DragSortTable`(`ProTable` + `dragSortKey`/`dragSortHandlerRender`/`onDragSortEnd`,对齐 pro-components) 与 `CropperUpload` 的 `sortable`;底座是 `@vue-dnd-kit/core`,组件自带 `DnDProvider`
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
   - 只依赖 `@wapri/gbase`,解析用 pdfjs-dist / mammoth / xlsx,排版用 opentype.js

@@ -133,6 +133,9 @@ importers:
 
   packages/element-pro:
     dependencies:
+      '@vue-dnd-kit/core':
+        specifier: ^3.1.0
+        version: 3.1.0(vue@3.5.38(typescript@5.8.3))
       '@wapri/ghooks':
         specifier: workspace:^
         version: link:../hooks
@@ -3011,6 +3014,11 @@ packages:
 
   '@volar/typescript@1.11.1':
     resolution: {integrity: sha512-iU+t2mas/4lYierSnoFOeRFQUhAEMgsFuQxoxvwn5EdQopw43j+J27a4lt9LMInx1gLJBC6qL14WYGlgymaSMQ==}
+
+  '@vue-dnd-kit/core@3.1.0':
+    resolution: {integrity: sha512-7cPCNJmo8WYjSQHsgKu/iQRj8MUC0EIWRCMgFmIOS1YrrWv7nOt8BdNI6F1oUJoH/u/o9jbxWMbXVdnYSgf1Zw==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@vue/compiler-core@3.5.38':
     resolution: {integrity: sha512-s99aGxWYig9ErHbct27KXEGhrBYlRI6c4MwAgXErOAbX9xiW37/uMa+XUDO69zLz83dng8UUZ70CTOJrLrYrEQ==}
@@ -12588,6 +12596,11 @@ snapshots:
     dependencies:
       '@volar/language-core': 1.11.1
       path-browserify: 1.0.1
+
+  '@vue-dnd-kit/core@3.1.0(vue@3.5.38(typescript@5.8.3))':
+    dependencies:
+      '@vueuse/core': 14.3.0(vue@3.5.38(typescript@5.8.3))
+      vue: 3.5.38(typescript@5.8.3)
 
   '@vue/compiler-core@3.5.38':
     dependencies:

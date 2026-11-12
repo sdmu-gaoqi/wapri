@@ -206,6 +206,8 @@ export interface ActionType<T extends object = object> {
   reset: () => Promise<void>
   clearSelected: () => void
   setPageInfo: (page: Partial<PageInfo>) => void
+  /** 直接替换当前页数据，不重新请求、不改分页；拖拽排序等需要即时回写顺序的场景用。 */
+  setDataSource: (data: T[]) => void
   /** 控制指定树形数据行的展开状态；不传 expanded 时切换当前状态。 */
   toggleRowExpansion: (row: T, expanded?: boolean) => void
   /** 展开当前已加载树形数据中的全部父级节点。 */

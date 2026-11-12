@@ -167,3 +167,28 @@
     transition: none !important;
   }
 }
+
+/**
+ * 拖拽排序（`sortable`）：整项可拖，按下时抓手光标。
+ * 拖动中的占位项由 @vue-dnd-kit/core 的默认样式淡出，这里只补「正在被拖」的手感。
+ */
+.wa-ui-cropper-upload--sortable {
+  .el-upload-list__item {
+    cursor: grab;
+  }
+
+  .el-upload-list__item:active,
+  .el-upload-list__item[data-dnd-dragging] {
+    cursor: grabbing;
+  }
+
+  .el-upload-list__item[data-dnd-placeholder] {
+    opacity: 0.4;
+  }
+
+  // 拖拽期间不要选中图片或触发原生图片拖影
+  .el-upload-list__item img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+}

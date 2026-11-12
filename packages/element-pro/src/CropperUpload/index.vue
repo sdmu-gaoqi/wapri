@@ -2,7 +2,9 @@
 import { computed, ref, useAttrs } from 'vue'
 import { ElMessage, ElUpload } from 'element-plus'
 import type { UploadHooks, UploadInstance, UploadRawFile, UploadUserFile } from 'element-plus'
+import { DnDProvider } from '@vue-dnd-kit/core'
 import CropperDialog from './CropperDialog.vue'
+import SortableFileList from './components/SortableFileList.vue'
 import { useConfig } from '../ConfigProvider/context'
 import { inheritUid, isImageFile } from './utils'
 import type { CropperUploadEmits, CropperUploadProps } from './types'
@@ -20,6 +22,8 @@ const props = withDefaults(defineProps<CropperUploadProps>(), {
   confirmText: '确定',
   cancelText: '取消',
   reselectText: '重新选择',
+  sortable: false,
+  sortableDisabled: false,
 })
 
 const emit = defineEmits<CropperUploadEmits>()
@@ -51,6 +55,33 @@ const fileList = computed(() => userFileList.value ?? internalFileList.value)
 
 const handleUpdateFileList = (files: UploadUserFile[]) => {
   if (!userFileList.value) internalFileList.value = files
+}
+
+/**
+ * 拖拽排序用的元素定位：`ElUpload` 的列表项由它自己渲染，只能按顺序取 DOM。
+ * 列表项顺序与 `fileList` 顺序一致，所以 index 可以直接对应到 `SortableFileList` 的注册顺序。
+ */
+const getUploadListElement = (): HTMLElement | undefined => {
+  const root = uploadRef.value?.$el
+  if (!(root instanceof HTMLElement)) return undefined
+  // ElUpload 是多根片段：picture-card 下 $el 就是 `.el-upload-list` 本身，其它形态才是它的容器
+  const list = root.matches('.el-upload-list') ? root : root.querySelector<HTMLElement>('.el-upload-list')
+  return list ?? undefined
+}
+
+const getUploadItemElement = (index: number): HTMLElement | undefined => {
+  const list = getUploadListElement()
+  return list?.querySelectorAll<HTMLElement>(':scope > .el-upload-list__item')[index] ?? undefined
+}
+
+/** 排序结束：受控用法把新顺序抛给 `v-model:file-list`，非受控用法更新内部列表。 */
+const handleSortEnd = (files: UploadUserFile[]) => {
+  if (userFileList.value) {
+    const update = attrs['onUpdate:fileList']
+    if (typeof update === 'function') update(files)
+    return
+  }
+  internalFileList.value = files
 }
 
 /** 打开裁剪弹窗并等待用户确认 */
@@ -156,7 +187,7 @@ defineExpose({ uploadRef })
   <ElUpload
     ref="uploadRef"
     v-bind="$attrs"
-    :class="[base, { [`${base}--circle`]: circle }]"
+    :class="[base, { [`${base}--circle`]: circle, [`${base}--sortable`]: sortable }]"
     :file-list="fileList"
     :before-upload="handleBeforeUpload"
     @update:file-list="handleUpdateFileList"
@@ -178,6 +209,16 @@ defineExpose({ uploadRef })
       <slot name="tip"></slot>
     </template>
   </ElUpload>
+
+  <DnDProvider v-if="sortable">
+    <SortableFileList
+      :files="fileList"
+      :get-list-element="getUploadListElement"
+      :get-item-element="getUploadItemElement"
+      :disabled="sortableDisabled"
+      @sort-end="handleSortEnd"
+    />
+  </DnDProvider>
 
   <CropperDialog
     :visible="visible"

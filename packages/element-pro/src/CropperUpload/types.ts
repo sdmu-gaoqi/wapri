@@ -115,6 +115,13 @@ export interface CropperUploadProps {
   cancelText?: string
   /** 「重新选择」按钮文案，设置后可在弹窗内换图而不关闭 */
   reselectText?: string
+  /**
+   * 上传列表是否支持拖拽调整顺序，默认 `false`。
+   * 顺序即语义的场景（商品图集、轮播图）打开它，松手后按新顺序回写 `file-list`。
+   */
+  sortable?: boolean
+  /** 拖拽排序是否禁用，仅在 `sortable` 为 `true` 时生效 */
+  sortableDisabled?: boolean
 }
 
 export interface CropperUploadEmits {
