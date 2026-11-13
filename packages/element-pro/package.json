@@ -25,6 +25,7 @@
     "@vue-dnd-kit/core": "^3.1.0",
     "@wapri/ghooks": "workspace:^",
     "@wapri/gutils": "workspace:^",
+    "@wapri/preview": "workspace:^",
     "classnames": "^2.5.1",
     "vue-cropper": "^1.1.4"
   },

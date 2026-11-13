@@ -35,6 +35,8 @@ export default defineConfig({
         '@element-plus/icons-vue',
         '@wapri/ghooks',
         '@wapri/gutils',
+        // 文档 / PDF / Word / XLSX 预览体积较大，按需动态加载
+        '@wapri/preview',
         // 拖拽排序底座：作为运行时依赖，交给使用方安装，不打进包体
         '@vue-dnd-kit/core',
         'classnames',

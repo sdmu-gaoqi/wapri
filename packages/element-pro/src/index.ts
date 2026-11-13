@@ -3,6 +3,7 @@ import { ModalForm } from './ModalForm'
 import { DrawerForm } from './DrawerForm'
 import { Ellipsis } from './Ellipsis'
 import { FileModal } from './FileModal'
+import { FileList } from './FileList'
 import type { App } from 'vue'
 import { DateQuickSelect } from './DateQuickSelect'
 import { ProTable } from './ProTable'
@@ -55,6 +56,7 @@ export * from './SvgIcon'
 export * from './CheckCard'
 export * from './Ellipsis'
 export * from './FileModal'
+export * from './FileList'
 export * from './Layout'
 export * from './MainContent'
 export * from './ShareButton'
@@ -119,6 +121,7 @@ const components = [
   CheckCard,
   Ellipsis,
   FileModal,
+  FileList,
   DateQuickSelect,
   TagSelector,
   Sidebar,

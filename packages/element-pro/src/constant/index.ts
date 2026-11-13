@@ -103,3 +103,27 @@ export const fileModalSortOptions = [
   { label: '名称 A-Z', value: 'name' },
   { label: '文件从大到小', value: 'size' },
 ] as const
+
+/** FileList 默认每行列数。 */
+export const fileListDefaultColumns = 4
+
+/** FileList 空列表文案。 */
+export const fileListEmptyText = '暂无文件'
+
+/** FileList 预览按钮的提示文案。 */
+export const fileListPreviewText = '预览'
+
+/** FileList 删除按钮的提示文案。 */
+export const fileListRemoveText = '删除'
+
+/** FileList 文档预览加载中的文案。 */
+export const fileListPreviewLoadingText = '正在加载预览…'
+
+/** FileList 文档预览失败的文案。 */
+export const fileListPreviewErrorText = '预览失败，请下载后查看'
+
+/** FileList 文档预览弹窗宽度：桌面 880px，窄屏跟随视口。 */
+export const fileListPreviewDialogWidth = 'min(880px, 92vw)'
+
+/** FileList 视频预览弹窗宽度：桌面 720px，窄屏跟随视口。 */
+export const fileListVideoDialogWidth = 'min(720px, 92vw)'

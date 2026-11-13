@@ -142,6 +142,9 @@ importers:
       '@wapri/gutils':
         specifier: workspace:^
         version: link:../utils
+      '@wapri/preview':
+        specifier: workspace:^
+        version: link:../preview
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -5477,6 +5480,7 @@ packages:
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
+    deprecated: Please migrate to image-size@2.x
     hasBin: true
 
   immediate@3.0.6:
