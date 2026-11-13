@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.9.1
+
+### Patch Changes
+
+- 将fileList的append行高设置为0
+
 ## 3.9.0
 
 ### Minor Changes
