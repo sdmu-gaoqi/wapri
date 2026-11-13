@@ -15,6 +15,7 @@ import type { FileListItem, FileListRowKey } from '../types'
 const props = defineProps<{
   data: T[]
   columns: number
+  width?: number | string
   previewable: boolean
   removable: boolean
   disabled: boolean
@@ -75,6 +76,7 @@ const handleRemove = (item: T, index: number): void => {
     ref="gridRef"
     :data="list.items.value"
     :columns="columns"
+    :width="width"
     :previewable="previewable"
     :removable="removable"
     :disabled="disabled"
@@ -83,7 +85,17 @@ const handleRemove = (item: T, index: number): void => {
     :row-key="rowKey"
     @preview="handlePreview"
     @remove="handleRemove"
-  />
+  >
+    <template
+      v-if="$slots.append"
+      #append="scope"
+    >
+      <slot
+        name="append"
+        v-bind="scope"
+      ></slot>
+    </template>
+  </FileListGrid>
 
   <SortableItemRegistrar
     v-for="(item, index) in list.items.value"

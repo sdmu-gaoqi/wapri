@@ -1,0 +1,192 @@
+/**
+ * 文件卡片样式：FileList 与 FileModal 共用。
+ *
+ * 缩略图、视频首帧、类型占位图标、底部名称浮层与右上角操作区都在这里维护，
+ * class 统一使用 `wa-ui` 前缀，与 `ConfigProvider` 的默认 prefix 保持一致。
+ */
+.wa-ui-file-card {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 6px;
+  background: var(--el-bg-color);
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    opacity 0.2s;
+
+  &:hover {
+    border-color: var(--el-color-primary-light-5);
+  }
+}
+
+.wa-ui-file-card--active {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 2px var(--el-color-primary-light-7);
+}
+
+.wa-ui-file-card--active .wa-ui-file-card__thumb::after {
+  position: absolute;
+  inset: 0;
+  background: var(--el-color-primary);
+  opacity: 0.08;
+  pointer-events: none;
+  content: '';
+}
+
+.wa-ui-file-card--disabled {
+  cursor: default;
+}
+
+.wa-ui-file-card[data-dnd-dragging] {
+  cursor: grabbing;
+  opacity: 0.4;
+}
+
+.wa-ui-file-card[data-dnd-placeholder] {
+  opacity: 0.3;
+}
+
+.wa-ui-file-card__thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--el-fill-color-light);
+}
+
+.wa-ui-file-card__thumb-image,
+.wa-ui-file-card__thumb-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/** 视频首帧不可点击，卡片整体负责打开预览或切换选中。 */
+.wa-ui-file-card__thumb-video {
+  background: var(--el-fill-color-dark);
+  pointer-events: none;
+}
+
+/** 底部名称浮层：黑底半透明白字，长名称省略，不拦卡片点击。 */
+.wa-ui-file-card__name {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 4px 6px;
+  overflow: hidden;
+  background: rgb(0 0 0 / 55%);
+  color: #fff;
+  font-size: 12px;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wa-ui-file-card__thumb-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--el-text-color-placeholder);
+}
+
+/** 文档占位图标按类型上色，与图标里的扩展名文案共同区分文件格式。 */
+.wa-ui-file-card__thumb-fallback--pdf {
+  color: #e5484d;
+}
+
+.wa-ui-file-card__thumb-fallback--word {
+  color: #2f6fed;
+}
+
+.wa-ui-file-card__thumb-fallback--xlsx {
+  color: #1a7f37;
+}
+
+.wa-ui-file-card__thumb-fallback--ppt {
+  color: #d97706;
+}
+
+.wa-ui-file-card__thumb-fallback--image {
+  color: #0e9f9f;
+}
+
+.wa-ui-file-card__thumb-fallback--video {
+  color: #7c5cff;
+}
+
+.wa-ui-file-card__file-icon {
+  width: 40px;
+  height: 48px;
+}
+
+.wa-ui-file-card__file-icon-page {
+  fill: currentColor;
+  opacity: 0.12;
+}
+
+.wa-ui-file-card__file-icon-fold {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  opacity: 0.45;
+}
+
+.wa-ui-file-card__file-icon-label {
+  fill: currentColor;
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.wa-ui-file-card__actions {
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.wa-ui-file-card:hover .wa-ui-file-card__actions,
+.wa-ui-file-card:focus-within .wa-ui-file-card__actions,
+.wa-ui-file-card__actions--always {
+  opacity: 1;
+}
+
+/** 左上角角标区：选中勾选标记等常驻角标挂在这里，与右上角操作区互不干扰 */
+.wa-ui-file-card__badge {
+  position: absolute;
+  z-index: 2;
+  top: 5px;
+  left: 5px;
+  display: flex;
+}
+
+.wa-ui-file-card__meta {
+  margin: 4px 2px 0;
+  overflow: hidden;
+  color: var(--el-text-color-placeholder);
+  font-size: 11px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/** 触屏设备没有 hover，操作按钮常驻，避免无法操作。 */
+@media (hover: none) {
+  .wa-ui-file-card__actions {
+    opacity: 1;
+  }
+}

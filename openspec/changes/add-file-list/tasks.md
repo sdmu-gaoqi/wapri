@@ -41,3 +41,15 @@
 - [x] 6.4 `npx -y @fission-ai/openspec@latest validate add-file-list --strict` 通过
 - [x] 6.5 新增 `.changeset/file-list.md`（`minor`）
 - [x] 6.6 `pnpm doc` 通过，生成 `/element-pros/file-list` 页面与 demo
+
+## 7. 视频卡片
+
+- [x] 7.1 卡片识别为视频时用 `<video preload="metadata">` 展示 `previewUrl` 首帧，`abbreviateUrl` 作为 `poster`；首帧失败退回封面，封面失败降级为文件图标
+- [x] 7.2 新增 `getItemVideoSrc` / `getItemVideoPoster` / `isVideoItem`，并补充 `tests/file-list.test.mjs`
+- [x] 7.3 同步 `FileList/index.md` 与 changeset，跑通 lint / format / 构建
+
+## 8. 文档占位图标
+
+- [x] 8.1 新增 `getFileIconInfo`（扩展名 / MIME 识别 PDF、Word、Excel、PPT 等分类与短文案）
+- [x] 8.2 `abbreviateUrl` 改为可选，卡片无缩略图时渲染按类型上色的文件图标；文档不再拿 `previewUrl` 当图片
+- [x] 8.3 补充测试、`FileList/index.md`、demo 与 changeset

@@ -110,6 +110,19 @@ export type FileModalUpload<T extends FileModalAsset = FileModalAsset> = (
   context: FileModalUploadContext,
 ) => Promise<T>
 
+/** `action` 插槽的上下文。 */
+export interface FileModalActionSlotProps {
+  /** 打开弹窗 */
+  open: () => void
+  /** 弹窗当前是否打开 */
+  visible: boolean
+}
+
+export interface FileModalSlots {
+  /** 触发入口：存在时点击它打开弹窗，可代替业务自己维护 `v-model:open` */
+  action?: (props: FileModalActionSlotProps) => unknown
+}
+
 export interface FileModalProps<T extends FileModalAsset = FileModalAsset> {
   /** 弹窗开关 */
   open?: boolean

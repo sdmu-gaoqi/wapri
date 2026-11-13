@@ -1,3 +1,8 @@
+/* action 插槽容器：只负责布局与点击，外观由插槽内容决定 */
+.wa-ui-file-modal__action {
+  display: inline-flex;
+}
+
 /* 弹窗整体最高 80vh：标题与底部按钮不参与伸缩，剩余高度全部交给内容区；
    内容很少时也保留一个下限高度，避免弹窗忽高忽低 */
 .wa-ui-file-modal {
@@ -330,65 +335,25 @@
   white-space: nowrap;
 }
 
-.wa-ui-file-modal__card {
-  display: flex;
-  flex-direction: column;
-  padding: 4px;
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 6px;
-  cursor: pointer;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
-
-  &:hover {
-    border-color: var(--el-color-primary-light-5);
-  }
-}
-
-.wa-ui-file-modal__card--active {
-  border-color: var(--el-color-primary);
-  box-shadow: 0 0 0 1px var(--el-color-primary) inset;
-}
-
-.wa-ui-file-modal__thumb {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  border-radius: 4px;
-  background: var(--el-fill-color-light);
-
-  img,
-  video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-}
-
-/* 视频角标已移除：卡片右下角只保留唯一的预览按钮，视频不再单独渲染播放图标 */
+/* 选中角标：挂在缩略图左上角，白底主色勾，带柔和投影，与右上角预览按钮各居一角 */
 .wa-ui-file-modal__check {
-  position: absolute;
-  top: 4px;
-  right: 4px;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: var(--el-color-primary);
-  color: #fff;
-  font-size: 12px;
+  background: #fff;
+  color: var(--el-color-primary);
+  font-size: 13px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
 }
 
 /* 预览入口：独立于选中，点击不冒泡 */
 .wa-ui-file-modal__preview {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   width: 22px;
@@ -406,26 +371,6 @@
   &:focus-visible {
     background: var(--el-color-primary);
   }
-}
-
-.wa-ui-file-modal__name {
-  margin: 6px 2px 0;
-  overflow: hidden;
-  color: var(--el-text-color-regular);
-  font-size: 12px;
-  line-height: 16px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.wa-ui-file-modal__meta {
-  margin: 2px 2px 0;
-  overflow: hidden;
-  color: var(--el-text-color-placeholder);
-  font-size: 11px;
-  line-height: 14px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .wa-ui-file-modal__empty {

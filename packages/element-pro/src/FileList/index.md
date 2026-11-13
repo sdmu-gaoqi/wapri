@@ -13,6 +13,10 @@ group:
 
 <code src="./demo/basic.vue" title="基础用法"></code>
 
+<code src="./demo/upload-crop.vue" title="指定卡片宽度 + 上传裁剪"></code>
+
+`width` 用来固定卡片宽度、按容器宽度自动换行；`append` 插槽渲染在网格末尾，适合放「上传」这类追加单元格。示例把 [CropperUpload](/element-pros/cropper-upload) 放进插槽，选中图片先裁剪、确认后再写入 `FileList` 的数据。
+
 ## 数据与回写
 
 组件接收 `data`，删除与排序后抛出 `update:data`，配合 `v-model:data` 即可自动回写：
@@ -34,12 +38,21 @@ const data = ref<FileListItem[]>([
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `name` | `string` | 文件名称，展示在缩略图下方 |
-| `abbreviateUrl` | `string` | 缩略图地址 |
+| `name` | `string` | 文件名称，以黑底半透明白字叠在缩略图底部，长名称省略 |
+| `abbreviateUrl` | `string` | 缩略图地址，可选；视频卡片用作封面帧 |
 | `previewUrl` | `string` | 预览地址，图片、视频、文档都取这个地址 |
 | 其余字段 | `unknown` | 通过索引签名透传，删除 / 排序后原样保留 |
 
+`abbreviateUrl` 可以不传：文档项按 `name` / `previewUrl` / `url` 的扩展名或 MIME 展示对应的 PDF / XLSX / DOCX / PPTX 图标，图标里带扩展名短文案；图片项缺失时退回 `previewUrl`，视频项直接播 `previewUrl` 首帧。
+
 组件不修改传入的数组对象：删除和排序都会生成新数组，业务可以在 `remove` / `sort` 里做持久化。
+
+## 卡片展示
+
+- 名称固定叠在缩略图底部：黑底半透明白字，单行省略，不拦截卡片点击。
+- 操作按钮（预览 / 删除）排在缩略图右上角，hover 或聚焦时显示；触屏设备常驻显示。
+- 视频卡片播放 `previewUrl` 的首帧，`abbreviateUrl` 只作为 `poster` 封面。
+- 没有可用缩略图时展示类型占位图标：PDF 红、Excel 绿、Word 蓝、PPT 橙，图标里带扩展名短文案。
 
 ## 预览分流
 
@@ -53,6 +66,8 @@ const data = ref<FileListItem[]>([
 
 媒体类型优先看 `type` / `mime` / `mimeType` / `contentType` / `fileType`，再看 `previewUrl` / `abbreviateUrl` / `name` 的扩展名，`data:` 地址直接看前缀。
 
+卡片里的视频不会用 `<img>`：识别为视频时改用 `<video preload="metadata">` 播放 `previewUrl` 的首帧，`abbreviateUrl` 作为 `poster` 封面；首帧加载失败退回封面图，封面也失败再降级为文件图标。
+
 文档预览按需动态加载 `@wapri/preview`，不使用文档预览时不会打进首屏包体。PDF 需要业务自己配置 pdf.js worker：
 
 ```ts
@@ -62,6 +77,20 @@ configurePdfjs({ workerSrc: '/pdf.worker.min.mjs' })
 ```
 
 预览失败时弹窗内展示错误提示，并抛出 `error` 事件。
+
+## 布局
+
+默认按 `columns` 固定列数排列，窄屏（≤640px）自动降为 2 列。需要固定卡片大小时改传 `width`：
+
+```vue | pure
+<template>
+  <!-- 每张卡片 120px 宽，一行能放几张由容器宽度决定 -->
+  <FileList v-model:data="data" :width="120" />
+</template>
+```
+
+- `width` 支持数字（按 `px`）与字符串（`8rem`、`30%`）。
+- 设置 `width` 后 `columns` 失效，窄屏也不再强制两列；容器比卡片还窄时卡片会收缩到容器宽度，不会横向溢出。
 
 ## 只读与操作
 
@@ -74,12 +103,21 @@ configurePdfjs({ workerSrc: '/pdf.worker.min.mjs' })
 
 开启拖拽时，卡片的键盘操作交给拖拽库：聚焦卡片后空格 / 回车拾取，方向键移动，再按空格 / 回车放下，Esc 取消；预览与删除用卡片内的按钮。关闭拖拽后卡片可用空格 / 回车打开预览。
 
+## Slots
+
+| 插槽名 | 参数 | 说明 |
+| --- | --- | --- |
+| `append` | `{ data, count }` | 网格末尾的追加单元格，占一个卡片位；常放上传入口。有该插槽时空列表不展示 `emptyText` |
+
+`append` 里的上传入口拿到的是裁剪 / 上传后的文件，业务把它转成 `FileListItem` 后写回 `v-model:data` 即可；`count` 可用于限制数量。
+
 ## Props
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `data` | `FileListItem[]` | `[]` | 文件列表，支持 `v-model:data` |
 | `columns` | `number` | `4` | 每行列数，窄屏（≤640px）自动降为 2 列 |
+| `width` | `number \| string` | - | 卡片固定宽度，数字按 `px`；设置后按宽度自动换行，`columns` 失效 |
 | `sortable` | `boolean` | `true` | 是否支持拖动排序 |
 | `removable` | `boolean` | `true` | 是否显示删除按钮 |
 | `previewable` | `boolean` | `true` | 是否支持点击预览 |
@@ -110,7 +148,7 @@ configurePdfjs({ workerSrc: '/pdf.worker.min.mjs' })
 ```ts
 interface FileListItem {
   name: string
-  abbreviateUrl: string
+  abbreviateUrl?: string
   previewUrl: string
   [key: string]: unknown
 }

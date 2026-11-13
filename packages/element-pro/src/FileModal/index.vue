@@ -56,6 +56,7 @@ import type {
   FileModalProps,
   FileModalQuery,
   FileModalRequest,
+  FileModalSlots,
   FileModalSortValue,
 } from './types'
 import './styles/index.scss'
@@ -84,11 +85,36 @@ const props = withDefaults(defineProps<FileModalProps<T>>(), {
 
 const emit = defineEmits<FileModalEmits<T>>()
 
+defineSlots<FileModalSlots>()
+
 const { prefix } = useConfig()
 
 defineOptions({ name: 'FileModal' })
 
 const base = computed(() => `${prefix.value}-file-modal`)
+
+/**
+ * 弹窗显隐的唯一真源。
+ * 既支持 `v-model:open` 受控，也支持 `action` 插槽自己打开——后者不需要业务维护开关。
+ */
+const innerOpen = ref(props.open)
+
+watch(
+  () => props.open,
+  (open) => {
+    innerOpen.value = open
+  },
+)
+
+const openModal = (): void => {
+  if (innerOpen.value) return
+  innerOpen.value = true
+  emit('update:open', true)
+}
+
+const closeModal = (): void => {
+  innerOpen.value = false
+}
 
 const tableRef = ref<ActionType<T>>()
 
@@ -311,11 +337,13 @@ const handleConfirm = (): void => {
   const result = pickSelectedAssets(assetCache, selectedKeys.value)
   const uniqResut = uniqBy(result, 'id')
   emit('confirm', uniqResut)
+  closeModal()
   emit('update:open', false)
 }
 
 const handleCancel = (): void => {
   emit('cancel')
+  closeModal()
   emit('update:open', false)
 }
 
@@ -323,24 +351,21 @@ const handleCancel = (): void => {
 const handleVisibleChange = (value: boolean): void => {
   if (busy.value) return
   if (value) {
-    emit('update:open', true)
+    openModal()
     return
   }
   handleCancel()
 }
 
 /** 打开时重置搜索与缓存，配合 destroy-on-close 保证每次都是干净的一次选择 */
-watch(
-  () => props.open,
-  (open) => {
-    if (!open) {
-      applyKeyword.cancel()
-      return
-    }
-    searchText.value = ''
-    keyword.value = ''
-  },
-)
+watch(innerOpen, (open) => {
+  if (!open) {
+    applyKeyword.cancel()
+    return
+  }
+  searchText.value = ''
+  keyword.value = ''
+})
 
 onBeforeUnmount(() => {
   applyKeyword.cancel()
@@ -348,10 +373,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <div
+    v-if="$slots.action"
+    :class="`${base}__action`"
+    @click="openModal"
+  >
+    <slot
+      name="action"
+      :open="openModal"
+      :visible="innerOpen"
+    ></slot>
+  </div>
+
   <ElDialog
     v-bind="modalProps"
     :class="base"
-    :model-value="open"
+    :model-value="innerOpen"
     :title="title"
     :width="modalProps?.width ?? '920px'"
     append-to-body

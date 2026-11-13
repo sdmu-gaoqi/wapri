@@ -232,8 +232,15 @@
 
 - **WHEN** 素材是图片或视频，且传入了 `abbreviateUrl`
 - **THEN** 卡片的预览图使用 `abbreviateUrl`
-- **AND** 未传或为空时退回 `url`
-- **AND** 组件不自行解析视频首帧
+- **AND** 图片未传或为空时退回 `url`
+- **AND** 视频用 `<video preload="metadata">` 播放预览地址首帧，`abbreviateUrl` 作为 `poster` 封面
+
+#### Scenario: 卡片名称与操作区
+
+- **WHEN** 素材卡片渲染完成
+- **THEN** 名称以黑底半透明白字叠在缩略图底部
+- **AND** 选中角标与预览按钮排在缩略图右上角
+- **AND** 体积与上传时间展示在缩略图下方
 
 #### Scenario: 预览入口不依赖类型识别
 

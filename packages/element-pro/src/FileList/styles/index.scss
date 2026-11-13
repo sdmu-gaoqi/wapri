@@ -1,7 +1,8 @@
 /**
- * FileList 样式。
+ * FileList 布局与预览弹窗样式。
  *
- * 卡片网格、hover 操作、拖拽占位与三类预览弹窗。class 统一使用 `wa-ui` 前缀，
+ * 卡片本体（缩略图、名称浮层、操作区）在 `shared/fileCard` 中维护，
+ * 这里只保留网格、FileList 专属按钮与三类预览弹窗。class 统一使用 `wa-ui` 前缀，
  * 与 `ConfigProvider` 的默认 prefix 保持一致。
  */
 .wa-ui-file-list {
@@ -13,98 +14,18 @@
     gap: 12px;
   }
 
-  &__card {
-    display: flex;
-    flex-direction: column;
-    padding: 4px;
-    border: 1px solid var(--el-border-color-lighter);
-    border-radius: 6px;
-    background: var(--el-bg-color);
-    cursor: pointer;
-    outline: none;
-    transition:
-      border-color 0.2s,
-      box-shadow 0.2s,
-      opacity 0.2s;
-
-    &:hover {
-      border-color: var(--el-color-primary-light-5);
-    }
-
-    &:focus-visible {
-      border-color: var(--el-color-primary);
-      box-shadow: 0 0 0 2px var(--el-color-primary-light-7);
-    }
+  /** 固定宽度布局：按 `width` 自动换行，列间距与 `columns` 布局一致。 */
+  &__grid--fixed {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(var(--wa-ui-file-list-width), 100%), var(--wa-ui-file-list-width))
+    );
+    justify-content: start;
   }
 
-  &__card--disabled {
-    cursor: default;
-  }
-
-  &__card[data-dnd-dragging] {
-    cursor: grabbing;
-    opacity: 0.4;
-  }
-
-  &__card[data-dnd-placeholder] {
-    opacity: 0.3;
-  }
-
-  &__thumb {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    border-radius: 4px;
-    background: var(--el-fill-color-light);
-  }
-
-  &__thumb-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &__thumb-fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: var(--el-text-color-placeholder);
-    font-size: 28px;
-  }
-
-  /** 视频角标：居中播放浮层，刻意与右上角的操作按钮区分开。 */
-  &__badge {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: auto;
-    border-radius: 50%;
-    background: rgb(0 0 0 / 40%);
-    color: #fff;
-    font-size: 18px;
-    pointer-events: none;
-  }
-
-  &__actions {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    display: flex;
-    gap: 4px;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  &__card:hover &__actions,
-  &__card:focus-within &__actions {
-    opacity: 1;
+  /** 追加单元格：只占一个网格位，内容由 `append` 插槽决定。 */
+  &__append {
+    min-width: 0;
   }
 
   &__action {
@@ -122,25 +43,13 @@
     cursor: pointer;
     transition: background-color 0.2s;
 
-    &:hover,
-    &:focus-visible {
+    &:hover {
       background: var(--el-color-primary);
     }
   }
 
-  &__action--remove:hover,
-  &__action--remove:focus-visible {
+  &__action--remove:hover {
     background: var(--el-color-danger);
-  }
-
-  &__name {
-    margin: 6px 2px 2px;
-    overflow: hidden;
-    color: var(--el-text-color-regular);
-    font-size: 12px;
-    line-height: 16px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &__empty {
@@ -158,7 +67,7 @@
     pointer-events: none;
     filter: drop-shadow(0 8px 20px rgb(0 0 0 / 18%));
 
-    .wa-ui-file-list__card {
+    .wa-ui-file-card {
       height: 100%;
       cursor: grabbing;
     }
@@ -182,16 +91,13 @@
   }
 }
 
-/** 触屏设备没有 hover，操作按钮常驻，避免无法删除。 */
-@media (hover: none) {
-  .wa-ui-file-list__actions {
-    opacity: 1;
-  }
+.wa-ui-file-list__grid {
+  width: 100%;
 }
 
-/** 窄屏降为两列，保证卡片里的名称还能看清。 */
+/** 窄屏降为两列，保证卡片里的名称还能看清；固定宽度布局仍按宽度自动换行。 */
 @media (max-width: 640px) {
-  .wa-ui-file-list__grid {
+  .wa-ui-file-list__grid:not(.wa-ui-file-list__grid--fixed) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

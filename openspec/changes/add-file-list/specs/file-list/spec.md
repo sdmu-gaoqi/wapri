@@ -44,6 +44,29 @@
 - **THEN** 卡片显示文件图标占位
 - **AND** 名称仍正常展示
 
+#### Scenario: 文档占位图标
+
+- **WHEN** 文档项未传 `abbreviateUrl`
+- **THEN** 卡片按扩展名或 MIME 展示 PDF、Excel、Word、PPT 等对应图标
+- **AND** 图标里显示扩展名短文案
+
+#### Scenario: 名称浮层与操作区
+
+- **WHEN** 卡片渲染完成
+- **THEN** 名称以黑底半透明白字叠在缩略图底部
+- **AND** 长名称单行省略，且不拦截卡片点击
+- **AND** 预览 / 删除按钮排在缩略图右上角
+
+#### Scenario: 视频卡片首帧
+
+- **WHEN** 列表项被识别为视频
+- **THEN** 卡片用 `<video preload="metadata">` 展示 `previewUrl` 的首帧
+- **AND** `abbreviateUrl` 作为 `poster` 封面；与视频地址相同时不重复设置
+- **WHEN** 首帧加载失败
+- **THEN** 退回 `abbreviateUrl` 封面
+- **WHEN** 封面也加载失败
+- **THEN** 卡片显示文件图标占位
+
 #### Scenario: 操作按钮
 
 - **WHEN** `previewable` 为 `true`

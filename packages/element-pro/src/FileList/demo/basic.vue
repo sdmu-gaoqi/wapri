@@ -48,7 +48,6 @@ const data = ref<FileListItem[]>([
   {
     id: 'f-6',
     name: '资质证明.pdf',
-    abbreviateUrl: buildThumb(6, 'PDF'),
     previewUrl: '/demo/sample.pdf',
   },
 ])

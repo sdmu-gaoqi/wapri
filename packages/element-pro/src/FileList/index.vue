@@ -15,7 +15,7 @@ import { getFileMediaType, type FileMediaType } from '../shared/media'
 import FileListGrid from './components/FileListGrid.vue'
 import FileListSortable from './components/FileListSortable.vue'
 import { collectImageItems, getItemPreviewUrl, resolveImageIndex } from './utils'
-import type { FileListEmits, FileListExpose, FileListItem, FileListProps } from './types'
+import type { FileListEmits, FileListExpose, FileListItem, FileListProps, FileListSlots } from './types'
 import './styles/index.scss'
 
 const props = withDefaults(defineProps<FileListProps<T>>(), {
@@ -28,6 +28,8 @@ const props = withDefaults(defineProps<FileListProps<T>>(), {
 })
 
 const emit = defineEmits<FileListEmits<T>>()
+
+defineSlots<FileListSlots<T>>()
 
 const { prefix } = useConfig()
 
@@ -187,6 +189,7 @@ defineExpose<FileListExpose<T>>({
     <FileListSortable
       :data="rows"
       :columns="columns"
+      :width="width"
       :previewable="previewable"
       :removable="removable"
       :disabled="disabled"
@@ -195,12 +198,23 @@ defineExpose<FileListExpose<T>>({
       @preview="handlePreview"
       @remove="handleRemove"
       @sort="handleSort"
-    />
+    >
+      <template
+        v-if="$slots.append"
+        #append="scope"
+      >
+        <slot
+          name="append"
+          v-bind="scope"
+        ></slot>
+      </template>
+    </FileListSortable>
   </DnDProvider>
   <FileListGrid
     v-else
     :data="rows"
     :columns="columns"
+    :width="width"
     :previewable="previewable"
     :removable="removable"
     :disabled="disabled"
@@ -209,7 +223,17 @@ defineExpose<FileListExpose<T>>({
     :row-key="rowKey"
     @preview="handlePreview"
     @remove="handleRemove"
-  />
+  >
+    <template
+      v-if="$slots.append"
+      #append="scope"
+    >
+      <slot
+        name="append"
+        v-bind="scope"
+      ></slot>
+    </template>
+  </FileListGrid>
 
   <ElImageViewer
     v-if="imageVisible"

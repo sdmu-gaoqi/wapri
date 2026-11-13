@@ -13,6 +13,31 @@ group:
 
 <code src="./demo/basic.vue" title="基础用法"></code>
 
+<code src="./demo/action.vue" title="action 插槽触发"></code>
+
+## 触发入口
+
+默认由业务自己维护开关：
+
+```vue | pure
+<ElButton @click="open = true">选择素材</ElButton>
+<FileModal v-model:open="open" :request="request" />
+```
+
+传入 `action` 插槽后，开关改由组件内部维护，点击插槽内容即可打开：
+
+```vue | pure
+<FileModal :request="request" @confirm="onConfirm">
+  <template #action="{ visible }">
+    <ElButton type="primary">{{ visible ? '选择中…' : '选择素材' }}</ElButton>
+  </template>
+</FileModal>
+```
+
+- 插槽参数提供 `open()` 与 `visible`，按钮文案等可以随 `visible` 联动。
+- 点击 action 容器内任意位置都会打开弹窗；插槽内的按钮若已有自己的点击逻辑、不想触发打开，加 `.stop` 即可。
+- 依然会派发 `update:open`，需要同时受控时照常绑定 `v-model:open`。
+
 ## 对外 API
 
 组件对外只暴露两个数据侧概念：`request` 与 `columns`（宫格一行几列）。分类与上传通过独立 prop 注入，未传对应能力时相关入口自动隐藏。
@@ -136,13 +161,13 @@ const upload = async (file: File, context: { groupId?: string }): Promise<FileMo
 
 ## 预览
 
-每张图片 / 视频卡片右下角有一个预览按钮，点击后由**组件自己**展示预览：图片用 `ElImageViewer`，视频用弹窗内的 `<video>`。表格视图的预览入口在「操作」列。业务不需要自己实现预览。
+卡片与 [FileList](/element-pros/file-list) 共用同一套缩略图卡片：名称以黑底半透明白字叠在缩略图底部，选中时左上角出现白底主色勾选角标、卡片带主题色边框与浅色蒙层，预览按钮在右上角。点击预览按钮后由**组件自己**展示预览：图片用 `ElImageViewer`，视频用弹窗内的 `<video>`。表格视图的预览入口在「操作」列。业务不需要自己实现预览。
 
 素材上两个地址字段分工明确：
 
 | 字段 | 用途 |
 | --- | --- |
-| `abbreviateUrl` | 卡片里的预览图，图片与视频都用它（视频填封面帧）；未传时退回 `url` |
+| `abbreviateUrl` | 卡片里的预览图，图片与视频都用它（视频填封面帧）；图片未传时退回 `url` |
 | `previewUrl` | 点击预览时展示的地址；未传时退回 `url` |
 
 组件不会自己解析视频首帧：视频卡片用 `<video preload="metadata">` 拉取首帧，`abbreviateUrl` 作为 `poster` 兜底；接口能给出封面帧时优先填 `abbreviateUrl`。
@@ -182,7 +207,7 @@ getAssetPreviewUrl(asset) // previewUrl || url
 
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `open` | `boolean` | `false` | 弹窗开关，配合 `v-model:open` |
+| `open` | `boolean` | `false` | 弹窗开关，配合 `v-model:open`；使用 `action` 插槽时可省略 |
 | `request` | `RequestFn<T, FileModalQuery>` | - | **必填**，与 ProTable 同签名 |
 | `columns` | `number` | `6` | 宫格一行几列 |
 | `modes` | `Array<'list' \| 'table'>` | `['list', 'table']` | 可用视图，第一项为默认；只有一项时不显示切换按钮 |
@@ -222,6 +247,12 @@ getAssetPreviewUrl(asset) // previewUrl || url
 | `groupRemoved` | `FileModalGroup` | 删除分类成功 |
 | `uploaded` | `T` | 上传成功 |
 | `uploadError` | `Error` | 上传失败 |
+
+## Slots
+
+| 插槽 | 参数 | 说明 |
+| --- | --- | --- |
+| `action` | `{ open, visible }` | 触发入口；传入后点击打开弹窗，不传时由 `v-model:open` 控制 |
 
 ## 类型
 
