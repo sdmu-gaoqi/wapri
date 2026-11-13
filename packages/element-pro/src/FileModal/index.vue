@@ -67,6 +67,7 @@ const props = withDefaults(defineProps<FileModalProps<T>>(), {
   groups: () => [],
   multiple: false,
   modes: () => ['list', 'table'],
+  selectedAssets: () => [],
   title: '选择素材',
   confirmText: '确定',
   cancelText: '取消',
@@ -365,6 +366,18 @@ watch(innerOpen, (open) => {
   }
   searchText.value = ''
   keyword.value = ''
+  // 清空缓存，避免上一次打开的素材残留（数据可能已过期）
+  assetCache.clear()
+  // 预填充已选素材记录：编辑场景下业务已持有完整数据，
+  // 即使这些素材不在当前分页也能在 confirm 时正确回传
+  const initialAssets = props.selectedAssets ?? []
+  initialAssets.forEach((asset) => {
+    assetCache.set(asset.id, asset)
+  })
+  // 受控模式下同步内部状态，确保 fallback 值与外部一致
+  if (props.selected !== undefined) {
+    innerSelected.value = [...props.selected]
+  }
 })
 
 onBeforeUnmount(() => {

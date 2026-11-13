@@ -151,6 +151,16 @@ export interface FileModalProps<T extends FileModalAsset = FileModalAsset> {
   modes?: ProTableMode[]
   /** 已选素材 id，配合 `v-model:selected` 使用 */
   selected?: Key[]
+  /**
+   * 已选素材的完整记录，配合 `selected` 使用。
+   *
+   * 编辑场景下，业务已持有已选图片的完整数据（从接口回显），
+   * 传到这里可以让弹窗在确认时正确回传这些记录——即使它们
+   * 不在当前分页的列表数据中。
+   *
+   * 不传时，确认只能回传当前弹窗内通过列表加载过的素材记录。
+   */
+  selectedAssets?: T[]
   /** 弹窗标题 */
   title?: string
   /** 确认按钮文案 */

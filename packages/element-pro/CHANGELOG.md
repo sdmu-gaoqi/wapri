@@ -1,5 +1,15 @@
 # @wapri/element-pro
 
+## 3.10.0
+
+### Minor Changes
+
+- FileModal: fix selected assets lost on confirm in edit scenario
+  - Clear `assetCache` when modal opens to prevent stale data from previous sessions
+  - Add `selectedAssets` prop to pre-populate cache with externally known asset data
+  - Sync `innerSelected` with controlled `selected` prop on modal open
+  - Document edit-scenario usage pattern for `selected` + `selectedAssets`
+
 ## 3.9.1
 
 ### Patch Changes
