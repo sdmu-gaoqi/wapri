@@ -1,5 +1,27 @@
 # @wapri/element-pro
 
+## 3.9.0
+
+### Minor Changes
+
+- 11c4407: `FileList` 的 `abbreviateUrl` 改为可选：没有缩略图时按扩展名 / MIME 展示 PDF、Excel、Word、PPT 等对应图标，图标里带扩展名短文案。
+- 11c4407: `FileList` 新增 `width` 固定宽度布局与 `append` 插槽：
+  - `width`：按指定卡片宽度自动换行，数字按 `px` 处理，也支持 `8rem` 这类字符串；设置后 `columns` 失效，窄屏也不再强制两列。
+  - `append`：在网格末尾渲染追加单元格，插槽参数提供 `data` 与 `count`，可与 `CropperUpload` 组合实现「上传裁剪后写入列表」；存在该插槽时空列表不再展示 `emptyText`。
+
+  `@wapri/gbase` 新增尺寸归一化工具 `toCssSize`（数字转 `px`、字符串原样返回），经 `@wapri/gutils` 导出；`TabForm` 与 `FileList` 复用该实现。
+
+- 11c4407: `FileList` 卡片识别为视频时改用 `<video>` 展示 `previewUrl` 首帧，`abbreviateUrl` 作为封面（`poster`）；首帧失败退回封面，封面失败降级为文件图标。
+- 11c4407: `FileModal` 新增 `action` 插槽：传入后渲染自定义触发入口，点击即可打开弹窗，开关由组件内部维护，无需再配合 `v-model:open`；插槽参数提供 `open` 与 `visible`。
+
+### Patch Changes
+
+- 11c4407: 优化素材卡片的选中态：勾选角标从右上角移到左上角并改为白底主色勾，避免与预览按钮挤在一起；选中时卡片带主题色边框与浅色蒙层。
+- Updated dependencies [11c4407]
+  - @wapri/gutils@2.2.0
+  - @wapri/ghooks@1.1.1
+  - @wapri/preview@0.1.1
+
 ## 3.8.0
 
 ### Minor Changes

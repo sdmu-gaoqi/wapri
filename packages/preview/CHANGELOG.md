@@ -1,5 +1,12 @@
 # @wapri/preview
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [11c4407]
+  - @wapri/gbase@2.2.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @wapri/gjsbridge
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [11c4407]
+  - @wapri/gbase@2.2.0
+
 ## 6.0.0
 
 ### Minor Changes
