@@ -1,7 +1,7 @@
 /**
  * title: 组件库
- * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览与 App 桥接
- * keywords: [SDK, element-pro, preview, hooks, utils, jsbridge, lint]
+ * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览、视频播放与 App 桥接
+ * keywords: [SDK, element-pro, player, preview, hooks, utils, jsbridge, lint]
  * sidebar: false
  * toc: false
  * hideChrome: true
@@ -16,7 +16,7 @@ import './index.css'
 const ALL_CATEGORY = '全部'
 
 /** 项目分类的展示顺序 */
-const CATEGORY_ORDER = ['组件库', 'Hooks 与工具', '文件预览', '网络与通信', '工程化']
+const CATEGORY_ORDER = ['组件库', 'Hooks 与工具', '文件预览', '视频播放', '网络与通信', '工程化']
 
 type ProjectCategory = (typeof CATEGORY_ORDER)[number]
 
@@ -89,6 +89,18 @@ const PROJECTS: ProjectItem[] = [
     mark: 'pv',
     accent: ['#9f1239', '#f43f5e'],
     docPath: '/previews',
+  },
+  {
+    name: 'player',
+    packageName: '@wapri/gplayer',
+    category: '视频播放',
+    tech: 'Vue 3 · artplayer',
+    description:
+      '基于 artplayer 的 Vue 3 视频播放器组件，插件用 key 声明；内置倍速、画面比例、翻转、截图、画中画、AB 循环、画面调节七个插件，各占右侧菜单一项。',
+    highlights: ['插件即菜单项', '内置 7 个插件'],
+    mark: 'vp',
+    accent: ['#0f766e', '#14b8a6'],
+    docPath: '/players',
   },
   {
     name: 'jsbridge',

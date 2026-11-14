@@ -19,11 +19,14 @@ export * from './worker'
 export * from './objectUrl'
 export * from './file'
 export * from './fileType'
+export * from './image'
 export * from './visibility'
 export * from './constant/regexp'
 export * from './constant/os'
 export * from './constant/file'
+export * from './constant/image'
 export type { OSType } from './types/os'
+export type { TosImageFormat, TosImageProcessOptions, TosImageQualityType, TosImageResizeMode } from './types/image'
 export type {
   CreateWorkerOptions,
   WorkerKind,

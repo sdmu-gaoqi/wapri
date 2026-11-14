@@ -1,0 +1,29 @@
+{
+  "name": "@wapri/gplayer",
+  "version": "0.1.0",
+  "description": "Vue 3 视频播放器：基于 artplayer 封装，插件通过 key + 配置覆盖声明",
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && vite build",
+    "dev": "vite build --watch"
+  },
+  "dependencies": {
+    "@wapri/gbase": "workspace:^",
+    "artplayer": "^5.4.0"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3"
+  }
+}

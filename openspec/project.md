@@ -13,6 +13,7 @@
 | `packages/hooks` | `@wapri/ghooks` | Vue 3 hooks（内置导出 `vue-hooks-plus`） |
 | `packages/utils` | `@wapri/gutils` | 通用函数（内置导出 `lodash-es`、`dayjs`） |
 | `packages/element-pro` | `@wapri/element-pro` | Vue 3 中后台组件库（模板 + tsx） |
+| `packages/player` | `@wapri/gplayer` | 视频播放器 `VideoPlayer`（基于 artplayer），插件按 key + 配置覆盖声明 |
 | `packages/preview` | `@wapri/preview` | H5 文件预览（文本 / PDF / Word / XLSX），按可视区域懒渲染 |
 | `packages/jsbridge` | `@wapri/gjsbridge` | App WebView 桥接，通道名由业务注入 |
 
@@ -20,7 +21,7 @@
 
 - 包管理：pnpm 9.x workspace（`packages/*`，`@base` 属于一层目录，同样被 glob 覆盖）
 - 版本与 changelog：changesets（`.changeset/config.json`，`baseBranch: main`）
-- 构建：father 4（`@wapri/gbase` / `ghooks` / `gutils` / `gjsbridge`）；vite + `vite-plugin-dts`（仅 `element-pro`）
+- 构建：father 4（`@wapri/gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）；vite + `vite-plugin-dts`（`element-pro`、`player`，需要编译 `.vue`）
 - 构建编排：turbo（`build` 依赖 `^build`，`dev` 常驻）
 - 文档站：dumi 2.4 + `@dumijs/preset-vue`，配置在 `.dumirc.ts`
 - 检查与格式：oxlint + oxfmt（`@wagq/lint-ox`），husky + lint-staged 在提交时执行
@@ -45,7 +46,7 @@
 
 ### Architecture Patterns
 
-- 依赖方向：`@base` 是叶子包；`hooks`、`utils` 依赖 `gbase`；`element-pro` 依赖 `ghooks`、`gutils`；`jsbridge` 依赖 `gbase`。新包默认只向下依赖 `@wapri/gbase`。
+- 依赖方向：`@base` 是叶子包；`hooks`、`utils` 依赖 `gbase`；`element-pro` 依赖 `ghooks`、`gutils`；`jsbridge` 依赖 `gbase`；`player` 依赖 `gbase` 与 `artplayer`，`vue` 为 peer。新包默认只向下依赖 `@wapri/gbase`。
 - 每个包自包含：`package.json`、`tsconfig.json`、构建配置、`README.md`、`src/index.md`（dumi 页面）齐全。
 - `build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免 `dist` 里残留已删除模块被一起发包。
 - 文档路由由 `.dumirc.ts` 的 `atomDirs.type` 推导并复数化：`element-pro` → `/element-pros`，`jsbridge` → `/jsbridges`。新增 `type` 后一律按复数写导航与内链。

@@ -183,6 +183,18 @@ importers:
         specifier: workspace:^
         version: link:../@base
 
+  packages/player:
+    dependencies:
+      '@wapri/gbase':
+        specifier: workspace:^
+        version: link:../@base
+      artplayer:
+        specifier: ^5.4.0
+        version: 5.4.0
+      vue:
+        specifier: '>=3.3'
+        version: 3.5.38(typescript@5.8.3)
+
   packages/preview:
     dependencies:
       '@wapri/gbase':
@@ -3350,6 +3362,9 @@ packages:
   arraybuffer.prototype.slice@1.0.4:
     resolution: {integrity: sha512-BNoCY6SXXPQ7gF2opIP4GBE+Xw7U+pHMYKuzjgCN3GwiaIR09UUeKfheyIry77QtrCBlC0KK0q5/TER/tYh3PQ==}
     engines: {node: '>= 0.4'}
+
+  artplayer@5.4.0:
+    resolution: {integrity: sha512-2B+plbx8N2yNsjK4nJU3+EOG8TULm1LRZk/QPkWRAMEX2Ee/MSnZG/WJYz8kcoZxZuLKcQ3uXifqLuPxZOH29A==}
 
   asn1.js@4.10.1:
     resolution: {integrity: sha512-p32cOF5q0Zqs9uBiONKYLm6BClCoBCM5O9JfeUSlnQLBTxYdTK+pW+nXflm8UkKd2UYlEbYz5qEi0JuZR9ckSw==}
@@ -6783,6 +6798,9 @@ packages:
     resolution: {integrity: sha512-thKDiELidAApOvXlncrpwDZKJCa9fXLEKM4+FoEWI+qTLDeNb+h7EkN+8a7KQODsB1GZ+Exz9KknkoPrEdXZDw==}
     deprecated: This version should be ignored, it was meant to be published as 2.0.0 but got published as 1.3.5 by mistake. As of May 6th 2026 the latest v1 release is v1.3.4
     hasBin: true
+
+  option-validator@2.0.6:
+    resolution: {integrity: sha512-tmZDan2LRIRQyhUGvkff68/O0R8UmF+Btmiiz0SmSw2ng3CfPZB9wJlIjHpe/MKUZqyIZkVIXCrwr1tIN+0Dzg==}
 
   option@0.2.4:
     resolution: {integrity: sha512-pkEqbDyl8ou5cpq+VsnQbe/WlEy5qS7xPzMS1U55OCG9KPvwFD46zDbxQIj3egJSFc3D+XhYOPUzz49zQAVy7A==}
@@ -13112,6 +13130,10 @@ snapshots:
       get-intrinsic: 1.3.0
       is-array-buffer: 3.0.5
 
+  artplayer@5.4.0:
+    dependencies:
+      option-validator: 2.0.6
+
   asn1.js@4.10.1:
     dependencies:
       bn.js: 4.12.1
@@ -17474,6 +17496,10 @@ snapshots:
   opener@1.5.2: {}
 
   opentype.js@1.3.5: {}
+
+  option-validator@2.0.6:
+    dependencies:
+      kind-of: 6.0.3
 
   option@0.2.4: {}
 

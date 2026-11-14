@@ -1,5 +1,12 @@
 # @wapri/gjsbridge
 
+## 8.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @wapri/gbase@2.3.0
+
 ## 7.0.0
 
 ### Patch Changes

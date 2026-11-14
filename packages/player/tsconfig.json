@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@wapri/gplayer": ["./src"],
+      "@wapri/gplayer/*": ["./src/*"],
+      "@wapri/gbase": ["../@base/src"],
+      "@wapri/gbase/*": ["../@base/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]
+}
