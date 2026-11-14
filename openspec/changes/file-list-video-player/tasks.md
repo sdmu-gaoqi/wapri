@@ -28,9 +28,9 @@
 
 ## 5. 校验
 
-- [ ] 5.1 `pnpm --filter @wapri/element-pro build` 通过，产物 external 引入 `@wapri/gplayer`
-- [ ] 5.2 `packages/element-pro/tests/file-list.test.mjs` 通过
-- [ ] 5.3 `pnpm lint` 无新增 error / warning
-- [ ] 5.4 新增文件通过 `oxfmt --check`
+- [x] 5.1 `pnpm --filter @wapri/element-pro build` 通过，产物 external 引入 `@wapri/gplayer`
+- [x] 5.2 `packages/element-pro/tests/file-list.test.mjs` 通过
+- [x] 5.3 `pnpm lint` 无新增 error / warning
+- [x] 5.4 新增文件通过 `oxfmt --check`
 - [ ] 5.5 `pnpm doc` 通过，FileList 页面内视频预览可打开
-- [ ] 5.6 `npx -y @fission-ai/openspec@latest validate file-list-video-player --strict` 通过
+- [x] 5.6 `npx -y @fission-ai/openspec@latest validate file-list-video-player --strict` 通过
