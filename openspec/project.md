@@ -46,7 +46,7 @@
 
 ### Architecture Patterns
 
-- 依赖方向：`@base` 是叶子包；`hooks`、`utils` 依赖 `gbase`；`element-pro` 依赖 `ghooks`、`gutils`；`jsbridge` 依赖 `gbase`；`player` 依赖 `gbase` 与 `artplayer`，`vue` 为 peer。新包默认只向下依赖 `@wapri/gbase`。
+- 依赖方向：`@base` 是叶子包；`hooks`、`utils` 依赖 `gbase`；`element-pro` 依赖 `ghooks`、`gutils`、`preview`、`player`；`jsbridge` 依赖 `gbase`；`player` 依赖 `gbase` 与 `artplayer`，`vue` 为 peer。新包默认只向下依赖 `@wapri/gbase`。
 - 每个包自包含：`package.json`、`tsconfig.json`、构建配置、`README.md`、`src/index.md`（dumi 页面）齐全。
 - `build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免 `dist` 里残留已删除模块被一起发包。
 - 文档路由由 `.dumirc.ts` 的 `atomDirs.type` 推导并复数化：`element-pro` → `/element-pros`，`jsbridge` → `/jsbridges`。新增 `type` 后一律按复数写导航与内链。

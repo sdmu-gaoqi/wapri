@@ -61,12 +61,38 @@ const data = ref<FileListItem[]>([
 | 类型 | 判断依据 | 预览方式 |
 | --- | --- | --- |
 | 图片 | MIME 或扩展名 | `ElImageViewer`，只在图片项之间左右切换 |
-| 视频 | MIME 或扩展名 | `ElDialog` + `<video controls autoplay>` |
+| 视频 | MIME 或扩展名 | `ElDialog` + [`@wapri/gplayer`](/players) 的 `VideoPlayer` |
 | 其他 | 兜底 | `ElDialog` + [`@wapri/preview`](/previews) |
 
 媒体类型优先看 `type` / `mime` / `mimeType` / `contentType` / `fileType`，再看 `previewUrl` / `abbreviateUrl` / `name` 的扩展名，`data:` 地址直接看前缀。
 
 卡片里的视频不会用 `<img>`：识别为视频时改用 `<video preload="metadata">` 播放 `previewUrl` 的首帧，`abbreviateUrl` 作为 `poster` 封面；首帧加载失败退回封面图，封面也失败再降级为文件图标。
+
+## 视频预览
+
+视频弹窗用的是 [`@wapri/gplayer`](/players) 的 `VideoPlayer`，地址取 `previewUrl`、`abbreviateUrl` 作为封面、打开即播。默认启用五个插件（播放器右侧设置菜单里各占一项）：
+
+| key | 右侧菜单 | 行为 |
+| --- | --- | --- |
+| `playbackRate` | 播放速度 | 选择语速 |
+| `aspectRatio` | 画面比例 | 选择比例 |
+| `filter` | 画面调节 | 亮度 / 对比度 / 饱和度 |
+| `flip` | 画面翻转 | 水平 / 垂直翻转 |
+| `pip` | 画中画 | 开关画中画 |
+
+`videoPlugins` 原样透传给播放器的 `plugins`，写法与播放器一致（字符串 / `{ key, setting }` / `pluginEntry`）：
+
+```vue | pure
+<template>
+  <!-- 只保留截图，并改文件名前缀 -->
+  <FileList
+    v-model:data="data"
+    :video-plugins="[{ key: 'screenshot', setting: () => ({ filename: 'cover' }) }]"
+  />
+</template>
+```
+
+传 `[]` 即关掉全部插件，回到只有控制条的状态。插件能力见 [player 文档](/players)。
 
 文档预览按需动态加载 `@wapri/preview`，不使用文档预览时不会打进首屏包体。PDF 需要业务自己配置 pdf.js worker：
 
@@ -124,6 +150,7 @@ configurePdfjs({ workerSrc: '/pdf.worker.min.mjs' })
 | `disabled` | `boolean` | `false` | 禁用删除与排序 |
 | `emptyText` | `string` | `'暂无文件'` | 空列表文案 |
 | `rowKey` | `string \| ((item, index) => Key)` | - | 卡片 key，默认取 `id`，没有时用名称与缩略图地址组合 |
+| `videoPlugins` | `PluginInput[]` | 倍速 / 比例 / 调节 / 翻转 / 画中画 | 视频预览启用的播放器插件，透传给 `VideoPlayer` |
 
 ## Events
 

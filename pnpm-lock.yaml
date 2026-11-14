@@ -139,6 +139,9 @@ importers:
       '@wapri/ghooks':
         specifier: workspace:^
         version: link:../hooks
+      '@wapri/gplayer':
+        specifier: workspace:^
+        version: link:../player
       '@wapri/gutils':
         specifier: workspace:^
         version: link:../utils

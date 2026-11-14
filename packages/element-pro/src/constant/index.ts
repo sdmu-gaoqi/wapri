@@ -1,3 +1,5 @@
+import type { PluginInput } from '@wapri/gplayer'
+
 export const defaultPrefix = 'wa-ui'
 
 /** 字段宽度预设映射，对齐 pro-components 的 width 枚举。 */
@@ -127,3 +129,17 @@ export const fileListPreviewDialogWidth = 'min(880px, 92vw)'
 
 /** FileList 视频预览弹窗宽度：桌面 720px，窄屏跟随视口。 */
 export const fileListVideoDialogWidth = 'min(720px, 92vw)'
+
+/** FileList 视频预览默认启用的播放器插件：倍速 / 比例 / 画面调节 / 翻转 / 画中画。 */
+export const fileListVideoPlugins: PluginInput[] = ['playbackRate', 'aspectRatio', 'filter', 'flip', 'pip']
+
+/** FileUpload 面板的默认标题。 */
+export const fileUploadTitle = '上传素材'
+/** FileUpload 上传中的标题。 */
+export const fileUploadLoadingText = '上传中'
+
+/** FileUpload 面板的默认提示文案。 */
+export const fileUploadTip = '拖拽文件到此处'
+
+/** FileUpload 自带的直接上传按钮文案。 */
+export const fileUploadActionText = '直接上传'

@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 import { ElAlert, ElDialog, ElImageViewer, vLoading } from 'element-plus'
 import { DnDProvider } from '@vue-dnd-kit/core'
+import { VideoPlayer } from '@wapri/gplayer'
 import { useConfig } from '../ConfigProvider/context'
 import {
   fileListDefaultColumns,
@@ -10,11 +11,12 @@ import {
   fileListPreviewErrorText,
   fileListPreviewLoadingText,
   fileListVideoDialogWidth,
+  fileListVideoPlugins,
 } from '../constant'
 import { getFileMediaType, type FileMediaType } from '../shared/media'
 import FileListGrid from './components/FileListGrid.vue'
 import FileListSortable from './components/FileListSortable.vue'
-import { collectImageItems, getItemPreviewUrl, resolveImageIndex } from './utils'
+import { collectImageItems, getItemPreviewUrl, getItemVideoPoster, resolveImageIndex } from './utils'
 import type { FileListEmits, FileListExpose, FileListItem, FileListProps, FileListSlots } from './types'
 import './styles/index.scss'
 
@@ -25,6 +27,7 @@ const props = withDefaults(defineProps<FileListProps<T>>(), {
   previewable: true,
   emptyText: fileListEmptyText,
   disabled: false,
+  videoPlugins: () => [...fileListVideoPlugins],
 })
 
 const emit = defineEmits<FileListEmits<T>>()
@@ -53,6 +56,7 @@ type PreviewKind = 'image' | 'video' | 'other'
 const previewVisible = ref(false)
 const previewKind = ref<PreviewKind>('image')
 const previewSrc = ref('')
+const previewPoster = ref<string | undefined>()
 const previewTitle = ref('')
 const imageUrls = ref<string[]>([])
 const imageIndex = ref(0)
@@ -81,6 +85,7 @@ const closePreview = (): void => {
   previewVisible.value = false
   previewKind.value = 'image'
   previewSrc.value = ''
+  previewPoster.value = undefined
   previewTitle.value = ''
   documentLoading.value = false
   documentError.value = ''
@@ -134,6 +139,7 @@ const openPreview = (index: number): void => {
   }
 
   previewSrc.value = getItemPreviewUrl(item)
+  previewPoster.value = getItemVideoPoster(item)
   previewKind.value = mediaType
   previewVisible.value = true
 
@@ -252,12 +258,13 @@ defineExpose<FileListExpose<T>>({
     destroy-on-close
     @update:model-value="handleVisibleChange"
   >
-    <video
+    <VideoPlayer
       :class="`${base}__video`"
-      :src="previewSrc"
-      controls
+      :url="previewSrc"
+      :poster="previewPoster"
+      :plugins="videoPlugins"
       autoplay
-    ></video>
+    />
   </ElDialog>
 
   <ElDialog

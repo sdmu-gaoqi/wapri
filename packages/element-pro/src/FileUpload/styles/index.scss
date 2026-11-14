@@ -1,0 +1,95 @@
+/**
+ * FileUpload 上传面板样式。
+ * class 统一使用 `wa-ui` 前缀，与 `ConfigProvider` 的默认 prefix 保持一致。
+ */
+.wa-ui-file-upload {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  width: 240px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 8px;
+  background: var(--el-bg-color);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+
+  &:hover,
+  &--dragover {
+    border-color: var(--el-color-primary);
+  }
+
+  &--dragover {
+    background: var(--el-color-primary-light-9);
+  }
+
+  &--disabled,
+  &--loading {
+    cursor: not-allowed;
+  }
+
+  &--disabled {
+    opacity: 0.6;
+  }
+
+  &__head {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  &__icon {
+    flex: none;
+    color: var(--el-color-primary);
+    font-size: 18px;
+  }
+
+  &__icon--loading {
+    animation: wa-ui-file-upload-spin 1s linear infinite;
+  }
+
+  &__title {
+    flex: none;
+    color: var(--el-text-color-primary);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  &__tip {
+    overflow: hidden;
+    color: var(--el-text-color-placeholder);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+
+    .el-button + .el-button {
+      margin-left: 0;
+    }
+  }
+
+  &__file {
+    display: none;
+  }
+}
+
+@keyframes wa-ui-file-upload-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

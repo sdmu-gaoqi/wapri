@@ -18,3 +18,4 @@
 
 - 组件 `VideoPlayer` 封装 artplayer；`plugins` 用 `Array<string | { key; setting }>`，`setting` 覆盖默认配置，读类型化配置用 `pluginEntry`。
 - 新增插件：在 `src/plugins/` 写 `PluginDefinition`，在 `plugins/index.ts` 注册进 `builtinPlugins`，菜单项通过 `context.setting()` 加；需要收尾的副作用用 `context.onCleanup()`。
+- 下游用法：`element-pro` 的 `FileList` 视频预览已换成 `VideoPlayer`，通过 `videoPlugins` 透传插件配置（默认倍速 / 比例 / 画面调节 / 翻转 / 画中画）；element-pro 依赖 gplayer，构建时在 external 白名单里。

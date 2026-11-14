@@ -24,6 +24,7 @@
   "dependencies": {
     "@vue-dnd-kit/core": "^3.1.0",
     "@wapri/ghooks": "workspace:^",
+    "@wapri/gplayer": "workspace:^",
     "@wapri/gutils": "workspace:^",
     "@wapri/preview": "workspace:^",
     "classnames": "^2.5.1",

@@ -1,3 +1,4 @@
+import type { PluginInput } from '@wapri/gplayer'
 import type { Key } from '../shared/field/types'
 import type { FileMediaType } from '../shared/media'
 
@@ -37,6 +38,11 @@ export interface FileListProps<T extends FileListItem = FileListItem> {
   disabled?: boolean
   /** 卡片 key，默认取 `id`；没有 `id` 时用名称与缩略图地址组合 */
   rowKey?: FileListRowKey<T>
+  /**
+   * 视频预览启用的播放器插件，透传给 `@wapri/gplayer` 的 `VideoPlayer`。
+   * 默认启用倍速、画面比例、画面调节、翻转、画中画；传 `[]` 可关闭全部插件。
+   */
+  videoPlugins?: PluginInput[]
 }
 
 /** `append` 插槽的上下文。 */

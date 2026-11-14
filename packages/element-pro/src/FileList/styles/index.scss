@@ -73,10 +73,13 @@
     }
   }
 
+  // 视频弹窗里是播放器组件的根容器：宽度撑满、高度按 16:9，超过 70vh 时以 70vh 为准
   &__video {
     display: block;
     width: 100%;
     max-height: 70vh;
+    border-radius: 6px;
+    overflow: hidden;
     background: #000;
   }
 
