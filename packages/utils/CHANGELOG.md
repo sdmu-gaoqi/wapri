@@ -1,5 +1,11 @@
 # @wapri/gutils
 
+## 2.3.1
+
+### Patch Changes
+
+- 火山tos参数移除对url的限制
+
 ## 2.3.0
 
 ### Minor Changes
