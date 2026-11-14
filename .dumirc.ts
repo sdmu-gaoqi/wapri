@@ -51,6 +51,7 @@ export default defineConfig({
       { title: '指南', link: '/guide' },
       { title: 'changelog', link: '/changelog/base' },
       { title: 'element-pro', link: '/element-pros' },
+      { title: 'player', link: '/players' },
       { title: 'preview', link: '/previews' },
       { title: 'hooks', link: '/hooks' },
       { title: 'utils', link: '/utils' },
@@ -89,6 +90,10 @@ export default defineConfig({
         type: 'preview',
         dir: 'packages/preview/src',
       },
+      {
+        type: 'player',
+        dir: 'packages/player/src',
+      },
     ],
   },
   favicons: [LOGO_PATH],
@@ -110,6 +115,7 @@ export default defineConfig({
     '@wapri/ghooks': `${process.cwd()}/packages/hooks/src`,
     '@wapri/element-pro': `${process.cwd()}/packages/element-pro/src`,
     '@wapri/preview': `${process.cwd()}/packages/preview/src`,
+    '@wapri/gplayer': `${process.cwd()}/packages/player/src`,
   },
   jsMinifierOptions: {
     target: ['chrome80', 'es2020'],

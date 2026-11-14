@@ -1,5 +1,14 @@
 # @wapri/element-pro
 
+## 3.10.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @wapri/gutils@2.3.0
+  - @wapri/ghooks@1.1.2
+  - @wapri/preview@0.1.2
+
 ## 3.10.0
 
 ### Minor Changes

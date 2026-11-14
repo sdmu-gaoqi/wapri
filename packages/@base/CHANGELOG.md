@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.3.0
+
+### Minor Changes
+
+- 新增火山引擎 TOS 图片处理能力：`withTosImageProcess` / `buildTosImageProcess` / `getTosImageProcess` / `removeTosImageProcess`，支持缩放压缩、质量调整、转 webp 等处理
+
 ## 2.2.0
 
 ### Minor Changes

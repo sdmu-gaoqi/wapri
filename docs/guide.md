@@ -11,7 +11,7 @@ order: 1
 
 - **pnpm workspace**：管理多包依赖。
 - **changesets**：控制版本和生成 changelog。
-- **father / vite**：独立编译各子包（`element-pro` 用 vite，其余包用 father）。
+- **father / vite**：独立编译各子包（`element-pro`、`player` 用 vite，其余包用 father）。
 - **@wagq/lint-ox**：基于 oxlint + oxfmt 的统一代码检查与格式化规范。
 - **husky & lint-staged**：在提交代码时进行校验。
 - **dumi**：生成文档 (Vue 模式, 通过 @dumijs/preset-vue)。
@@ -73,7 +73,7 @@ pnpm i
 每个子包必须包含以下文件：
 
 - `src`：源码目录。
-- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）。`element-pro` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单）。
+- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）。`element-pro`、`player` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单），要编译 `.vue` 单文件组件。
 - `package.json`：包的元信息，`name` 以 `@wapri/` 开头（如 `@wapri/element-pro`），版本号建议初始为 `0.0.0`。`build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免已删除模块残留在 `dist` 被一起发包。
 - `tsconfig.json`：TypeScript 配置文件，需设置 `paths` 以解析依赖。
 
