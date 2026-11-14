@@ -13,7 +13,7 @@ group:
 
 | 导出 | 类型 | 说明 |
 | --- | --- | --- |
-| `withTosImageProcess(url, options?)` | `(string, TosImageProcessOptions?) => string` | 给图片地址加处理参数，返回新地址 |
+| `withTosImageProcess(url, options?)` | `(string, TosImageProcessOptions?) => string` | 给图片地址加处理参数，返回新地址；不要求带域名 |
 | `buildTosImageProcess(options?)` | `(TosImageProcessOptions?) => string` | 只拼处理串，自行控制参数位置时用 |
 | `getTosImageProcess(url)` | `(string) => string` | 读取地址上已有的处理串 |
 | `removeTosImageProcess(url)` | `(string) => string` | 去掉处理参数，还原原图地址 |
@@ -48,6 +48,16 @@ withTosImageProcess(url, { width: 200, height: 200, resizeMode: 'fill' })
 withTosImageProcess('https://cdn.example.com/a.jpg?v=2#top', { width: 300 })
 // https://cdn.example.com/a.jpg?v=2&x-tos-process=image/resize,w_300#top
 
+// 不是完整 URL 也能拼：相对路径、object key、协议相对地址
+withTosImageProcess('/upload/product/a.jpg', { width: 300 })
+// /upload/product/a.jpg?x-tos-process=image/resize,w_300
+
+withTosImageProcess('product/2026/a.jpg', { width: 300 })
+// product/2026/a.jpg?x-tos-process=image/resize,w_300
+
+withTosImageProcess('//cdn.example.com/a.jpg', { width: 300 })
+// //cdn.example.com/a.jpg?x-tos-process=image/resize,w_300
+
 // 还原原图
 removeTosImageProcess(url)
 ```
@@ -59,4 +69,4 @@ removeTosImageProcess(url)
 - `width` / `height` 优先于 `longEdge` / `shortEdge`，同时传时以宽高为准。
 - `quality` 对 png / gif / bmp / tiff 不生效，这些格式要压体积优先转 `webp`。
 - 私有桶的预签名 URL 已带签名，直接拼参数会导致校验失败，需要服务端按处理参数签名。
-- 非 `http(s)` 地址（`data:`、`blob:`、相对路径）原样返回，不做处理。
+- `data:` / `blob:` / `file:` 等非 http(s) 协议的地址原样返回，拼了 query 也用不了；相对路径与 object key 正常处理。

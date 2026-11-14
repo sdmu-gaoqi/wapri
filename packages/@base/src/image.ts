@@ -6,8 +6,16 @@ import {
 } from './constant/image'
 import type { TosImageProcessOptions } from './types/image'
 
-/** 只有 http(s) 地址才有 query 可拼，其余（data:、blob:、相对路径）原样返回 */
-const HTTP_URL_REG = /^https?:\/\//i
+/** 带协议的地址，如 `http:`、`data:`、`blob:`、`file:` */
+const SCHEME_REG = /^[a-z][a-z0-9+.-]*:/i
+
+/**
+ * 能否在地址后面追加 query。
+ *
+ * 相对路径、绝对路径、object key、协议相对地址（`//cdn/xx.jpg`）都可以直接拼；
+ * 只有带协议且不是 http(s) 的地址（`data:`、`blob:`、`file:` 等）拼了会失效，需要原样返回。
+ */
+const canAppendQuery = (value: string) => !SCHEME_REG.test(value) || /^https?:/i.test(value)
 
 /** 像素值归一化到 [1, TOS_IMAGE_MAX_SIZE]，非法值返回 undefined 表示不参与处理 */
 const toPixels = (value?: number) => {
@@ -130,17 +138,19 @@ export const buildTosImageProcess = (options: TosImageProcessOptions = {}): stri
 }
 
 /**
- * 给 tos 图片地址加上处理参数，返回新的 URL。
+ * 给 tos 图片地址加上处理参数，返回新的地址。
+ *
+ * 完整 URL、相对路径、object key、协议相对地址都支持，不要求带域名。
  *
  * - 已有 `x-tos-process` 会被替换，避免两个处理串叠加
  * - 其余 query 参数与 `#hash` 原样保留
- * - 非 http(s) 地址、或没有任何处理参数时原样返回
+ * - `data:` / `blob:` 等非 http(s) 协议的地址、或没有任何处理参数时原样返回
  *
- * @param url 图片地址
+ * @param url 图片地址，可以是完整 URL，也可以是相对路径或 object key
  * @param options 处理参数
  */
 export const withTosImageProcess = (url: string, options?: TosImageProcessOptions): string => {
-  if (!url || !HTTP_URL_REG.test(url)) {
+  if (!url || !canAppendQuery(url)) {
     return url
   }
 
