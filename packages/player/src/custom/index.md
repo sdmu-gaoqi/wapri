@@ -35,6 +35,8 @@ registerPlugin(
 | `art` | artplayer 实例，事件、图层、属性都从这里拿 |
 | `setting(option)` | 往右侧菜单追加一项，返回菜单项本体，可回写 `html` / `tooltip` / `switch` |
 | `onCleanup(fn)` | 注册清理回调，实例销毁前统一执行；`setTimeout`、DOM 监听、`video.style` 这类副作用要在这里收尾 |
+| `frame` | 帧渲染器，逐帧改画面用（马赛克、模糊、绿幕等），多个插件共用同一层 canvas |
+| `cssFilter` | filter 合成栈，写 `video.style.filter` 时按 key 写入，不会覆盖别的插件 |
 
 ## 菜单项的返回值
 
@@ -64,6 +66,24 @@ install({ art, setting }, config) {
 }
 ```
 
+## 改画面
+
+逐帧处理走 `frame`，不用自己管 canvas 与渲染循环；写 `video.style.filter` 走 `cssFilter`，避免和其他插件互相覆盖：
+
+```ts
+install({ frame, cssFilter, onCleanup }, config) {
+  frame.set('mosaic', { size: 24 })
+  cssFilter.set('watermark', 'contrast(1.1)')
+
+  onCleanup(() => {
+    frame.set('mosaic', null)
+    cssFilter.remove('watermark')
+  })
+}
+```
+
+可用的 effect key 与参数见 [API](/players/api) 的「帧渲染器」。
+
 ## 相关导出
 
 | 导出 | 说明 |
@@ -74,3 +94,4 @@ install({ art, setting }, config) {
 | `getPlugin(key)` | 按 key 取插件定义 |
 | `listPlugins()` | 当前已注册的插件列表 |
 | `builtinPlugins` | 内置插件定义数组 |
+| `defaultPlayerPlugins` | 未传 `plugins` 时启用的插件列表，展开后可以「默认 + 追加」 |

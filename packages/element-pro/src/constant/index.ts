@@ -131,7 +131,18 @@ export const fileListPreviewDialogWidth = 'min(880px, 92vw)'
 export const fileListVideoDialogWidth = 'min(720px, 92vw)'
 
 /** FileList 视频预览默认启用的播放器插件：倍速 / 比例 / 画面调节 / 翻转 / 画中画。 */
-export const fileListVideoPlugins: PluginInput[] = ['playbackRate', 'aspectRatio', 'filter', 'flip', 'pip']
+export const fileListVideoPlugins: PluginInput[] = [
+  'playbackRate',
+  'aspectRatio',
+  'filter',
+  'flip',
+  'pip',
+  'screenshot',
+  'webFullscreen',
+  'mosaic',
+  'blur',
+  'chromaKey',
+]
 
 /** FileUpload 面板的默认标题。 */
 export const fileUploadTitle = '上传素材'

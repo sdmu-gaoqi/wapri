@@ -31,10 +31,56 @@ const { createPluginRunner, getPlugin, listPlugins, pluginEntry, registerPlugin,
   `data:text/javascript;base64,${Buffer.from(entry).toString('base64')}`
 )
 
-// 插件在浏览器里才会碰 document，这里给一个最小桩
+// 默认插件列表是组件的默认值来源，单独打一份出来断言
+const constantBundle = await build({
+  configFile: false,
+  logLevel: 'silent',
+  build: {
+    write: false,
+    minify: false,
+    lib: { entry: fileURLToPath(new URL('../src/constant/index.ts', import.meta.url)), formats: ['es'] },
+  },
+})
+
+const constantEntry = constantBundle[0].output.find((item) => item.type === 'chunk').code
+const { defaultPlayerPlugins } = await import(
+  `data:text/javascript;base64,${Buffer.from(constantEntry).toString('base64')}`
+)
+
+const createElementStub = () => ({
+  style: {},
+  className: '',
+  textContent: '',
+  src: '',
+  alt: '',
+  muted: false,
+  loop: false,
+  autoplay: false,
+  playsInline: false,
+  classList: { add: () => undefined },
+  appendChild: () => undefined,
+  remove: () => undefined,
+  setAttribute: () => undefined,
+  addEventListener: () => undefined,
+  removeEventListener: () => undefined,
+  getBoundingClientRect: () => ({ left: 0, top: 0, width: 320, height: 180 }),
+  play: () => Promise.resolve(),
+})
+
+// 插件在浏览器里才会碰 document / window，这里给一个最小桩
 globalThis.document = {
   pictureInPictureEnabled: true,
   visibilityState: 'visible',
+  head: { querySelector: () => null, appendChild: () => undefined },
+  createElement: createElementStub,
+  addEventListener: () => {},
+  removeEventListener: () => {},
+}
+
+globalThis.window = {
+  devicePixelRatio: 1,
+  setTimeout: (...args) => setTimeout(...args),
+  clearTimeout: (...args) => clearTimeout(...args),
   addEventListener: () => {},
   removeEventListener: () => {},
 }
@@ -46,14 +92,18 @@ const createMockArt = () => {
   const settings = []
   const listeners = {}
 
+  const player = createElementStub()
+
   const art = {
     currentTime: 0,
+    duration: 0,
     playbackRate: 1,
     aspectRatio: 'default',
     flip: 'normal',
     pip: false,
+    fullscreenWeb: false,
     playing: false,
-    video: { style: {}, loop: false },
+    video: { style: {}, loop: false, getBoundingClientRect: () => ({ left: 0, top: 0, width: 320, height: 180 }) },
     icons: {
       playbackRate: createElement(),
       aspectRatio: createElement(),
@@ -61,9 +111,11 @@ const createMockArt = () => {
       screenshot: createElement(),
       pip: createElement(),
       config: createElement(),
+      fullscreenWebOff: createElement(),
     },
     i18n: { get: (key) => key },
     notice: { show: '' },
+    template: { $player: player },
     layers: { add: () => undefined, remove: () => undefined },
     setting: {
       add: (option) => {
@@ -78,13 +130,18 @@ const createMockArt = () => {
     off: (name, fn) => {
       listeners[name] = (listeners[name] ?? []).filter((item) => item !== fn)
     },
+    once: (name, fn) => {
+      listeners[name] = [...(listeners[name] ?? []), fn]
+    },
     emit: () => {},
+    pause: () => undefined,
+    play: () => Promise.resolve(),
   }
 
   return { art, settings, listeners }
 }
 
-/** 安装单个插件，返回上下文里的 mock 与清理函数 */
+/** 安装插件，返回上下文里的 mock 与清理函数 */
 const install = (key, plugins = [key]) => {
   const { art, settings, listeners } = createMockArt()
   const runner = createPluginRunner(resolvePlugins(plugins))
@@ -94,14 +151,37 @@ const install = (key, plugins = [key]) => {
   return { art, settings, listeners, dispose: runner.dispose }
 }
 
-test('内置插件一共 7 个，key 与右侧菜单一一对应', () => {
-  assert.equal(listPlugins().length, 7)
+test('内置插件一共 18 个，key 与右侧菜单一一对应', () => {
+  assert.equal(listPlugins().length, 18)
   assert.deepEqual(
     listPlugins()
       .map((plugin) => plugin.key)
       .sort(),
-    ['abLoop', 'aspectRatio', 'filter', 'flip', 'pip', 'playbackRate', 'screenshot'],
+    [
+      'abLoop',
+      'aspectRatio',
+      'backgroundBlur',
+      'blur',
+      'chromaKey',
+      'filter',
+      'flip',
+      'intro',
+      'mosaic',
+      'overlay',
+      'pip',
+      'playbackRate',
+      'reverse',
+      'screenshot',
+      'stabilizer',
+      'vertical',
+      'videoFilter',
+      'webFullscreen',
+    ],
   )
+})
+
+test('默认插件为画面调节、截图、网页全屏、马赛克、模糊、绿幕', () => {
+  assert.deepEqual(defaultPlayerPlugins, ['filter', 'screenshot', 'webFullscreen', 'mosaic', 'blur', 'chromaKey'])
 })
 
 test('字符串写法走默认配置，对象写法覆盖默认配置', () => {
@@ -264,6 +344,125 @@ test('画面调节写入 filter，重置与卸载都会还原', () => {
 
   dispose()
   assert.equal(art.video.style.filter, '')
+})
+
+test('画面调节与视频滤镜共用 filter 合成栈，互不覆盖', () => {
+  const { art, settings, dispose } = install('filter-video-filter', ['filter', 'videoFilter'])
+
+  const brightness = settings[0]
+
+  brightness.onChange({ $range: { value: '120' } })
+  assert.match(art.video.style.filter, /brightness\(120%\)/)
+
+  // 预设选择行的 selector 有 9 项，画面调节的滑杆行没有 selector
+  const selectorItem = settings.find((item) => Array.isArray(item.selector) && item.selector.length > 1)
+  assert.ok(selectorItem)
+
+  const subtitle = selectorItem.onSelect({ value: 'mono' })
+  assert.equal(subtitle, '黑白')
+  assert.match(art.video.style.filter, /grayscale\(1\)/)
+  assert.match(art.video.style.filter, /brightness\(120%\)/)
+
+  dispose()
+  assert.equal(art.video.style.filter, '')
+})
+
+test('网页全屏开关切换 fullscreenWeb 并同步状态', () => {
+  const { art, settings, listeners } = install('webFullscreen')
+  const [menu] = settings
+
+  assert.equal(menu.switch, false)
+  assert.equal(menu.onSwitch(menu), true)
+  assert.equal(art.fullscreenWeb, true)
+
+  art.fullscreenWeb = false
+  listeners.fullscreenWeb.forEach((fn) => fn(false))
+  assert.equal(menu.switch, false)
+})
+
+test('画面类插件给出开关与滑杆两行', () => {
+  const cases = [
+    ['mosaic', 2],
+    ['blur', 2],
+    ['backgroundBlur', 2],
+    ['stabilizer', 2],
+  ]
+
+  cases.forEach(([key, count]) => {
+    const { settings } = install(key)
+
+    assert.equal(settings.length, count, key)
+    assert.equal(typeof settings[0].onSwitch, 'function', key)
+    assert.equal(typeof settings[1].onChange, 'function', key)
+  })
+})
+
+test('效果插件拖滑杆会自动打开开关', () => {
+  const { settings } = install('mosaic')
+  const [menu, range] = settings
+
+  assert.equal(menu.switch, false)
+  range.onChange({ $range: { value: '32' } })
+  assert.equal(menu.switch, true)
+})
+
+test('视频滤镜提供 9 个预设，强度写进副标题', () => {
+  const { settings } = install('videoFilter')
+  const [preset, intensity] = settings
+
+  assert.equal(preset.selector.length, 9)
+  assert.equal(preset.selector.filter((item) => item.default).length, 1)
+
+  const subtitle = intensity.onChange({ $range: { value: '0.5' } })
+  assert.equal(subtitle, '50%')
+})
+
+test('绿幕提供取色、相似度与羽化，滑杆自动启用', () => {
+  const { settings } = install('chromaKey')
+  const [menu, pick, similarity] = settings
+
+  assert.equal(menu.switch, false)
+  assert.equal(pick.tooltip, '#00ff00')
+
+  similarity.onChange({ $range: { value: '0.5' } })
+  assert.equal(menu.switch, true)
+})
+
+test('竖屏插件改写画面比例，关闭后还原', () => {
+  const { art, settings } = install('vertical')
+  const [menu] = settings
+
+  assert.equal(art.aspectRatio, 'default')
+
+  // artplayer 会把返回值写回菜单项的 switch 状态，这里手动同步
+  menu.switch = menu.onSwitch(menu)
+  assert.equal(art.aspectRatio, '9:16')
+
+  menu.switch = menu.onSwitch(menu)
+  assert.equal(art.aspectRatio, 'default')
+})
+
+test('倒放注册 play 监听，清理后移除', () => {
+  const { listeners, dispose } = install('reverse')
+
+  assert.equal(listeners.play.length, 1)
+
+  dispose()
+
+  assert.equal(listeners.play.length, 0)
+})
+
+test('开场动画与视频叠加的菜单可用', () => {
+  const intro = install('intro')
+
+  assert.equal(intro.settings.length, 1)
+  assert.equal(typeof intro.settings[0].onClick, 'function')
+
+  const overlay = install('overlay')
+
+  // 开关、透明度、大小、重置位置
+  assert.equal(overlay.settings.length, 4)
+  assert.equal(overlay.settings[0].switch, false)
 })
 
 test('清理回调在 dispose 时统一执行', () => {

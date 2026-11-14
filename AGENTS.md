@@ -26,8 +26,10 @@ Guidance for coding agents working in this repository.
   - 拖拽排序用 `DragSortTable`(`ProTable` + `dragSortKey`/`dragSortHandlerRender`/`onDragSortEnd`,对齐 pro-components) 与 `CropperUpload` 的 `sortable`;底座是 `@vue-dnd-kit/core`,组件自带 `DnDProvider`
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/player`: 视频播放器(`VideoPlayer`,基于 artplayer)
-  - 插件用 `plugins: Array<string | { key; setting }>` 声明,内置插件各占右侧菜单一项
+  - 插件用 `plugins: Array<string | { key; setting }>` 声明,内置插件各占右侧菜单一项,默认启用 `filter`/`screenshot`/`webFullscreen`/`mosaic`/`blur`/`chromaKey`
   - 内置插件在 `src/plugins/`,插件协议与注册表在 `src/core`、`src/types`,常量与图标放 `src/constant`
+  - 逐帧改画面的插件(马赛克/模糊/背景模糊/防抖/绿幕/横屏转竖屏)通过 `PluginContext.frame` 写参数,不要各自建 canvas
+  - 写 `video.style.filter` 一律走 `PluginContext.cssFilter`,避免多个插件互相覆盖
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
   - 只依赖 `@wapri/gbase`,解析用 pdfjs-dist / mammoth / xlsx,排版用 opentype.js
   - 只渲染可视区域,常量放 `src/constant`

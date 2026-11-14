@@ -13,7 +13,7 @@
 | `packages/hooks` | `@wapri/ghooks` | Vue 3 hooks（内置导出 `vue-hooks-plus`） |
 | `packages/utils` | `@wapri/gutils` | 通用函数（内置导出 `lodash-es`、`dayjs`） |
 | `packages/element-pro` | `@wapri/element-pro` | Vue 3 中后台组件库（模板 + tsx） |
-| `packages/player` | `@wapri/gplayer` | 视频播放器 `VideoPlayer`（基于 artplayer），插件按 key + 配置覆盖声明 |
+| `packages/player` | `@wapri/gplayer` | 视频播放器 `VideoPlayer`（基于 artplayer），插件按 key + 配置覆盖声明，内置 18 个插件，画面类效果走共享 canvas 渲染管线 |
 | `packages/preview` | `@wapri/preview` | H5 文件预览（文本 / PDF / Word / XLSX），按可视区域懒渲染 |
 | `packages/jsbridge` | `@wapri/gjsbridge` | App WebView 桥接，通道名由业务注入 |
 

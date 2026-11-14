@@ -10,7 +10,7 @@
 import Artplayer from 'artplayer'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import type { CSSProperties } from 'vue'
-import { defaultPlayerRatio, prefix } from '../constant'
+import { defaultPlayerPlugins, defaultPlayerRatio, prefix } from '../constant'
 import { resolveOption } from '../core/option'
 import { createPluginRunner, resolvePlugins } from '../core/registry'
 import type { FlipMode } from '../types/plugin'
@@ -19,7 +19,7 @@ import type { VideoPlayerEmits, VideoPlayerInstance, VideoPlayerProps } from '..
 defineOptions({ name: 'VideoPlayer' })
 
 const props = withDefaults(defineProps<VideoPlayerProps>(), {
-  plugins: () => [],
+  plugins: () => [...defaultPlayerPlugins],
   options: () => ({}),
 })
 

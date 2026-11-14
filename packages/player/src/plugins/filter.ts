@@ -35,7 +35,7 @@ export const filterPlugin: PluginDefinition<FilterConfig> = {
     max: defaultFilterMax,
     step: defaultFilterStep,
   },
-  install({ art, setting, onCleanup }, config) {
+  install({ setting, onCleanup, cssFilter }, config) {
     const state: Record<FilterKey, number> = {
       brightness: config.brightness,
       contrast: config.contrast,
@@ -44,7 +44,7 @@ export const filterPlugin: PluginDefinition<FilterConfig> = {
     const entries: Array<{ key: FilterKey; item: SettingOption }> = []
 
     const apply = () => {
-      art.video.style.filter = filterKeys.map((key) => `${key}(${state[key]}%)`).join(' ')
+      cssFilter.set('adjust', filterKeys.map((key) => `${key}(${state[key]}%)`).join(' '))
     }
 
     filterKeys.forEach((key) => {
@@ -85,7 +85,7 @@ export const filterPlugin: PluginDefinition<FilterConfig> = {
     apply()
 
     onCleanup(() => {
-      art.video.style.filter = ''
+      cssFilter.remove('adjust')
     })
   },
 }

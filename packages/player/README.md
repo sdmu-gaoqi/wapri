@@ -31,7 +31,7 @@ import { VideoPlayer } from '@wapri/gplayer'
 - 同一个 key 只安装一次，后出现的配置覆盖先出现的；未注册的 key 警告后跳过。
 - 需要在 `setting` 里读字段时用 `pluginEntry('key', fn)`，`config` 会带上该插件的类型。
 
-内置插件：`playbackRate`、`aspectRatio`、`flip`、`screenshot`、`pip`、`abLoop`、`filter`。
+内置插件：`playbackRate`、`aspectRatio`、`flip`、`webFullscreen`、`screenshot`、`pip`、`abLoop`、`filter`、`videoFilter`、`mosaic`、`blur`、`backgroundBlur`、`stabilizer`、`chromaKey`、`vertical`、`reverse`、`intro`、`overlay`。不传 `plugins` 时默认启用 `filter`、`screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`（后三个开关默认关闭）。
 
 自定义插件：
 
@@ -54,15 +54,15 @@ registerPlugin(
 
 | 能力 | 说明 |
 | --- | --- |
-| Props | `url`、`poster`、`theme`、`lang`、`autoplay`、`muted`、`loop`、`volume`、`height`、`plugins`、`options` |
-| Events | `ready`、`play`、`pause`、`ended`、`timeupdate`、`seek`、`error`、`volumechange`、`ratechange`、`flip`、`pip`、`screenshot`、`fullscreen`、`fullscreen-web`、`destroy` |
+| Props | `url`、`poster`、`theme`、`lang`、`autoplay`、`muted`、`loop`、`volume`、`height`、`plugins`、`options` || Events | `ready`、`play`、`pause`、`ended`、`timeupdate`、`seek`、`error`、`volumechange`、`ratechange`、`flip`、`pip`、`screenshot`、`fullscreen`、`fullscreen-web`、`destroy` |
 | 实例方法 | `player`、`play`、`pause`、`toggle`、`seek`、`screenshot`、`fullscreen` |
 | 注册表 | `registerPlugin`、`definePlugin`、`pluginEntry`、`getPlugin`、`listPlugins`、`builtinPlugins` |
 
 ## 注意
 
 - `plugins` 与 `options` 变化会重建实例，播放进度与播放状态会自动接上。
-- 截图走 canvas 重绘，视频源需允许跨域；画面调节的滤镜会被一起画进截图。
+- 截图走 canvas 重绘，视频源需允许跨域；画面调节与视频滤镜会一起画进截图。
+- 帧效果（马赛克、绿幕、背景模糊等）共用一层 canvas，跨域源需要服务端放行并在 `options` 里打开 `crossOrigin`；截图不含这些效果。
 - HLS / FLV 等流协议由业务通过 `options.customType` 或 artplayer 生态插件接入。
 
 ## 在线文档

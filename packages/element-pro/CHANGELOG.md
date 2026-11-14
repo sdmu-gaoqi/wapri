@@ -1,5 +1,18 @@
 # @wapri/element-pro
 
+## 3.12.0
+
+### Minor Changes
+
+- 新增共享的帧渲染管线（canvas 叠加层 + CSS filter 合成栈）与 11 个内置插件：`webFullscreen`、`videoFilter`、`mosaic`、`blur`、`backgroundBlur`、`stabilizer`、`chromaKey`、`vertical`、`reverse`、`intro`、`overlay`。`PluginContext` 增加 `frame` 与 `cssFilter`，自定义插件同样可用。
+
+  播放器默认插件由空数组改为 `filter`、`screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`（后三个开关默认关闭），默认列表以 `defaultPlayerPlugins` 导出，方便「默认 + 追加」；`element-pro` 的 `FileList` 视频预览同步补齐这批插件。截图仍按原始帧出图，不包含 canvas 上的帧效果。
+
+### Patch Changes
+
+- Updated dependencies
+  - @wapri/gplayer@0.2.0
+
 ## 3.11.2
 
 ### Patch Changes

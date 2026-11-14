@@ -2,8 +2,12 @@ import type Artplayer from 'artplayer'
 import type { Setting, SettingOption } from 'artplayer'
 import { packageName } from '../constant'
 import { builtinPlugins } from '../plugins'
+import { createCssFilterStack } from './cssFilter'
+import { createFrameRenderer } from './frame'
+import type { FrameRenderer } from '../types/frame'
 import type {
   BuiltinPluginKey,
+  CssFilterStack,
   PluginConfig,
   PluginConfigMap,
   PluginContext,
@@ -80,6 +84,22 @@ export const resolvePlugins = (inputs: PluginInput[] = []): ResolvedPlugin[] => 
 export const createPluginRunner = (plugins: ResolvedPlugin[]) => {
   const cleanups: Array<() => void> = []
 
+  // 帧渲染器与 filter 合成栈按实例共享，多个插件读写的是同一份
+  let frameRenderer: FrameRenderer | undefined
+  let cssFilter: CssFilterStack | undefined
+
+  const sharedFrame = (art: Artplayer) => {
+    frameRenderer ??= createFrameRenderer(art)
+
+    return frameRenderer
+  }
+
+  const sharedCssFilter = (art: Artplayer) => {
+    cssFilter ??= createCssFilterStack(art)
+
+    return cssFilter
+  }
+
   const runners = plugins.map(({ definition, config }) => (art: Artplayer) => {
     const context: PluginContext = {
       art,
@@ -88,6 +108,12 @@ export const createPluginRunner = (plugins: ResolvedPlugin[]) => {
       onCleanup: (cleanup) => {
         cleanups.push(cleanup)
       },
+      get frame() {
+        return sharedFrame(art)
+      },
+      get cssFilter() {
+        return sharedCssFilter(art)
+      },
     }
 
     definition.install(context, config)
@@ -95,6 +121,10 @@ export const createPluginRunner = (plugins: ResolvedPlugin[]) => {
 
   const dispose = () => {
     cleanups.splice(0).forEach((cleanup) => cleanup())
+    frameRenderer?.dispose()
+    frameRenderer = undefined
+    cssFilter?.clear()
+    cssFilter = undefined
   }
 
   return { plugins: runners, dispose }
