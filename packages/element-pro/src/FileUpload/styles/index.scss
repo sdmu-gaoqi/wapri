@@ -9,7 +9,7 @@
   gap: 10px;
   justify-content: center;
   /* 默认 240px，容器更窄时跟随容器，避免溢出 */
-  width: min(240px, 100%);
+  width: max-content;
   min-width: 0;
   padding: 12px;
   border: 1px solid var(--el-border-color);

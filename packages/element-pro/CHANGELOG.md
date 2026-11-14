@@ -1,5 +1,12 @@
 # @wapri/element-pro
 
+## 3.11.0
+
+### Minor Changes
+
+- 391df25: FileList 的视频预览改用 `@wapri/gplayer` 的 `VideoPlayer`：默认启用倍速、画面比例、画面调节、画面翻转、画中画五个插件，新增 `videoPlugins` 属性透传插件配置（`PluginInput[]`，传 `[]` 关闭全部插件）。视频弹窗内的 DOM 由 `<video>` 变成播放器容器，覆盖过 `.wa-ui-file-list__video` 子元素样式的业务需要跟着调整。
+- 391df25: 新增 `FileUpload` 上传面板：标题 + 拖拽提示 + 按钮区，支持点击、拖拽、键盘选文件，`select` 抛出按 `accept` 过滤后的 `File[]`，被拦下的文件走 `reject`；`actions` 插槽可替换自带按钮（参数里的 `open` 保留打开文件选择框的能力），`loading` / `disabled` 覆盖上传中与禁用态。
+
 ## 3.10.1
 
 ### Patch Changes
