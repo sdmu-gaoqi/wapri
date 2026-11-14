@@ -9,7 +9,7 @@ group:
 
 表单里的上传入口：标题 + 拖拽提示 + 按钮区，点一下、拖进来、键盘回车都能选文件。组件只负责拿到 `File[]`，上传请求与列表回写留给业务，方便接素材库、裁剪、批量上传等不同流程。
 
-常与 [FileList](/element-pros/file-list) 搭配：把 `FileUpload` 放进 `append` 插槽当追加单元格，拿到文件后上传、转成 `FileListItem` 写回 `v-model:data`。需要裁剪走 [CropperUpload](/element-pros/cropper-upload)，需要从素材库挑则把 [FileModal](/element-pros/file-modal) 的开弹窗动作挂到 `actions` 插槽上。
+常与 [FileList](/element-pros/file-list) 搭配：把 `FileUpload` 放进 `append` 插槽当追加单元格（此时传 `width="100%"` 撑满单元格），拿到文件后上传、转成 `FileListItem` 写回 `v-model:data`。需要裁剪走 [CropperUpload](/element-pros/cropper-upload)，需要从素材库挑则把 [FileModal](/element-pros/file-modal) 的开弹窗动作挂到 `actions` 插槽上。
 
 <code src="./demo/basic.vue" title="基础用法"></code>
 
@@ -21,7 +21,7 @@ group:
 
 ## 宽度
 
-默认宽度 240px，和文件卡片并排时刚好一列多一点；放进表单或网格里需要撑满时传 `'100%'`：
+默认宽度 240px，容器比它窄时跟随容器；放进表单或网格里需要撑满时传 `'100%'`：
 
 ```vue | pure
 <template>
