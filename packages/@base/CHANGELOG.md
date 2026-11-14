@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.3.1
+
+### Patch Changes
+
+- 更新base,image处理放松对url的拦截
+
 ## 2.3.0
 
 ### Minor Changes

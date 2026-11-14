@@ -1,5 +1,14 @@
 # @wapri/element-pro
 
+## 3.11.2
+
+### Patch Changes
+
+- @wapri/ghooks@1.1.3
+- @wapri/gplayer@0.1.1
+- @wapri/preview@0.1.3
+- @wapri/gutils@2.3.2
+
 ## 3.11.1
 
 ### Patch Changes

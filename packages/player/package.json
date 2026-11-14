@@ -1,6 +1,6 @@
 {
   "name": "@wapri/gplayer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vue 3 视频播放器：基于 artplayer 封装，插件通过 key + 配置覆盖声明",
   "license": "MIT",
   "author": "wapri contributors",

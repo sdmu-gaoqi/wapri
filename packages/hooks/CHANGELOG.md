@@ -1,5 +1,12 @@
 # @wapri/ghooks
 
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @wapri/gbase@2.3.1
+
 ## 1.1.2
 
 ### Patch Changes
