@@ -1,5 +1,11 @@
 # @wapri/element-pro
 
+## 3.13.2
+
+### Patch Changes
+
+- 增加element-pro对plus的导出
+
 ## 3.13.1
 
 ### Patch Changes

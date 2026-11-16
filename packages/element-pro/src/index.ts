@@ -43,6 +43,7 @@ import {
 import { version } from '../package.json'
 // 全局主题变量（:root 上的 CSS 变量），随组件库样式一起输出
 import './styles/theme.scss'
+import 'element-plus/dist/index.css'
 
 export * from './ProTable'
 export {
@@ -73,6 +74,7 @@ export * from './ProFormDependency'
 export * from './StepsForm'
 export * from './TabForm'
 export * from 'element-plus'
+export * from 'element-plus/es/locale/index'
 export {
   ProConfigProvider,
   SvgIcon,
