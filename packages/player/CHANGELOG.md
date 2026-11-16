@@ -1,5 +1,13 @@
 # @wapri/gplayer
 
+## 0.3.1
+
+### Patch Changes
+
+- element-pro导出element
+- Updated dependencies
+  - @wapri/gbase@2.3.2
+
 ## 0.3.0
 
 ### Minor Changes

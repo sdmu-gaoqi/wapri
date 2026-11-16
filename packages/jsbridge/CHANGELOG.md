@@ -1,5 +1,13 @@
 # @wapri/gjsbridge
 
+## 8.0.2
+
+### Patch Changes
+
+- element-pro导出element
+- Updated dependencies
+  - @wapri/gbase@2.3.2
+
 ## 8.0.1
 
 ### Patch Changes

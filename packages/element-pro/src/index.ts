@@ -10,7 +10,7 @@ import { DateQuickSelect } from './DateQuickSelect'
 import { ProTable } from './ProTable'
 import { TagSelector } from './TagSelector'
 import { VH100 } from './VH100'
-import { ConfigProvider } from './ConfigProvider'
+import { ProConfigProvider } from './ConfigProvider'
 import { SvgIcon } from './SvgIcon'
 import { Layout } from './Layout'
 import { MainContent } from './MainContent'
@@ -72,8 +72,9 @@ export * from './ProFormList'
 export * from './ProFormDependency'
 export * from './StepsForm'
 export * from './TabForm'
+export * from 'element-plus'
 export {
-  ConfigProvider,
+  ProConfigProvider,
   SvgIcon,
   ProTable,
   VH100,
@@ -114,7 +115,7 @@ export {
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 
 const components = [
-  ConfigProvider,
+  ProConfigProvider,
   SvgIcon,
   ProTable,
   VH100,

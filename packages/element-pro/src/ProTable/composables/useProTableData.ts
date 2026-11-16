@@ -8,7 +8,7 @@ import type {
   ProTableProps,
   ProTableRequestContext,
   RequestParams,
-  SortState,
+  ProSortState,
 } from '../types'
 
 const DEFAULT_PAGE_SIZE = 10
@@ -33,7 +33,7 @@ export function useProTableData<T extends object, U extends Record<string, unkno
   const error = ref<Error | null>(null)
   const searchValues = ref<Record<string, unknown>>(getInitialSearchValues(props.columns))
   const requestContext = ref<ProTableRequestContext>({ quickDateSelections: {} })
-  const sort = ref<SortState>({})
+  const sort = ref<ProSortState>({})
   const filter = ref<FilterState>({})
   const pageInfo = ref<PageInfo>({
     current: props.pagination === false ? 1 : (props.pagination?.current ?? 1),

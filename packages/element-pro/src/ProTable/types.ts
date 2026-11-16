@@ -102,7 +102,7 @@ export interface ProColumn<T = Record<string, unknown>> {
   switchProps?: ProComponentProps<SwitchProps>
 }
 
-export type SortState = Record<string, SortOrder>
+export type ProSortState = Record<string, SortOrder>
 export type FilterState = Record<string, Key[] | null>
 
 export type RequestParams<U extends Record<string, unknown> = Record<string, unknown>> = U & {
@@ -118,14 +118,14 @@ export interface RequestResult<T> {
 
 export type RequestFn<T, U extends Record<string, unknown> = Record<string, unknown>> = (
   params: RequestParams<U>,
-  sort: SortState,
+  sort: ProSortState,
   filter: FilterState,
   context: ProTableRequestContext,
 ) => Promise<RequestResult<T>>
 
 export type DownloadFn<U extends Record<string, unknown> = Record<string, unknown>> = (
   params: RequestParams<U>,
-  sort: SortState,
+  sort: ProSortState,
   filter: FilterState,
   context: ProTableRequestContext,
 ) => void | Promise<void>

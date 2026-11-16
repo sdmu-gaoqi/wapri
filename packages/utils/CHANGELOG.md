@@ -1,5 +1,13 @@
 # @wapri/gutils
 
+## 2.3.3
+
+### Patch Changes
+
+- element-pro导出element
+- Updated dependencies
+  - @wapri/gbase@2.3.2
+
 ## 2.3.2
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @wapri/element-pro
 
+## 3.13.1
+
+### Patch Changes
+
+- element-pro导出element
+- Updated dependencies
+  - @wapri/ghooks@1.1.4
+  - @wapri/gplayer@0.3.1
+  - @wapri/preview@0.1.4
+  - @wapri/gutils@2.3.3
+
 ## 3.13.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @wapri/ghooks
 
+## 1.1.4
+
+### Patch Changes
+
+- element-pro导出element
+- Updated dependencies
+  - @wapri/gbase@2.3.2
+
 ## 1.1.3
 
 ### Patch Changes

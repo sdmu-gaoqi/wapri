@@ -46,7 +46,7 @@ import type {
   ProTableRequestContext,
   RequestParams,
   RequestResult,
-  SortState,
+  ProSortState,
 } from '../ProTable/types'
 import type {
   FileModalAsset,
@@ -193,7 +193,7 @@ const busy = computed(() => requesting.value || creatingGroup.value)
 const lockedRequest = useLockFn(
   async (
     params: RequestParams<FileModalQuery>,
-    sort: SortState,
+    sort: ProSortState,
     filter: FilterState,
     context: ProTableRequestContext,
   ): Promise<RequestResult<T>> => {

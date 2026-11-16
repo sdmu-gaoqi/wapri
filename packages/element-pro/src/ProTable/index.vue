@@ -399,7 +399,7 @@ function onSelectionChange(rows: T[]): void {
   setSelection(rows)
 }
 
-/** el-table sort-change：映射为 pro-components 的 SortState 后重新请求。 */
+/** el-table sort-change：映射为 pro-components 的 ProSortState 后重新请求。 */
 function onSortChange(sortProps: Sort): void {
   const { prop, order } = sortProps
   if (!prop) return
