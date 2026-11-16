@@ -1,5 +1,15 @@
 # @wapri/element-pro
 
+## 3.13.5
+
+### Patch Changes
+
+- table新增debug入口
+  - @wapri/ghooks@1.1.6
+  - @wapri/gplayer@0.3.3
+  - @wapri/preview@0.1.6
+  - @wapri/gutils@2.3.5
+
 ## 3.13.4
 
 ### Patch Changes

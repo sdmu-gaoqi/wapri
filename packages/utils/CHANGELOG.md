@@ -1,5 +1,12 @@
 # @wapri/gutils
 
+## 2.3.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @wapri/gbase@2.3.4
+
 ## 2.3.4
 
 ### Patch Changes

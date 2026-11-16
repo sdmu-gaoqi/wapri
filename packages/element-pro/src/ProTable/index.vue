@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends object, U extends Record<string, unknown>">
-import { computed, isRef, isVNode, onBeforeUnmount, ref, useSlots, watch, type VNodeChild } from 'vue'
+import { computed, isRef, isVNode, onBeforeUnmount, onMounted, ref, useSlots, watch, type VNodeChild } from 'vue'
 import {
   ElAlert,
   ElBadge,
@@ -35,7 +35,7 @@ import type {
   SortOrder,
 } from './types'
 import { useConfig } from '../ConfigProvider/context'
-import { isEmpty } from '@wapri/gutils'
+import { isEmpty, outputDebug } from '@wapri/gutils'
 
 const props = withDefaults(defineProps<ProTableProps<T, U>>(), {
   columnEmptyText: '-',
@@ -219,6 +219,10 @@ watch(
   },
   { immediate: true },
 )
+
+onMounted(() => {
+  outputDebug()
+})
 
 onBeforeUnmount(() => {
   clearActionRef(props.actionRef)

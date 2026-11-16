@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.3.4
+
+### Patch Changes
+
+- table新增debug入口
+
 ## 2.3.3
 
 ### Patch Changes
