@@ -1,5 +1,20 @@
 # @wapri/element-pro
 
+## 3.13.0
+
+### Minor Changes
+
+- 收敛默认插件：`VideoPlayer` 未传 `plugins` 时只装 `filter`（画面调节）与 `webFullscreen`（网页全屏），截图、马赛克、模糊、绿幕不再默认启用，需要时写进 `plugins` 或用 `[...defaultPlayerPlugins, ...]` 追加。
+
+  `element-pro` 的 `FileList` 视频预览默认插件同步收敛为 `playbackRate`、`aspectRatio`、`filter`、`flip`、`pip`、`webFullscreen`，`videoPlugins` 仍可整体覆盖。
+
+### Patch Changes
+
+- 调整player的默认插件
+- Updated dependencies
+- Updated dependencies
+  - @wapri/gplayer@0.3.0
+
 ## 3.12.0
 
 ### Minor Changes

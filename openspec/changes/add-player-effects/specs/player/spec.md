@@ -55,14 +55,20 @@
 
 ### Requirement: 播放器默认插件
 
-`VideoPlayer` 未传 `plugins` 时 SHALL 默认启用 `filter`、`screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey` 六项。
+`VideoPlayer` 未传 `plugins` 时 SHALL 只默认启用 `filter` 与 `webFullscreen`，其余插件按需声明。
 
 #### Scenario: 默认菜单
 
 - **WHEN** 使用 `<VideoPlayer url="..." />` 且不传 `plugins`
-- **THEN** 右侧设置菜单出现画面调节、截图、网页全屏、马赛克、模糊、绿幕六项
-- **AND** 马赛克、模糊、绿幕的效果开关默认关闭，菜单项可见但不改画面
+- **THEN** 右侧设置菜单只有画面调节与网页全屏两项
+- **AND** 截图、马赛克、模糊、绿幕等未声明的插件不出现菜单项
 - **AND** 传入 `:plugins="[]"` 时菜单不出现插件项
+
+#### Scenario: 在默认之上追加
+
+- **WHEN** 传入 `[...defaultPlayerPlugins, 'screenshot', 'mosaic']`
+- **THEN** 菜单在两项默认插件之外多出截图与马赛克
+- **AND** 默认插件的配置不受影响
 
 ### Requirement: 倒放
 

@@ -3,15 +3,8 @@ import type { AspectRatioValue, FlipMode, PluginInput, ScreenshotType } from '..
 export * from './effect'
 export * from './filters'
 
-/** 未传 `plugins` 时默认启用的插件：画面调节、截图、网页全屏、马赛克、模糊、绿幕 */
-export const defaultPlayerPlugins: PluginInput[] = [
-  'filter',
-  'screenshot',
-  'webFullscreen',
-  'mosaic',
-  'blur',
-  'chromaKey',
-]
+/** 未传 `plugins` 时默认启用的插件：画面调节、网页全屏 */
+export const defaultPlayerPlugins: PluginInput[] = ['filter', 'webFullscreen']
 
 /** 包名，用于日志与提示前缀 */
 export const packageName = '@wapri/gplayer'

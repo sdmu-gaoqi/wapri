@@ -31,7 +31,7 @@ import { VideoPlayer } from '@wapri/gplayer'
 - 同一个 key 只安装一次，后出现的配置覆盖先出现的；未注册的 key 警告后跳过。
 - 需要在 `setting` 里读字段时用 `pluginEntry('key', fn)`，`config` 会带上该插件的类型。
 
-内置插件：`playbackRate`、`aspectRatio`、`flip`、`webFullscreen`、`screenshot`、`pip`、`abLoop`、`filter`、`videoFilter`、`mosaic`、`blur`、`backgroundBlur`、`stabilizer`、`chromaKey`、`vertical`、`reverse`、`intro`、`overlay`。不传 `plugins` 时默认启用 `filter`、`screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`（后三个开关默认关闭）。
+内置插件：`playbackRate`、`aspectRatio`、`flip`、`webFullscreen`、`screenshot`、`pip`、`abLoop`、`filter`、`videoFilter`、`mosaic`、`blur`、`backgroundBlur`、`stabilizer`、`chromaKey`、`vertical`、`reverse`、`intro`、`overlay`。不传 `plugins` 时只默认启用 `filter` 与 `webFullscreen`，其余按需声明。
 
 自定义插件：
 

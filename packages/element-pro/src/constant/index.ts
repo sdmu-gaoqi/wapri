@@ -137,11 +137,7 @@ export const fileListVideoPlugins: PluginInput[] = [
   'filter',
   'flip',
   'pip',
-  'screenshot',
   'webFullscreen',
-  'mosaic',
-  'blur',
-  'chromaKey',
 ]
 
 /** FileUpload 面板的默认标题。 */

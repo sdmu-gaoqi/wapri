@@ -68,7 +68,7 @@ pluginEntry('playbackRate', (config) => ({
 
 ## 内置插件
 
-每个插件在右侧设置菜单里占一项，点插件名查看用法与 demo。不传 `plugins` 时默认启用 `filter`、`screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`（后三个的开关默认关闭）。
+每个插件在右侧设置菜单里占一项，点插件名查看用法与 demo。不传 `plugins` 时只默认启用 `filter`（画面调节）与 `webFullscreen`（网页全屏），其余按需声明。
 
 | key | 右侧菜单 | 行为 |
 | --- | --- | --- |

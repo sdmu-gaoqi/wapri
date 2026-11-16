@@ -25,8 +25,8 @@
 
 ## 3. 默认插件
 
-- [ ] 3.1 `VideoPlayer` 的 `plugins` 默认值改为 `['filter', 'screenshot', 'webFullscreen', 'mosaic', 'blur', 'chromaKey']`
-- [ ] 3.2 `element-pro` 的 `fileListVideoPlugins` 补 `screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`
+- [ ] 3.1 `VideoPlayer` 的 `plugins` 默认值改为 `['filter', 'webFullscreen']`，并以 `defaultPlayerPlugins` 导出
+- [ ] 3.2 `element-pro` 的 `fileListVideoPlugins` 收敛为 `playbackRate`、`aspectRatio`、`filter`、`flip`、`pip`、`webFullscreen`
 
 ## 4. 验证与文档
 

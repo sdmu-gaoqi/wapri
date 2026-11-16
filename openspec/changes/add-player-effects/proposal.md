@@ -13,7 +13,7 @@
 - `PluginContext` 新增 `frame`（帧渲染器）与 `cssFilter`（合成栈）两个字段，自定义插件同样可用；两者懒创建，无 DOM 环境下降级为空实现。
 - 新增 11 个内置插件：`webFullscreen`（网页全屏）、`mosaic`（马赛克）、`stabilizer`（防抖）、`blur`（模糊）、`reverse`（倒放）、`backgroundBlur`（背景模糊）、`intro`（开场动画）、`overlay`（视频叠加）、`chromaKey`（绿幕编辑器）、`videoFilter`（视频滤镜）、`vertical`（横屏转竖屏）。
 - 每个插件一个 `PluginConfigMap` 条目、一条右侧菜单、一个文档页与 demo。
-- 播放器默认插件由 `[]` 改为 `['filter', 'screenshot', 'webFullscreen', 'mosaic', 'blur', 'chromaKey']`；`element-pro` 的 `FileList` 默认插件同步补 `screenshot`、`webFullscreen`、`mosaic`、`blur`、`chromaKey`。
+- 播放器默认插件由 `[]` 改为 `['filter', 'webFullscreen']`，默认列表以 `defaultPlayerPlugins` 导出；`element-pro` 的 `FileList` 默认插件收敛为 `playbackRate`、`aspectRatio`、`filter`、`flip`、`pip`、`webFullscreen`。
 - 版本按 minor 记（新增能力，无破坏性变更）。
 
 ## Impact

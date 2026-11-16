@@ -150,7 +150,7 @@ configurePdfjs({ workerSrc: '/pdf.worker.min.mjs' })
 | `disabled` | `boolean` | `false` | 禁用删除与排序 |
 | `emptyText` | `string` | `'暂无文件'` | 空列表文案 |
 | `rowKey` | `string \| ((item, index) => Key)` | - | 卡片 key，默认取 `id`，没有时用名称与缩略图地址组合 |
-| `videoPlugins` | `PluginInput[]` | 倍速 / 比例 / 调节 / 翻转 / 画中画 | 视频预览启用的播放器插件，透传给 `VideoPlayer` |
+| `videoPlugins` | `PluginInput[]` | 倍速 / 比例 / 调节 / 翻转 / 画中画 / 网页全屏 | 视频预览启用的播放器插件，透传给 `VideoPlayer` |
 
 ## Events
 

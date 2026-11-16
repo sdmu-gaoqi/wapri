@@ -180,8 +180,8 @@ test('内置插件一共 18 个，key 与右侧菜单一一对应', () => {
   )
 })
 
-test('默认插件为画面调节、截图、网页全屏、马赛克、模糊、绿幕', () => {
-  assert.deepEqual(defaultPlayerPlugins, ['filter', 'screenshot', 'webFullscreen', 'mosaic', 'blur', 'chromaKey'])
+test('默认插件为画面调节与网页全屏', () => {
+  assert.deepEqual(defaultPlayerPlugins, ['filter', 'webFullscreen'])
 })
 
 test('字符串写法走默认配置，对象写法覆盖默认配置', () => {

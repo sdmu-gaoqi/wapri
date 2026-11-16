@@ -20,7 +20,7 @@ group:
 | `loop` | 是否循环播放 | `boolean` | `false` |
 | `volume` | 初始音量，0–1 | `number` | `0.7` |
 | `height` | 容器高度，数字按 px；不传按 16:9 | `number \| string` | - |
-| `plugins` | 插件配置 | `PluginInput[]` | `['filter', 'screenshot', 'webFullscreen', 'mosaic', 'blur', 'chromaKey']` |
+| `plugins` | 插件配置 | `PluginInput[]` | `['filter', 'webFullscreen']` |
 | `options` | 其余 [artplayer 配置](https://artplayer.org/document/) 原样透传 | `PlayerOption` | `{}` |
 
 组件默认打开右侧设置菜单、全屏按钮与迷你进度条，其余按钮（`playbackRate`、`screenshot`、`pip` 等）默认关闭，交给插件接管；需要原生按钮时用 `options` 打开。
