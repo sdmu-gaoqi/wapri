@@ -16,12 +16,13 @@
 | `packages/player` | `@wapri/gplayer` | 视频播放器 `VideoPlayer`（基于 artplayer），插件按 key + 配置覆盖声明，内置 18 个插件，画面类效果走共享 canvas 渲染管线 |
 | `packages/preview` | `@wapri/preview` | H5 文件预览（文本 / PDF / Word / XLSX），按可视区域懒渲染 |
 | `packages/jsbridge` | `@wapri/gjsbridge` | App WebView 桥接，通道名由业务注入 |
+| `packages/mcp` | `@wapri/mcp` | MCP Server：把组件文档 / 示例 / 源码快照进包，供 AI 助手查询（stdio、只读、离线） |
 
 ## Tech Stack
 
 - 包管理：pnpm 9.x workspace（`packages/*`，`@base` 属于一层目录，同样被 glob 覆盖）
 - 版本与 changelog：changesets（`.changeset/config.json`，`baseBranch: main`）
-- 构建：father 4（`@wapri/gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）；vite + `vite-plugin-dts`（`element-pro`、`player`，需要编译 `.vue`）
+- 构建：father 4（`@wapri/gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）；vite + `vite-plugin-dts`（`element-pro`、`player`，需要编译 `.vue`）；tsc（`mcp`，Node ESM CLI，构建后再生成 `dist/knowledge.json`）
 - 构建编排：turbo（`build` 依赖 `^build`，`dev` 常驻）
 - 文档站：dumi 2.4 + `@dumijs/preset-vue`，配置在 `.dumirc.ts`
 - 检查与格式：oxlint + oxfmt（`@wagq/lint-ox`），husky + lint-staged 在提交时执行

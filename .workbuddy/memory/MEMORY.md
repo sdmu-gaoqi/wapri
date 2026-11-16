@@ -3,10 +3,12 @@
 ## 新增子包的固定动作
 
 1. `packages/<name>/{package.json,tsconfig.json,README.md,CHANGELOG.md,src}`，版本从 `0.0.0` 起，`build` 以 `node ../../scripts/clean-dist.mjs &&` 开头。
-2. 需要编译 `.vue` 的包用 `vite.config.ts`（`vite-plugin-dts` + external 白名单），纯 TS 包用 `.fatherrc.ts`。
-3. 六处登记：`.dumirc.ts`（atomDirs / nav / alias）、`docs/changelog/<pkg>.md`、根 `AGENTS.md` 仓库地图、`docs/guide.md`、`openspec/project.md` 包表、`.changeset/*.md`。
-4. 文档路由按 `atomDirs.type` 复数化（preview → `/previews`，player → `/players`）。
+2. 需要编译 `.vue` 的包用 `vite.config.ts`（`vite-plugin-dts` + external 白名单），纯 TS 包用 `.fatherrc.ts`，Node CLI 用 `tsc`（`module/moduleResolution: NodeNext`、`types: ["node"]`、相对导入带 `.js`）。
+3. 登记：`.dumirc.ts`（atomDirs / nav / alias）、`docs/changelog/<pkg>.md`、根 `AGENTS.md` 仓库地图、`docs/guide.md`、`openspec/project.md` 包表、`.changeset/*.md`，以及首页卡片 `.dumi/pages/index.tsx` 的 `PROJECTS`（mark 取项目名两字母、accent 渐变、category 取自 `CATEGORY_ORDER`）。
+4. 文档路由按 `atomDirs.type` 复数化（preview → `/previews`，player → `/players`，mcp → `/mcps`；结尾已有 s 的不变）。
 5. 先写 `openspec/changes/<id>/` 提案（proposal / tasks / specs，有取舍补 design），`validate --strict` 通过后再实施。
+6. 在根 `tsconfig.json` 的 `exclude` 里排掉某个包后，该包的 `tsconfig.json` 会**继承这个 exclude**，必须在子包显式写 `exclude` 覆盖，否则 `TS18003 No inputs were found`。
+7. 包的产物若取自别的包的 `src`（如 `@wapri/mcp` 的知识快照），要在 `turbo.json` 里给 `"<pkg>#build"` 设 `cache: false`，否则别的包改了文档也命中旧缓存。
 
 ## 文档组织约定
 
@@ -28,6 +30,15 @@
 - element-plus 在 `packages/element-pro/src/index.ts` 入口统一透出（`export * from 'element-plus'`、`default as ElementPlus`、locale），主题样式由入口 `import 'element-plus/dist/index.css'` 带入；包内组件仍直接 `from 'element-plus'`。
 - 不要给 element-plus 的子路径（如 `element-plus/es/locale/index`）写 `export *` 却不加 external，会把全部语言包打进产物（index.mjs 从 270 kB 涨到 615 kB）。
 - 命名：`ProConfigProvider`（全局注册名仍是 `ConfigProvider`）、`ProSortState`。
+
+## Skills 文案与安装面板
+
+- `public/skills/wapri-design/` 是 Skills 文案唯一来源；`packages/mcp/scripts/sync-skills.mjs` 构建时同步到 `packages/mcp/skills/wapri-design/`，后者 gitignore，不在页面或包内重复维护。
+- `/mcps` 的「添加到我的项目」面板（`packages/mcp/src/demo/install-skills.vue`）按各客户端约定目录写入：`.agents/skills`、`.trae/skills`、`.cursor/skills`、`.codebuddy/skills`、`.claude/skills`、`.qwen/skills`、`.codex/skills`、`.skills`，统一落到 `wapri-design/` 子目录；不支持 File System Access API 时给下载链接兜底。
+- dotagents 标准：源文件 `skill.dotagents.md`，落盘为 `.agents/skills/wapri-design/skill.md`（小写），frontmatter 要 `kind: skill` + `id: wapri-design` + `name` + `description`；同时写一份 `SKILL.md` 兼容按大写名扫描的客户端。面板的 `TOOLS[].files` 用 `[来源文件名, 目标文件名]` 做映射，不要假定所有客户端同名。
+- 写入失败排查顺序：Chromium 内核 → HTTPS/localhost 安全上下文 → 选项目根目录并点「允许写入」→ 看面板下方具体错误；非 Chromium / 普通 HTTP 只能下载后手动放。
+- 真实 `FileSystemDirectoryHandle` 与 mock 不同：写前要 `queryPermission({ mode: 'readwrite' })`，不是 `granted` 就 `requestPermission`；否则可能选完目录却静默不落盘。面板状态分步显示进度，便于定位卡在选目录 / 权限 / fetch / 写文件哪一步。
+- dumi 的 `define` 直接传字符串值（如 `__DOC_PUBLIC_PATH__: BASE_PATH`），不要再 `JSON.stringify`，否则运行时值带引号，静态资源请求 404。
 
 ## 拖拽底座（@vue-dnd-kit/core）
 

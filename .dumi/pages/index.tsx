@@ -1,7 +1,7 @@
 /**
  * title: 组件库
- * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览、视频播放与 App 桥接
- * keywords: [SDK, element-pro, player, preview, hooks, utils, jsbridge, lint]
+ * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览、视频播放、App 桥接与 MCP
+ * keywords: [SDK, element-pro, player, preview, hooks, utils, jsbridge, mcp, lint]
  * sidebar: false
  * toc: false
  * hideChrome: true
@@ -98,8 +98,9 @@ const PROJECTS: ProjectItem[] = [
     description:
       '基于 artplayer 的 Vue 3 视频播放器组件，插件用 key 声明；内置倍速、画面比例、翻转、截图、画中画、AB 循环、画面调节七个插件，各占右侧菜单一项。',
     highlights: ['插件即菜单项', '内置 7 个插件'],
-    mark: 'vp',
-    accent: ['#0f766e', '#14b8a6'],
+    mark: 'pl',
+    // 原来的青色比其它图标亮一档，放在一排深色图标里显眼；压暗到与其它图标同一明度
+    accent: ['#115e59', '#0f766e'],
     docPath: '/players',
   },
   {
@@ -112,6 +113,18 @@ const PROJECTS: ProjectItem[] = [
     mark: 'jb',
     accent: ['#b91c1c', '#dc2626'],
     docPath: '/jsbridges',
+  },
+  {
+    name: 'mcp',
+    packageName: '@wapri/mcp',
+    category: '工程化',
+    tech: 'TypeScript · Node',
+    description:
+      '把组件文档、示例与源码快照进包里的 MCP Server，AI 编程助手接上后可以边查文档边写代码；只读、离线、随包发布，附一份 Skills 说清工作流与硬约定。',
+    highlights: ['7 个只读工具', '随包 Skills'],
+    mark: 'mc',
+    accent: ['#3730a3', '#4f46e5'],
+    docPath: '/mcps',
   },
 ]
 
@@ -240,8 +253,8 @@ const ProjectsPage: React.FC = () => {
           <p className="wa-projects__eyebrow">wa · Monorepo</p>
           <h1 className="wa-projects__title">前端 SDK</h1>
           <p className="wa-projects__subtitle">
-            前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库、Hooks、工具函数、文件预览与 App 桥接， 全部由 pnpm workspace
-            管理并独立发包。
+            前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库、Hooks、工具函数、文件预览、视频播放与 App 桥接，并提供 AI
+            助手可直连的 MCP Server；全部由 pnpm workspace 管理并独立发包。
           </p>
           <div>
             <Link

@@ -56,6 +56,7 @@ export default defineConfig({
       { title: 'hooks', link: '/hooks' },
       { title: 'utils', link: '/utils' },
       { title: 'jsbridge', link: '/jsbridges' },
+      { title: 'mcp', link: '/mcps' },
     ],
     prefersColor: { default: 'auto', switch: true },
     hd: { rules: [] },
@@ -94,6 +95,10 @@ export default defineConfig({
         type: 'player',
         dir: 'packages/player/src',
       },
+      {
+        type: 'mcp',
+        dir: 'packages/mcp/src',
+      },
     ],
   },
   favicons: [LOGO_PATH],
@@ -116,11 +121,15 @@ export default defineConfig({
     '@wapri/element-pro': `${process.cwd()}/packages/element-pro/src`,
     '@wapri/preview': `${process.cwd()}/packages/preview/src`,
     '@wapri/gplayer': `${process.cwd()}/packages/player/src`,
+    // mcp 是 Node 侧包（node:fs / node:url），只在文档里引用代码片段，不要在任何浏览器 demo 里 import
+    '@wapri/mcp': `${process.cwd()}/packages/mcp/src`,
   },
   jsMinifierOptions: {
     target: ['chrome80', 'es2020'],
   },
   define: {
     'process.env.DEBUG': '1',
+    // /mcps 页的「添加到我的项目」面板要按部署子路径去取 skills 静态文件
+    '__DOC_PUBLIC_PATH__': BASE_PATH,
   },
 })

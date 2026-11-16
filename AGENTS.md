@@ -33,6 +33,11 @@ Guidance for coding agents working in this repository.
 - `packages/preview`: H5 文件预览(文本 / PDF / Word / XLSX)
   - 只依赖 `@wapri/gbase`,解析用 pdfjs-dist / mammoth / xlsx,排版用 opentype.js
   - 只渲染可视区域,常量放 `src/constant`
+- `packages/mcp`: wapri 组件知识的 MCP Server(Node ESM CLI,`bin: wapri-mcp`,stdio)
+  - 构建走 `tsc` + `scripts/gen-knowledge.mjs`,把 `packages/*/src` 的文档/示例/源码快照成 `dist/knowledge.json`;运行时不读仓库、不联网
+  - 工具集中在 `src/tools/register.ts`,查询与文本渲染在 `src/knowledge/`;工具名与参数是 AI 侧公共 API,只加不改
+  - Skills 文案统一放 `public/skills/wapri-design/`(文档站 `/mcps` 的「添加到我的项目」面板直接写进用户项目),构建时 `scripts/sync-skills.mjs` 同步进包内 `skills/` 随 npm 发布;改文案只改 `public/skills` 一处
+  - dotagents 标准落 `.agents/skills/<id>/skill.md`,源文件是 `skill.dotagents.md`(frontmatter 带 `id`/`kind`);面板同时写一份 `SKILL.md` 兼容按大写名扫描的客户端
 
 ## OpenSpec 工作流
 
@@ -69,6 +74,7 @@ Guidance for coding agents working in this repository.
 - 破坏性变更采用主版本号更新,新增功能采用次版本号更新,修复问题与样式变更采用补丁版本号更新
 - 保持prop、event、slot和暴露类型与实现行为同步。
 - 业务域名、桶名、网关前缀、Token 键、App 通道名一律走配置或环境变量,不要写进源码与文档示例。
+- 新增的包必须在首页增加菜单导航,且图标为暖色调
 
 ## Git And Review Hygiene
 

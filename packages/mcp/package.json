@@ -1,0 +1,44 @@
+{
+  "name": "@wapri/mcp",
+  "version": "0.0.0",
+  "description": "wapri 组件库的 MCP Server：查文档、示例与源码，供 AI 编程助手接入",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "vue",
+    "wapri"
+  ],
+  "license": "MIT",
+  "author": "wapri contributors",
+  "bin": {
+    "wapri-mcp": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean-dist.mjs && tsc -p tsconfig.json && node scripts/gen-knowledge.mjs && node scripts/sync-skills.mjs",
+    "dev": "node scripts/gen-knowledge.mjs && tsc -p tsconfig.json --watch",
+    "start": "node dist/cli.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  }
+}

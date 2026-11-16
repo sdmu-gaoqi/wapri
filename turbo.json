@@ -6,6 +6,13 @@
       "outputs": ["dist/**"],
       "outputLogs": "new-only"
     },
+    // mcp 的知识快照取自其它包的 src（不是 dist），turbo 默认只按包内文件算缓存 key，
+    // 别的包改了文档这里会命中旧缓存，所以不缓存、每次重跑（tsc + 生成脚本约 3s）。
+    "@wapri/mcp#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": false
+    },
     "dev": {
       "cache": false,
       "persistent": true

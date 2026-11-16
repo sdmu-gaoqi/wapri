@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "resolveJsonModule": false,
+    "declaration": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  // 根 tsconfig 的 exclude 会被 extends 继承（那份是把 mcp 从浏览器侧的检查里排掉），
+  // 这里必须覆盖掉，否则本包一个文件都进不了 program。
+  "exclude": ["node_modules", "dist"]
+}

@@ -27,3 +27,6 @@ es
 .codegraph
 .playwright-mcp
 .dumi-dev.log
+
+# mcp 的技能包唯一来源是 public/skills，构建时同步到包内随 npm 发布，不入库
+packages/mcp/skills/

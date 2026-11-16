@@ -22,5 +22,8 @@
       "@/*": ["src/*"]
     }
   },
-  "include": [".dumirc.ts", "demos", "packages/*/src/**/*", "packages/*/components/**/*"]
+  "include": [".dumirc.ts", "demos", "packages/*/src/**/*", "packages/*/components/**/*"],
+  // mcp 是 Node ESM 包，走自己的 tsconfig（NodeNext + types: node）；这里的 moduleResolution: Node
+  // 解析不到 @modelcontextprotocol/sdk 的 exports 子路径，混在一起只会报假错。
+  "exclude": ["packages/mcp"]
 }
