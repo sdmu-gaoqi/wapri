@@ -74,6 +74,7 @@ export * from './ProFormDependency'
 export * from './StepsForm'
 export * from './TabForm'
 export * from 'element-plus'
+export { default as ElementPlus } from 'element-plus'
 export * from 'element-plus/es/locale/index'
 export {
   ProConfigProvider,
