@@ -1,5 +1,13 @@
 # @wapri/gjsbridge
 
+## 8.0.3
+
+### Patch Changes
+
+- 修订结构,收拢base能力
+- Updated dependencies
+  - @wapri/gbase@2.3.3
+
 ## 8.0.2
 
 ### Patch Changes

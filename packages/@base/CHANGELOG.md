@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.3.3
+
+### Patch Changes
+
+- 修订结构,收拢base能力
+
 ## 2.3.2
 
 ### Patch Changes

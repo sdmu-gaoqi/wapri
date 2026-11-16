@@ -1,5 +1,13 @@
 # @wapri/gutils
 
+## 2.3.4
+
+### Patch Changes
+
+- 修订结构,收拢base能力
+- Updated dependencies
+  - @wapri/gbase@2.3.3
+
 ## 2.3.3
 
 ### Patch Changes

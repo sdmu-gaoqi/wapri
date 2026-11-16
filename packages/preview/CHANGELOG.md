@@ -1,5 +1,13 @@
 # @wapri/preview
 
+## 0.1.5
+
+### Patch Changes
+
+- 修订结构,收拢base能力
+- Updated dependencies
+  - @wapri/gbase@2.3.3
+
 ## 0.1.4
 
 ### Patch Changes

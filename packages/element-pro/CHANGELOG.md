@@ -1,5 +1,16 @@
 # @wapri/element-pro
 
+## 3.13.4
+
+### Patch Changes
+
+- 修订结构,收拢base能力
+- Updated dependencies
+  - @wapri/ghooks@1.1.5
+  - @wapri/gplayer@0.3.2
+  - @wapri/preview@0.1.5
+  - @wapri/gutils@2.3.4
+
 ## 3.13.3
 
 ### Patch Changes
