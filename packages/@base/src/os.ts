@@ -27,6 +27,7 @@ const browserList = {
 type BrwoserType = keyof typeof browserList
 
 const getUA = () => {
+  console.info('debug=================>getUA')
   return navigator?.userAgent.toLocaleLowerCase() ?? ''
 }
 
