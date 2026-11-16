@@ -28,3 +28,11 @@
 - element-plus 在 `packages/element-pro/src/index.ts` 入口统一透出（`export * from 'element-plus'`、`default as ElementPlus`、locale），主题样式由入口 `import 'element-plus/dist/index.css'` 带入；包内组件仍直接 `from 'element-plus'`。
 - 不要给 element-plus 的子路径（如 `element-plus/es/locale/index`）写 `export *` 却不加 external，会把全部语言包打进产物（index.mjs 从 270 kB 涨到 615 kB）。
 - 命名：`ProConfigProvider`（全局注册名仍是 `ConfigProvider`）、`ProSortState`。
+
+## 拖拽底座（@vue-dnd-kit/core）
+
+- `makeSortableList` 只算落点（写内部 `draft`），**不搬 DOM**：返回值里的 `items` 是草稿顺序，必须自己渲染出来，否则拖拽期间没有实时反馈，只有松手才看到结果。
+- 判定落点的策略是「指针 vs 目标项中点」（`strategy` 只区分 vertical / horizontal / grid，没有阈值配置），所以要让行跟着指针让位，就得渲染草稿。
+- 表格行排序要用 `strategy: 'grid'` 而不是 `'vertical'`：vertical 比中点、要拖过一整行才换位；grid 只要指针落在某一行就取该行下标（进一行换一行）。`axis: 'y'` 会把指针 x 锁在起拖位置，横向偏移不影响判定。
+- 表格这类自渲染组件：用 `activeIndex >= 0` 判断拖拽中，草稿变化时 `setDataSource` 推给 `ElTable`，并把按序号取 DOM 的注册器也改成按草稿顺序遍历，否则 key 与 `tr` 对不上。
+- `ProTable` 内部有一份 `div.hidden-columns` 的隐藏单元格副本，按 class 数元素会多出来，测试选择器要限定到 `table.el-table__body tbody tr`。

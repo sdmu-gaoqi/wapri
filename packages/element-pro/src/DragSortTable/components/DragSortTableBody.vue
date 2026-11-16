@@ -45,7 +45,7 @@ function syncTableElement(): void {
   tableElement.value = rootRef.value?.querySelector<HTMLElement>('table.el-table__body') ?? undefined
 }
 
-/** 第 index 行的 `<tr>`：行顺序与 `rows` 一致，直接按序号取。 */
+/** 第 index 行的 `<tr>`：DOM 行序与 `displayRows` 一致，直接按序号取。 */
 function getRowElement(index: number): MaybeElement {
   return tableElement.value?.querySelectorAll<HTMLElement>(':scope > tbody > tr')[index] ?? undefined
 }
@@ -73,13 +73,20 @@ watch(
   { deep: true },
 )
 
-makeSortableList<T>(() => tableElement.value, {
+const sortableList = makeSortableList<T>(() => tableElement.value, {
   id: sortableId,
   items: rows,
   getKey: (row) => rowKeyMap.value.get(row) ?? 0,
   overlay: DragSortTableOverlay,
   axis: 'y',
-  strategy: 'vertical',
+  /**
+   * 落点按「指针落在哪一行」算，不按「指针是否越过行的中点」算。
+   *
+   * `vertical` 策略比的是目标行的中点，把手又正好在行中间，所以要把指针拖过整整一行才换位，
+   * 手感就是「拖到底才触发」；`grid` 策略只要指针进到某一行就取那一行的下标，进一行换一行。
+   * 表格本身只有一列行，横向由 `axis: 'y'` 锁住（指针 x 固定为起拖位置），不会因为行宽或横向偏移误判。
+   */
+  strategy: 'grid',
   // 拖到表格外松手按取消处理，避免「拖出去也改了顺序」。
   dropOutside: 'cancel',
   onDrop: (event) => {
@@ -92,6 +99,34 @@ makeSortableList<T>(() => tableElement.value, {
       void props.onDragSortEnd?.(event.from.index, event.to.index, next)
     })
   },
+})
+
+/**
+ * 是否正在拖拽本表：库把当前项在草稿里的位置写进 `activeIndex`，
+ * 拖拽结束或取消后变回 -1。
+ */
+const isSorting = computed(() => sortableList.activeIndex.value >= 0)
+
+/**
+ * 表格要展示的顺序：拖拽中跟着库的草稿走，其余时候就是源数据。
+ * 拖拽库只负责算「这一行该插到第几」，不会自己搬 DOM；不按草稿渲染的话，
+ * 拖拽期间其它行原地不动，只有松手才看到结果，手感就是「拖了半天没反应」。
+ */
+const displayRows = computed<T[]>(() => (isSorting.value ? sortableList.items.value : rows.value))
+
+/** 草稿一变就把新顺序推给表格，让行跟着指针让位。 */
+watch(
+  () => sortableList.items.value,
+  (next) => {
+    if (!isSorting.value) return
+    proTableRef.value?.setDataSource(next)
+  },
+)
+
+/** 松手或取消：回到源数据为准，取消时草稿直接丢弃。 */
+watch(isSorting, (value) => {
+  if (value) return
+  proTableRef.value?.setDataSource(rows.value)
 })
 
 const innerColumns = computed<ProColumn<T>[]>(() => {
@@ -161,7 +196,7 @@ watch(
     </ProTable>
 
     <SortableItemRegistrar
-      v-for="(row, index) in rows"
+      v-for="(row, index) in displayRows"
       :key="String(rowKeyMap.get(row) ?? index)"
       :item="row"
       :target="() => getRowElement(index)"
