@@ -52,6 +52,7 @@ export const set = (target, path, value) => {
   return target
 }
 export const cloneDeep = (value) => JSON.parse(JSON.stringify(value))
+export const toCssSize = (value) => (typeof value === 'number' ? \`\${value}px\` : value)
 export const uuid = () => Math.random().toString(36).slice(2)
 `
 

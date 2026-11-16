@@ -93,7 +93,7 @@ ProTable 支持以下布局插槽：
 | 属性 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `columns` | `ProColumn<T>[]` | `[]` | 列配置。支持 `title`、`dataIndex`、`valueType`、`valueEnum`、`render`、`renderText`、`renderFormItem`、`search`、`hideInTable`、`hideInForm`、`width`、`fixed`、`ellipsis`、`sorter`、`filters`、`initialValue`、`fieldProps`、`proFieldProps` 及各组件 props。详见下方“columns 与 valueType”。 |
-| `request` | `(params, sort, filter, context) => Promise<RequestResult<T>>` | - | 异步数据请求。自动首次请求时，表格从首帧开始展示加载态，不会短暂展示空状态。返回 `{ data, success?, total? }`；`success: false` 会按空数据处理。请求抛错时 ProTable 会自动清空表格数据和分页总数，并触发 `onRequestError`。`params` 自动包含 `current`、`pageSize`、`tabActiveKey`、`params` 和搜索表单值，`context` 可区分日期快捷选择和手动选择。 |
+| `request` | `(params, sort, filter, context) => Promise<RequestResult<T>>` | - | 异步数据请求。自动首次请求时，表格从首帧开始展示加载态，不会短暂展示空状态。返回 `{ data, success?, total? }`；`success: false` 会按空数据处理。请求抛错时 ProTable 会自动清空表格数据和分页总数，并触发 `onRequestError`。`params` 自动包含 `current`、`pageSize`、`tabActiveKey`、`params` 和搜索表单值，`context` 可区分日期快捷选择和手动选择；`sort` 的类型是 `ProSortState`，`filter` 是 `FilterState`。 |
 | `dataSource` | `T[]` | `[]` | 静态数据源。未配置 `request` 时使用，后续变化会同步到表格。配置 `request` 时由请求结果驱动表格数据。 |
 | `defaultData` | `T[]` | `[]` | 初始数据，仅用于初始化表格；未配置 `request` 且未传 `dataSource` 时也会作为静态数据源。 |
 | `params` | `U` | `{}` | 额外请求参数；对象变化后自动回到第一页并刷新。 |

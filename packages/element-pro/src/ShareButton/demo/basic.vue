@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElInput } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { ShareButton } from '@wapri/element-pro'
 import { os } from '@wapri/gutils'
 

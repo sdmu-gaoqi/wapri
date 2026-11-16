@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
-import 'element-plus/dist/index.css'
 import { Layout, type SidebarMenuItem, type SidebarProps } from '@wapri/element-pro'
 import DemoLink from '../../Sidebar/demo/DemoLink.vue'
 

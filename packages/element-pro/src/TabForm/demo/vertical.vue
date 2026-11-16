@@ -2,7 +2,6 @@
 import { reactive, ref } from 'vue'
 import { ElConfigProvider, ElMessage, ElRadioButton, ElRadioGroup } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProFormDigit, ProFormSelect, ProFormText, TabForm } from '@wapri/element-pro'
 import type { TabFormTabPosition } from '@wapri/element-pro'
 

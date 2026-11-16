@@ -21,4 +21,10 @@
 - 内置 18 个插件；默认插件是 `src/constant/index.ts` 的 `defaultPlayerPlugins`（`filter`/`webFullscreen`），其余按需声明。
 - 逐帧改画面（马赛克/模糊/背景模糊/防抖/绿幕/横屏转竖屏）走 `PluginContext.frame`，共享一层 canvas（`core/frame.ts`），不要各自建 canvas；写 `video.style.filter` 走 `PluginContext.cssFilter`，否则多插件会互相覆盖。
 - `FrameFit` 默认是 `fill`（对齐 artplayer 的 `object-fit: fill`），背景模糊时前景切 `contain`，竖屏插件自己给 fit。
-- 下游用法：`element-pro` 的 `FileList` 视频预览用 `VideoPlayer`，通过 `videoPlugins` 透传插件配置（默认倍速 / 比例 / 调节 / 翻转 / 画中画 / 截图 / 网页全屏 / 马赛克 / 模糊 / 绿幕）；element-pro 依赖 gplayer，构建时在 external 白名单里。
+- 下游用法：`element-pro` 的 `FileList` 视频预览用 `VideoPlayer`，通过 `videoPlugins` 透传插件配置（默认倍速 / 比例 / 调节 / 翻转 / 画中画 / 网页全屏）；element-pro 依赖 gplayer，构建时在 external 白名单里。
+
+## element-pro 与 element-plus
+
+- element-plus 在 `packages/element-pro/src/index.ts` 入口统一透出（`export * from 'element-plus'`、`default as ElementPlus`、locale），主题样式由入口 `import 'element-plus/dist/index.css'` 带入；包内组件仍直接 `from 'element-plus'`。
+- 不要给 element-plus 的子路径（如 `element-plus/es/locale/index`）写 `export *` 却不加 external，会把全部语言包打进产物（index.mjs 从 270 kB 涨到 615 kB）。
+- 命名：`ProConfigProvider`（全局注册名仍是 `ConfigProvider`）、`ProSortState`。

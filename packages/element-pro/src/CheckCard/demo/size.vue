@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElRadioButton, ElRadioGroup, ElSpace } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { CheckCard, CheckCardGroup, type CheckCardSize } from '@wapri/element-pro'
 
 const size = ref<CheckCardSize>('default')

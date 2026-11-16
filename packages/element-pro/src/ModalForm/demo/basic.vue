@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { ElButton, ElMessage } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { ModalForm, ProFormDigit, ProFormList, ProFormSelect, ProFormText } from '@wapri/element-pro'
 
 const open = ref(false)

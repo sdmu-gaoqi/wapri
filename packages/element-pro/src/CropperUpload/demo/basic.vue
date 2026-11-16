@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElButton } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { CropperUpload } from '@wapri/element-pro'
 import type { UploadUserFile } from 'element-plus'
 

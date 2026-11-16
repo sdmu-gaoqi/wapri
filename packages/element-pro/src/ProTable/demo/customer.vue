@@ -2,7 +2,6 @@
 import { h } from 'vue'
 import { ElConfigProvider, ElOption, ElSelect, ElTag } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProTable, type ProColumn, type RequestFn } from '@wapri/element-pro'
 
 type StoreStatus = 'published' | 'draft' | 'offline'

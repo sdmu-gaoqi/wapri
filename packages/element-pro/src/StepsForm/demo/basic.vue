@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { ElConfigProvider, ElMessage } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProFormSelect, ProFormText, ProFormTextArea, StepsForm } from '@wapri/element-pro'
 
 const result = ref('')

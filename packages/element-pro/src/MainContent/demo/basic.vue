@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { provide, ref } from 'vue'
 import { ElButton } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { MainContent, Sidebar, type SidebarMenuItem } from '@wapri/element-pro'
 import DemoLink from '../../Sidebar/demo/DemoLink.vue'
 

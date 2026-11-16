@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ElMessage, ElTooltip } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { copy } from '@wapri/gutils'
 import { SvgIcon } from '@wapri/element-pro'
 

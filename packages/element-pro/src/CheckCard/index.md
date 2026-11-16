@@ -42,7 +42,7 @@ group:
 | avatar / cover | string | — | 图片 URL；cover 模式替代标题、描述、头像 |
 | disabled / loading | boolean | false | 禁用或加载状态，均不可切换 |
 | bordered | boolean | true | 是否显示默认边框，选中时仍有高亮边框 |
-| size | small / default / large | 继承 ConfigProvider，未配置时为 default | 联动宽度、最小高度、内边距、字号及头像尺寸，详见尺寸表；可用 style 覆盖 |
+| size | small / default / large | 继承 ProConfigProvider，未配置时为 default | 联动宽度、最小高度、内边距、字号及头像尺寸，详见尺寸表；可用 style 覆盖 |
 
 组内 size、bordered 默认继承组配置；组禁用或加载时，子卡片不能解除该状态。支持 Element Plus Form 的整体 disabled 状态。
 
@@ -56,7 +56,7 @@ group:
 | options | Array<string / number / CheckCardOption> | — | 配置式生成卡片，默认插槽优先 |
 | disabled / loading | boolean | false | 整组禁用或加载 |
 | bordered | boolean | true | 默认边框 |
-| size | small / default / large | 继承 ConfigProvider，未配置时为 default | 统一尺寸 |
+| size | small / default / large | 继承 ProConfigProvider，未配置时为 default | 统一尺寸 |
 
 `CheckCardOption` 支持 value（必填）、title、description、avatar、cover、disabled、loading、bordered、size。
 

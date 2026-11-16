@@ -2,7 +2,6 @@
 import { reactive } from 'vue'
 import { ElConfigProvider, ElRow } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProForm, ProFormSelect, ProFormText } from '@wapri/element-pro'
 
 const model = reactive<Record<string, unknown>>({

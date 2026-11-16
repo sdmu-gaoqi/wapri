@@ -59,7 +59,8 @@ Guidance for coding agents working in this repository.
 - 所有修改都要严格遵守 `.oxlintrc.json`（继承 `@wagq/lint-ox/oxlint/vue.json`）的配置,不得使用any
 - element-pro 组件的 class 命名,必须使用 `packages\element-pro\src\constant\index.ts` 统一的 `prefix` 做为前缀
 - 每次修改完,都要同步下文档
-- ui组件可以直接使用element-plus的直接使用element-plus的
+- element-plus 在 `packages/element-pro/src/index.ts` 入口统一透出(`export * from 'element-plus'`、`default as ElementPlus`、locale),业务方从 `@wapri/element-pro` 引入即可;主题样式由入口 `import 'element-plus/dist/index.css'` 带入,不要在 demo / 业务里重复引
+- 组件命名避免与 Element Plus 撞名:配置容器导出 `ProConfigProvider`(全局注册名仍是 `ConfigProvider`),ProTable 排序状态类型是 `ProSortState`
 - 不允许使用localStorage或sessionStorage,必须使用@wapri/gbase packages\@base\src\storage.ts中的导出
 - 复杂的代码,类型超过三个的,不要把类型和实现写在一个文件里,放在同级目录的types/下维护
 

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProFormText, StepsForm } from '@wapri/element-pro'
 </script>
 

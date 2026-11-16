@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElButton, ElForm, ElFormItem } from 'element-plus'
-import 'element-plus/dist/index.css'
 import { CheckCard, CheckCardGroup, type CheckCardGroupValue } from '@wapri/element-pro'
 
 const services = ref<CheckCardGroupValue>(['delivery'])

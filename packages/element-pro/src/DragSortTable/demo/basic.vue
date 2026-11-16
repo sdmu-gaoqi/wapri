@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { DragSortTable, type ProColumn } from '@wapri/element-pro'
 
 interface Banner {

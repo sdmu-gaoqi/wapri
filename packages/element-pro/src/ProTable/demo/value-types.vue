@@ -2,7 +2,6 @@
 import { h, ref } from 'vue'
 import { ElConfigProvider, ElOption, ElSelect, ElTag } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import 'element-plus/dist/index.css'
 import { ProTable, type ActionType, type ProColumn, type RequestFn } from '@wapri/element-pro'
 import { safeString } from '@wapri/gutils'
 

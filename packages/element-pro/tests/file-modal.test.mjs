@@ -191,14 +191,15 @@ test('getAssetMediaType 无 MIME 时按扩展名兜底', () => {
   assert.equal(utils.getAssetMediaType({ id: 'a', name: 'a.docx', url: 'https://cdn/file' }), 'other')
 })
 
-test('getAssetMediaType 也看 previewUrl / abbreviateUrl 的扩展名', () => {
+test('getAssetMediaType 看 previewUrl，但不把缩略图算成图片', () => {
   assert.equal(
     utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/sign?x=1', previewUrl: 'https://cdn/a.mp4' }),
     'video',
   )
+  // abbreviateUrl 永远是缩略图，参与判断会把带封面的视频 / 文档误判成图片
   assert.equal(
     utils.getAssetMediaType({ id: 'a', name: 'a', url: 'https://cdn/sign?x=1', abbreviateUrl: 'https://cdn/a.png' }),
-    'image',
+    'other',
   )
 })
 

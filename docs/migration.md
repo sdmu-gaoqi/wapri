@@ -51,10 +51,10 @@ toc: false
   src="https://cdn.example.com/iconfont.js"
 />
 
-<!-- 全局：ConfigProvider 的 iconfont -->
-<ConfigProvider iconfont="https://cdn.example.com/iconfont.js">
+<!-- 全局：ProConfigProvider 的 iconfont -->
+<ProConfigProvider iconfont="https://cdn.example.com/iconfont.js">
   <SvgIcon name="card" />
-</ConfigProvider>
+</ProConfigProvider>
 ```
 
 两者都不传时，只读取页面里已存在的 `<symbol>`。
@@ -72,7 +72,7 @@ toc: false
 pnpm add @wapri/element-pro element-plus @element-plus/icons-vue
 ```
 
-`element-plus`、`@element-plus/icons-vue`、`vue` 均为 peer，需由宿主显式安装。
+`element-plus`、`@element-plus/icons-vue`、`vue` 均为 peer，需由宿主显式安装。Element Plus 的主题样式（`element-plus/dist/index.css`）已由 element-pro 的包入口带入，宿主不需要再单独引入一次。
 
 ## @wapri/gjsbridge 5.0.0
 
