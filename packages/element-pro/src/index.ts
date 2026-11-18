@@ -24,6 +24,7 @@ import { ProFormDependency } from './ProFormDependency'
 import { ProFormList } from './ProFormList'
 import { StepsForm, StepsFormStep } from './StepsForm'
 import { TabForm, TabFormItem } from './TabForm'
+import { NProgress, createNProgress } from './NProgress'
 import {
   ProFormCascader,
   ProFormDatePicker,
@@ -73,6 +74,7 @@ export * from './ProFormList'
 export * from './ProFormDependency'
 export * from './StepsForm'
 export * from './TabForm'
+export * from './NProgress'
 export * from 'element-plus'
 export { default as ElementPlus } from 'element-plus'
 export * from 'element-plus/es/locale/index'
@@ -114,6 +116,8 @@ export {
   StepsFormStep,
   TabForm,
   TabFormItem,
+  NProgress,
+  createNProgress,
 }
 export type { ModalFormProps, DrawerFormProps, OverlayFormProps, OverlayFormAction } from './shared/overlayForm/types'
 

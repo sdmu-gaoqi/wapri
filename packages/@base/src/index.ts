@@ -3,6 +3,11 @@ export * from './sleep'
 export * from './env'
 export * from './copy'
 export { default as dayjs } from 'dayjs'
+export { default as Fuse } from 'fuse.js'
+export type { FuseIndex, FuseOptionKey, FuseResult, FuseResultMatch, FuseSearchOptions, IFuseOptions } from 'fuse.js'
+export { default as screenfull } from 'screenfull'
+export type { EventName as ScreenfullEventName, RawEventNames as ScreenfullRawEventNames } from 'screenfull'
+export * from './fullscreen'
 export * from './url'
 export * from './download'
 export * from './emitter'
@@ -36,3 +41,4 @@ export type {
   WorkerResponseType,
   WorkerTask,
 } from './types/worker'
+export * from './aes'

@@ -1,5 +1,18 @@
 # @wapri/element-pro
 
+## 3.14.0
+
+### Minor Changes
+
+- 新增函数式顶部进度条 `NProgress`：`start()` / `done()` 接进路由守卫或请求拦截器即可，也支持 `inc()` / `set()` 手动推进与 `configure()` 配置。颜色默认跟随 `--el-color-primary`，进度结束自动淡出并移除节点；`createNProgress()` 可建独立实例做局部进度条。不新增依赖。
+
+### Patch Changes
+
+- @wapri/ghooks@1.1.7
+- @wapri/gplayer@0.3.4
+- @wapri/preview@0.1.7
+- @wapri/gutils@2.3.6
+
 ## 3.13.6
 
 ### Patch Changes

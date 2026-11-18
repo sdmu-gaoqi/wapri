@@ -15,9 +15,10 @@ group:
 | --- | --- | --- |
 | `storage` | `MyStorage` | 默认本地存储实例 |
 | `session` | `MyStorage` | 会话存储实例 |
-| `MyStorage` | class | 支持按需创建本地或会话存储实例 |
+| `cookie` | `MyStorage` | Cookie 存储实例 |
+| `MyStorage` | class | 支持按需创建本地、会话或 cookie 存储实例 |
 
-每个 `MyStorage` 实例均提供 `getItem`、`setItem`、`removeItem` 和 `clear`，方法签名与浏览器 Storage API 一致。
+每个 `MyStorage` 实例均提供 `getItem`、`setItem`、`removeItem` 和 `clear`，方法签名与浏览器 Storage API 一致。`StorageType` 取值为 `'localStorage' | 'sessionStorage' | 'cookie'`；`cookie` 底层走 `js-cookie`，默认写到 `path=/`，`clear()` 会删除当前 path 下可读写的所有 cookie。
 
 ## 代码演示
 
@@ -28,7 +29,7 @@ group:
 ## 如何使用
 
 ```ts
-import { MyStorage, session, storage } from '@wapri/gutils'
+import { cookie, MyStorage, session, storage } from '@wapri/gutils'
 
 // 长期保存的数据
 storage.setItem('token', 'value')
@@ -37,9 +38,14 @@ const token = storage.getItem('token')
 // 当前会话有效的数据
 session.setItem('current-step', '2')
 
+// 需要随请求带到服务端的数据
+cookie.setItem('theme', 'dark')
+
 // 按需创建独立实例
 const wizardStorage = new MyStorage('sessionStorage')
 wizardStorage.setItem('form-draft', 'draft')
+const cookieStorage = new MyStorage('cookie')
+cookieStorage.setItem('trace-id', 'abc')
 ```
 
 `MyStorage#noSupportLS` 用于表示实例对应的浏览器存储是否不可用；为 `true` 时，数据仅保留在当前运行时的内存中。

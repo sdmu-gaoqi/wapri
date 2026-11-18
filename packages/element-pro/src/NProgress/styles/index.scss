@@ -1,0 +1,102 @@
+/**
+ * NProgress 顶部进度条样式。
+ *
+ * 函数式 API 直接把节点插到 body（或 `parent` 指定的容器），样式不在组件树内，
+ * 因此统一用 wa-ui 前缀的独立类名 + CSS 变量。
+ *
+ * 默认值写在 `:root` 上，宿主可以全局覆盖；只有显式传给 `configure()` 的值才会以内联变量下发，
+ * 这样宿主换 Element Plus 主题色（`--el-color-primary`）时进度条会自动跟随。
+ */
+
+:root {
+  --wa-ui-nprogress-color: var(--el-color-primary, #409eff);
+  --wa-ui-nprogress-height: 2px;
+  --wa-ui-nprogress-z-index: 2000;
+  --wa-ui-nprogress-speed: 200ms;
+  --wa-ui-nprogress-easing: ease;
+}
+
+.wa-ui-nprogress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: var(--wa-ui-nprogress-z-index);
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--wa-ui-nprogress-speed) linear;
+}
+
+/** 挂在指定容器里时改为绝对定位，跟随容器而不是视口。 */
+.wa-ui-nprogress--scoped {
+  position: absolute;
+}
+
+.wa-ui-nprogress__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--wa-ui-nprogress-height);
+  background-color: var(--wa-ui-nprogress-color);
+  transform: translate3d(-100%, 0, 0);
+  transition: transform var(--wa-ui-nprogress-speed) var(--wa-ui-nprogress-easing);
+}
+
+/** 进度条右端的拖尾光晕，让走完的瞬间更明显。 */
+.wa-ui-nprogress__peg {
+  position: absolute;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  box-shadow:
+    0 0 10px var(--wa-ui-nprogress-color),
+    0 0 5px var(--wa-ui-nprogress-color);
+  opacity: 1;
+  transform: rotate(3deg) translate(0, -4px);
+}
+
+.wa-ui-nprogress__spinner {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  transition: opacity var(--wa-ui-nprogress-speed) linear;
+}
+
+.wa-ui-nprogress--scoped .wa-ui-nprogress__spinner {
+  position: absolute;
+}
+
+.wa-ui-nprogress__spinner-icon {
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top-color: var(--wa-ui-nprogress-color);
+  border-left-color: var(--wa-ui-nprogress-color);
+  border-radius: 50%;
+  animation: wa-ui-nprogress-spin 400ms linear infinite;
+}
+
+/** 进度条存在期间给 body 一个「加载中」光标，行为与 nprogress 一致。 */
+html.wa-ui-nprogress-busy body {
+  cursor: progress;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-ui-nprogress,
+  .wa-ui-nprogress__bar {
+    transition: none;
+  }
+
+  .wa-ui-nprogress__spinner-icon {
+    animation-duration: 1200ms;
+  }
+}
+
+@keyframes wa-ui-nprogress-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -150,3 +150,38 @@ export const fileUploadTip = '拖拽文件到此处'
 
 /** FileUpload 自带的直接上传按钮文案。 */
 export const fileUploadActionText = '直接上传'
+
+/** NProgress 顶部进度条的默认配置，语义与 nprogress 的 `configure` 对齐。 */
+export const nprogressDefaults = {
+  /** 起始进度，同时是 `set()` 的下限 */
+  minimum: 0.08,
+  /** 进度上限，到达即视为完成 */
+  maximum: 1,
+  /** 是否自动递增 */
+  trickle: true,
+  /** 自动递增间隔（ms） */
+  trickleSpeed: 200,
+  /** 是否显示右上角转圈 */
+  showSpinner: true,
+  /** 进度动画与淡出时长（ms） */
+  speed: 200,
+  /** 进度过渡曲线 */
+  easing: 'ease',
+  /** 挂载父元素，默认 body */
+  parent: null,
+  /** 层级，与 element-plus 的弹层同档 */
+  zIndex: 2000,
+  /** 进度条颜色，空字符串表示跟随 --el-color-primary */
+  color: '',
+} as const
+
+/** 自动递增最多推进到这里，剩下的留给 `done()`。 */
+export const nprogressMaxReachable = 0.994
+
+/** 自动递增的步长：进度越高步长越小，避免长时间停在 90 多。 */
+export const nprogressTrickleSteps = [
+  { until: 0.2, amount: 0.1 },
+  { until: 0.5, amount: 0.04 },
+  { until: 0.8, amount: 0.02 },
+  { until: 0.99, amount: 0.005 },
+] as const

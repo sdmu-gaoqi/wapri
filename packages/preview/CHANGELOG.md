@@ -1,5 +1,16 @@
 # @wapri/preview
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @wapri/gbase@2.4.0
+
 ## 0.1.6
 
 ### Patch Changes

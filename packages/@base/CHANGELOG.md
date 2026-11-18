@@ -1,5 +1,15 @@
 # @wapri/gbase
 
+## 2.4.0
+
+### Minor Changes
+
+- 新增 `aesEncrypt` / `aesDecrypt` / `getSign`：基于 `crypto-js` 的 AES-CBC 加解密（IV 取 key 前 16 位，输出 Base64）与 HmacMD5 参数签名；`@wapri/gutils` 直接透出，并补齐文档页。
+- 新增 `fuse.js` 依赖，并从 `@wapri/gbase` 导出 `Fuse` 及常用类型（`IFuseOptions`、`FuseOptionKey`、`FuseResult`、`FuseResultMatch`、`FuseSearchOptions`、`FuseIndex`）。
+- 新增 `screenfull` 依赖，并从 `@wapri/gbase` 导出 `screenfull` 及 `ScreenfullEventName` / `ScreenfullRawEventNames` 类型。
+- 新增全屏快捷方法 `fullscreen`：`on()` 开启全屏、`off()` 关闭全屏、`switch()` 切换，三者都不需要先判断 `isEnabled`，返回 `Promise<boolean>` 表示是否生效；同时提供 `isEnabled` / `isFullscreen`。事件监听仍用 `screenfull.on('change', handler)`。
+- `StorageType` 新增 `cookie`，并导出预置实例 `cookie`。`new MyStorage('cookie')` 通过 `js-cookie` 读写（默认 `path=/`），浏览器不支持时同样回退到内存。
+
 ## 2.3.4
 
 ### Patch Changes

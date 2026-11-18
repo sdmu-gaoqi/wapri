@@ -24,6 +24,7 @@ Guidance for coding agents working in this repository.
   - 多 tab 表单用 `TabForm` + `TabForm.Item`,所有 tab 共用一份 `model`;提交时校验全部 tab,失败自动跳到第一个出错的分段;`tabPosition` 为 `left`/`right` 时是垂直导航,`navWidth` 控制导航列宽度
   - 字段级类型与格式化(如 `ValueType`、`formatCellValue`)放在 `src/shared/field/`,表格与表单共用
   - 拖拽排序用 `DragSortTable`(`ProTable` + `dragSortKey`/`dragSortHandlerRender`/`onDragSortEnd`,对齐 pro-components) 与 `CropperUpload` 的 `sortable`;底座是 `@vue-dnd-kit/core`,组件自带 `DnDProvider`
+  - 页面级异步的顶部进度条用函数式 `NProgress`(`start`/`done`/`inc`/`set`/`configure`),不写组件标签;`createNProgress({ parent })` 建独立实例做局部进度条
 - `packages/jsbridge`: App WebView 桥接,通道名由业务注入
 - `packages/player`: 视频播放器(`VideoPlayer`,基于 artplayer)
   - 插件用 `plugins: Array<string | { key; setting }>` 声明,内置插件各占右侧菜单一项,默认只启用 `filter`/`webFullscreen`
@@ -68,6 +69,7 @@ Guidance for coding agents working in this repository.
 - 组件命名避免与 Element Plus 撞名:配置容器导出 `ProConfigProvider`(全局注册名仍是 `ConfigProvider`),ProTable 排序状态类型是 `ProSortState`
 - 不允许使用localStorage或sessionStorage,必须使用@wapri/gbase packages\@base\src\storage.ts中的导出
 - 复杂的代码,类型超过三个的,不要把类型和实现写在一个文件里,放在同级目录的types/下维护
+- base中新增的能力,需要在utils中增加文档md
 
 ## Documentation And API
 

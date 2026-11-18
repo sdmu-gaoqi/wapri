@@ -1,5 +1,16 @@
 # @wapri/gplayer
 
+## 0.3.4
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+- Updated dependencies
+  - @wapri/gbase@2.4.0
+
 ## 0.3.3
 
 ### Patch Changes

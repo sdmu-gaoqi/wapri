@@ -31,6 +31,13 @@
 - 不要给 element-plus 的子路径（如 `element-plus/es/locale/index`）写 `export *` 却不加 external，会把全部语言包打进产物（index.mjs 从 270 kB 涨到 615 kB）。
 - 命名：`ProConfigProvider`（全局注册名仍是 `ConfigProvider`）、`ProSortState`。
 
+## 第三方依赖统一出口
+
+- `@wapri/gbase` 统一透出 `lodash-es`、`dayjs`、`fuse.js`、`screenfull` 等基础依赖。新增这类依赖要同时改 `package.json` dependencies、`src/index.ts` 导出（default 用 `export { default as X } from 'pkg'`，类型按需 `export type`，泛用类型名用别名）、README 和 changeset。
+- 因为 `@wapri/gutils` 直接 `export * from '@wapri/gbase'`，base 新增对外导出时还要在 utils 补文档：`packages/utils/src/<name>/index.md` 能力页 + `packages/utils/src/index.md` 的「基础依赖」表登记；atomDirs 会自动收文件夹，无需改 `.dumirc.ts`。
+- 全屏开关统一用 base 导出的 `fullscreen`（`on` / `off` / `switch`），不要把 `on`/`off` 塞进 `screenfull` 实例：会和它的 `on('change')` / `off('change')` 事件 API 撞名；`isEnabled` 为 `false` 时三个方法都直接返回 `false`，不抛错。
+- father 产物中的相对导入不带扩展名，Node 直接 import `dist/index.js` 会 `ERR_MODULE_NOT_FOUND`；做运行时验证时先用 esbuild 把 dist 打成单文件再跑。
+
 ## Skills 文案与安装面板
 
 - `public/skills/wapri-design/` 是 Skills 文案唯一来源；`packages/mcp/scripts/sync-skills.mjs` 构建时同步到 `packages/mcp/skills/wapri-design/`，后者 gitignore，不在页面或包内重复维护。

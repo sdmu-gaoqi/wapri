@@ -1,25 +1,97 @@
 # @wapri/gbase
 
-与框架无关的前端基础能力包：浏览器存储封装、运行环境（含鸿蒙）判断、正则校验，以及 `lodash-es`、`dayjs` 等基础依赖的统一出口。
+与框架无关的前端基础能力包：浏览器存储封装、运行环境（含鸿蒙）判断、正则校验、AES 加解密与签名、全屏切换，以及 `lodash-es`、`dayjs`、`fuse.js` 等基础依赖的统一出口。
 
 ## 在线文档
 
 https://sdmu-gaoqi.github.io/wapri/changelog/base
 
-## Storage
+## 模糊搜索（Fuse）
 
-`MyStorage` 创建时先检查对应浏览器存储是否可用，并在不可用时回退到内存，避免 App 壳或非浏览器环境的读写异常。
+`fuse.js` 从 `@wapri/gbase` 统一导出，业务里不用再单独装它：
 
 ```ts
-import storage, { MyStorage } from '@wapri/gbase'
+import { Fuse } from '@wapri/gbase'
+import type { IFuseOptions } from '@wapri/gbase'
 
-storage.setItem('token', 'value')
+const options: IFuseOptions<{ name: string }> = { keys: ['name'] }
+const fuse = new Fuse([{ name: 'wapri' }], options)
 
-const sessionStorage = new MyStorage('sessionStorage')
-sessionStorage.setItem('step', '2')
+fuse.search('wap') // [{ item: { name: 'wapri' }, refIndex: 0, score: ... }]
 ```
 
-`storage` 是 `new MyStorage('localStorage')` 的默认实例；也保留具名导出以兼容现有导入方式。
+同时导出了 `IFuseOptions`、`FuseOptionKey`、`FuseResult`、`FuseResultMatch`、`FuseSearchOptions`、`FuseIndex` 等常用类型。
+
+## 全屏（screenfull）
+
+`screenfull` 从 `@wapri/gbase` 统一导出，业务里不用再单独装它。日常开关全屏用 `fullscreen` 即可，省掉 `isEnabled` 判断：
+
+```ts
+import { fullscreen } from '@wapri/gbase'
+
+await fullscreen.on() // 开启全屏，环境不支持时返回 false
+await fullscreen.off() // 关闭全屏，本来不在全屏时返回 false
+await fullscreen.switch() // 切换，返回切换后是否全屏
+
+await fullscreen.on(document.querySelector('.player')!) // 只全屏某个元素
+```
+
+需要监听变化、拿全屏元素或传 `FullscreenOptions` 时用原始的 `screenfull`：
+
+```ts
+import { screenfull } from '@wapri/gbase'
+
+if (screenfull.isEnabled) {
+  await screenfull.request()
+  await screenfull.exit()
+}
+
+screenfull.on('change', () => {
+  console.log(screenfull.isFullscreen)
+})
+```
+
+同时导出了 `ScreenfullEventName`（`'change' | 'error'`）与 `ScreenfullRawEventNames` 类型。
+
+## AES 加解密与签名
+
+基于 `crypto-js` 的 AES-CBC 加解密与 HmacMD5 参数签名：
+
+```ts
+import { aesDecrypt, aesEncrypt, getSign } from '@wapri/gbase'
+
+const key = '0123456789abcdef' // 16 / 24 / 32 位
+const cipher = aesEncrypt('hello', key) // Base64 密文
+aesDecrypt(cipher, key) // 'hello'
+
+// 按参数名升序拼 key=encodeURIComponent(value)，再做 HmacMD5
+getSign({ b: 2, a: 'x y', sign: 'ignored' }, 'secret', ['sign'])
+```
+
+约定：
+
+- `aesEncrypt` / `aesDecrypt` 是 AES-CBC + PKCS7，`key` 按 UTF-8 解析，长度必须是 16 / 24 / 32 个字节；IV 取 `key` 前 16 个字符，不单独传。
+- 密文输出是 **Base64**（内部先取 hex 再转 Base64），不是 hex；密钥不一致时解密可能得到空串或抛 `Malformed UTF-8 data`，需要调用方兜底。
+- `getSign(params, secretKey, excludeKeys?)` 会跳过 `excludeKeys` 与空值（`''`、`null`、`undefined`、空数组 / 空对象，数字 `0` 也算空值），值先 `encodeURIComponent` 再把 `*` 换成 `%2A`，最后返回 `HmacMD5` 的十六进制串。
+
+## Storage
+
+`MyStorage` 创建时先检查对应浏览器存储是否可用，并在不可用时回退到内存，避免 App 壳或非浏览器环境的读写异常。`StorageType` 支持 `localStorage`、`sessionStorage` 和 `cookie`。
+
+```ts
+import storage, { cookie, MyStorage, session } from '@wapri/gbase'
+
+storage.setItem('token', 'value')
+session.setItem('step', '2')
+
+// cookie 走 js-cookie，默认 path=/，浏览器不可用时同样回退到内存
+cookie.setItem('theme', 'dark')
+
+const cookieStorage = new MyStorage('cookie')
+cookieStorage.getItem('theme')
+```
+
+`storage` 是 `new MyStorage('localStorage')` 的默认实例；`session` 与 `cookie` 是另外两个预置实例。`cookie.clear()` 会删除当前 path 下可读写的所有 cookie。
 
 ## 运行环境判断（os）
 
