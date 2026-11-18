@@ -15,8 +15,8 @@ importers:
         specifier: ^7.24.4
         version: 7.27.0
       '@wagq/wa-cli':
-        specifier: ^0.6.66
-        version: 0.6.66(@types/node@22.14.1)
+        specifier: ^0.6.69
+        version: 0.6.69(@types/node@22.14.1)
       vue:
         specifier: ^3.4.0
         version: 3.5.38(typescript@5.8.3)
@@ -3168,8 +3168,8 @@ packages:
       oxfmt: ^0.75.0
       oxlint: ^1.90.0
 
-  '@wagq/wa-cli@0.6.66':
-    resolution: {integrity: sha512-YV3KZ9/+MpzUEaMeZ7kkPsnLNuSZeFGoDLir7pRDe8Tp6PgZtvp6tAyN6z2opFqBrGPtT0oUO/WX4VoI9FTLMg==}
+  '@wagq/wa-cli@0.6.69':
+    resolution: {integrity: sha512-d0Xmod2F3N7RKKqTcBM2N3zxiIlyLY3JrLGdNsmeY3hDQz+V2hy9XdvHCSlclPxdIivUFyn7ksF4DzpTDIY2bw==}
     hasBin: true
 
   '@webassemblyjs/ast@1.14.1':
@@ -12960,7 +12960,7 @@ snapshots:
       oxfmt: 0.75.0
       oxlint: 1.91.0
 
-  '@wagq/wa-cli@0.6.66(@types/node@22.14.1)':
+  '@wagq/wa-cli@0.6.69(@types/node@22.14.1)':
     dependencies:
       chalk: 3.0.0
       child_process: 1.0.2
@@ -20545,7 +20545,7 @@ snapshots:
 
   union@0.5.0:
     dependencies:
-      qs: 6.16.0
+      qs: 6.17.1
 
   unist-util-filter@4.0.1:
     dependencies:
@@ -20608,7 +20608,7 @@ snapshots:
   url-okam@0.11.1:
     dependencies:
       punycode: 1.4.1
-      qs: 6.16.0
+      qs: 6.17.1
 
   url-parse-lax@3.0.0:
     dependencies:
