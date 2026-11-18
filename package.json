@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.4",
-    "@wagq/wa-cli": "^0.6.66",
+    "@wagq/wa-cli": "^0.6.69",
     "vue": "^3.4.0",
     "wa-postcss-pxtorem": "^0.0.1"
   },

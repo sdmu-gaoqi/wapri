@@ -1,6 +1,6 @@
 {
   "name": "@wapri/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "wapri 组件库的 MCP Server：查文档、示例与源码，供 AI 编程助手接入",
   "keywords": [
     "mcp",

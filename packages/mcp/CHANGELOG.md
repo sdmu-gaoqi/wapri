@@ -1,5 +1,11 @@
 # @wapri/mcp
 
+## 0.1.1
+
+### Patch Changes
+
+- 将cookie从storage中移除,不再进行二次加装
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # @wapri/preview
 
+## 0.1.8
+
+### Patch Changes
+
+- 将cookie从storage中移除,不再进行二次加装
+- Updated dependencies
+  - @wapri/gbase@2.4.1
+
 ## 0.1.7
 
 ### Patch Changes

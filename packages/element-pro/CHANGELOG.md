@@ -1,5 +1,16 @@
 # @wapri/element-pro
 
+## 3.14.1
+
+### Patch Changes
+
+- 将cookie从storage中移除,不再进行二次加装
+- Updated dependencies
+  - @wapri/ghooks@1.1.8
+  - @wapri/gplayer@0.3.5
+  - @wapri/preview@0.1.8
+  - @wapri/gutils@2.3.7
+
 ## 3.14.0
 
 ### Minor Changes
