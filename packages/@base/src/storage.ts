@@ -1,45 +1,9 @@
 /**
  * 在 App 壳未提供浏览器存储时，回退到内存存储，避免读写时抛出异常。
  */
+export type StorageType = 'localStorage' | 'sessionStorage'
 
-import Cookies from 'js-cookie'
-
-export type StorageType = 'localStorage' | 'sessionStorage' | 'cookie'
-
-type SimpleStorage = Pick<Storage, 'setItem' | 'getItem' | 'clear' | 'removeItem'>
-
-/** js-cookie 默认写到 path=/，clear 也按这个范围删除，与业务里其它 Cookies.set 的默认值一致 */
-const cookieStorage: SimpleStorage = {
-  getItem: (key) => Cookies.get(key) ?? null,
-  setItem: (key, value) => {
-    Cookies.set(key, value)
-  },
-  removeItem: (key) => {
-    Cookies.remove(key)
-  },
-  clear: () => {
-    for (const key of Object.keys(Cookies.get())) {
-      Cookies.remove(key)
-    }
-  },
-}
-
-const noSupportCookie = () => {
-  try {
-    Cookies.set('_wapri-test-key', 'miao')
-    const ok = Cookies.get('_wapri-test-key') === 'miao'
-    Cookies.remove('_wapri-test-key')
-    return !ok
-  } catch {
-    return true
-  }
-}
-
-const noSupportStorage = (type: StorageType) => {
-  if (type === 'cookie') {
-    return noSupportCookie()
-  }
-
+const noSupportLS = (type: StorageType) => {
   try {
     const storage = globalThis[type]
 
@@ -72,12 +36,12 @@ class MemoryStorage {
   }
 }
 
-export class MyStorage implements SimpleStorage {
+export class MyStorage implements Pick<Storage, 'setItem' | 'getItem' | 'clear' | 'removeItem'> {
   private readonly memory = new MemoryStorage()
   readonly noSupportLS: boolean
 
   constructor(public readonly type: StorageType) {
-    this.noSupportLS = noSupportStorage(type)
+    this.noSupportLS = noSupportLS(type)
   }
 
   getItem(key: string) {
@@ -134,13 +98,12 @@ export class MyStorage implements SimpleStorage {
     }
   }
 
-  private get storage(): SimpleStorage {
-    return this.type === 'cookie' ? cookieStorage : globalThis[this.type]
+  private get storage() {
+    return globalThis[this.type]
   }
 }
 
 export const storage = new MyStorage('localStorage')
 export const session = new MyStorage('sessionStorage')
-export const cookie = new MyStorage('cookie')
 
 export default storage

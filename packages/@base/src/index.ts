@@ -42,3 +42,4 @@ export type {
   WorkerTask,
 } from './types/worker'
 export * from './aes'
+export * from './cookie'
