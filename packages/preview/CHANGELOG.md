@@ -1,5 +1,13 @@
 # @wapri/preview
 
+## 0.1.9
+
+### Patch Changes
+
+- cookie导出策略调整
+- Updated dependencies
+  - @wapri/gbase@2.4.2
+
 ## 0.1.8
 
 ### Patch Changes

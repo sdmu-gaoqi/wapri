@@ -1,5 +1,11 @@
 # @wapri/mcp
 
+## 0.1.2
+
+### Patch Changes
+
+- cookie导出策略调整
+
 ## 0.1.1
 
 ### Patch Changes

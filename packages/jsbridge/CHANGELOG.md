@@ -1,5 +1,13 @@
 # @wapri/gjsbridge
 
+## 9.0.2
+
+### Patch Changes
+
+- cookie导出策略调整
+- Updated dependencies
+  - @wapri/gbase@2.4.2
+
 ## 9.0.1
 
 ### Patch Changes

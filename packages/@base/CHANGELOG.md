@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.4.2
+
+### Patch Changes
+
+- cookie导出策略调整
+
 ## 2.4.1
 
 ### Patch Changes

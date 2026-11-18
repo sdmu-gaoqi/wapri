@@ -1,5 +1,13 @@
 # @wapri/gplayer
 
+## 0.3.6
+
+### Patch Changes
+
+- cookie导出策略调整
+- Updated dependencies
+  - @wapri/gbase@2.4.2
+
 ## 0.3.5
 
 ### Patch Changes

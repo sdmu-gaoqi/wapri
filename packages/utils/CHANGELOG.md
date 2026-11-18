@@ -1,5 +1,13 @@
 # @wapri/gutils
 
+## 2.3.8
+
+### Patch Changes
+
+- cookie导出策略调整
+- Updated dependencies
+  - @wapri/gbase@2.4.2
+
 ## 2.3.7
 
 ### Patch Changes

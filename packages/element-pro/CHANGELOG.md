@@ -1,5 +1,16 @@
 # @wapri/element-pro
 
+## 3.14.2
+
+### Patch Changes
+
+- cookie导出策略调整
+- Updated dependencies
+  - @wapri/ghooks@1.1.9
+  - @wapri/gplayer@0.3.6
+  - @wapri/gutils@2.3.8
+  - @wapri/preview@0.1.9
+
 ## 3.14.1
 
 ### Patch Changes
