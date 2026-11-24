@@ -1,5 +1,11 @@
 # @wapri/gutils
 
+## 2.3.9
+
+### Patch Changes
+
+- 新增了createWorker,不再需要字符串方式来写worker
+
 ## 2.3.8
 
 ### Patch Changes
