@@ -73,9 +73,10 @@ pnpm i
 每个子包必须包含以下文件：
 
 - `src`：源码目录。
-- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）。`element-pro`、`player` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单），要编译 `.vue` 单文件组件。`mcp` 例外，用 `tsc` 直接产出 Node ESM（`dist/cli.js` 是 `bin` 入口），构建后再跑 `scripts/gen-knowledge.mjs` 生成知识快照。
-- `package.json`：包的元信息，`name` 以 `@wapri/` 开头（如 `@wapri/element-pro`），版本号建议初始为 `0.0.0`。`build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免已删除模块残留在 `dist` 被一起发包。
+- `.fatherrc.ts`：father 打包配置（`gbase` / `ghooks` / `gutils` / `gjsbridge` / `preview`）。`element-pro`、`player` 例外，用 `vite.config.ts`（`vite-plugin-dts` + `external` 白名单），要编译 `.vue` 单文件组件。`vant-pro` 例外，不单独构建，`package.json` 的 `main` / `module` / `types` 直接指向 `src/index.ts`，由宿主打包；`vant`、`vue` 只做 `peerDependencies`。`mcp` 例外，用 `tsc` 直接产出 Node ESM（`dist/cli.js` 是 `bin` 入口），构建后再跑 `scripts/gen-knowledge.mjs` 生成知识快照。
+- `package.json`：包的元信息，`name` 以 `@wapri/` 开头（如 `@wapri/element-pro`），版本号建议初始为 `0.0.0`。`build` 脚本统一以 `node ../../scripts/clean-dist.mjs &&` 开头，避免已删除模块残留在 `dist` 被一起发包（不构建的包除外）。
 - `tsconfig.json`：TypeScript 配置文件，需设置 `paths` 以解析依赖。
+- `src/index.md`：包的文档首页，通过 `nav` 字段挂到站点导航，其余组件 / 模块文档放各自的 `src/<名字>/index.md`，并在 `.dumirc.ts` 里登记 `atomDirs` 与 `alias`。
 
 #### 配置更新
 

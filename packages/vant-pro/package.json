@@ -1,0 +1,40 @@
+{
+  "name": "@wapri/vant-pro",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Vue 3 + Vant 4 业务无关 H5 公共组件库（上传 / 底部菜单 / 筛选栏 / 空状态）",
+  "keywords": [
+    "components",
+    "h5",
+    "vant",
+    "vue3"
+  ],
+  "license": "MIT",
+  "author": "wapri contributors",
+  "files": [
+    "src"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "**/*.vue"
+  ],
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "vant": "^4.9.0",
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@wapri/ghooks": "workspace:^",
+    "@wapri/gutils": "workspace:^"
+  },
+  "devDependencies": {
+    "vant": "^4.9.0"
+  }
+}

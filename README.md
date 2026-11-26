@@ -2,6 +2,20 @@
 
 Vue 3 组件库与前端公共能力的集合项目
 
+## 包含的包
+
+| 包 | 说明 | 文档 |
+| --- | --- | --- |
+| `@wapri/gbase` | 基础能力：加密、存储、URL、下载、事件总线、Worker 等 | `/utils` |
+| `@wapri/gutils` | 通用函数库，透出 `gbase` 能力与 `lodash-es`、`dayjs` | `/utils` |
+| `@wapri/ghooks` | Vue 3 Hooks，内置导出 `vue-hooks-plus` | `/hooks` |
+| `@wapri/element-pro` | Vue 3 + Element Plus 中后台组件库 | `/element-pros` |
+| `@wapri/vant-pro` | Vue 3 + Vant 4 的 H5 业务无关组件库（上传 / 底部菜单 / 筛选栏 / 空状态 / 视口高度 / 远程 UMD） | `/vant-pros` |
+| `@wapri/gplayer` | 基于 artplayer 的 Vue 3 视频播放器 | `/players` |
+| `@wapri/preview` | H5 文件预览（文本 / PDF / Word / XLSX） | `/previews` |
+| `@wapri/gjsbridge` | App WebView 桥接，三端统一协议 | `/jsbridges` |
+| `@wapri/mcp` | 组件知识的 MCP Server，AI 助手可直连查询 | `/mcps` |
+
 ## 技术栈
 
 - 项目为标准的 pnpm `monorepo` 多包结构，[pnpm workspace](https://pnpm.io/workspaces) 处理多包依赖

@@ -1,7 +1,7 @@
 /**
  * title: 组件库
  * description: 前端 JS SDK 共仓，覆盖组件库、Hooks、工具函数、文件预览、视频播放、App 桥接与 MCP
- * keywords: [SDK, element-pro, player, preview, hooks, utils, jsbridge, mcp, lint]
+ * keywords: [SDK, element-pro, vant-pro, player, preview, hooks, utils, jsbridge, mcp, lint]
  * sidebar: false
  * toc: false
  * hideChrome: true
@@ -14,6 +14,10 @@ import './index.css'
 
 /** 全部分类，选中时不做分类过滤 */
 const ALL_CATEGORY = '全部'
+
+/** 首屏副标题：整段用常量，避免 JSX 折行把中文标点拆开 */
+const SUBTITLE =
+  '前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库（中后台 element-pro、H5 vant-pro）、Hooks、工具函数、文件预览、视频播放与 App 桥接，并提供 AI 助手可直连的 MCP Server；全部由 pnpm workspace 管理并独立发包。'
 
 /** 项目分类的展示顺序 */
 const CATEGORY_ORDER = ['组件库', 'Hooks 与工具', '文件预览', '视频播放', '网络与通信', '工程化']
@@ -56,6 +60,18 @@ const PROJECTS: ProjectItem[] = [
     mark: 'ui',
     accent: ['#d97706', '#f59e0b'],
     docPath: '/element-pros',
+  },
+  {
+    name: 'vant-pro',
+    packageName: '@wapri/vant-pro',
+    category: '组件库',
+    tech: 'Vue 3 · Vant 4',
+    description:
+      '面向 H5 的 Vue 3 + Vant 4 业务无关组件库：上传、底部菜单、筛选栏、空状态，外加视口高度容器与远程 UMD 容器，取图、跳转、上传都由父组件注入。',
+    highlights: ['业务无关，能力靠注入', 'BEM + wa-mobile- 前缀'],
+    mark: 'h5',
+    accent: ['#92400e', '#b45309'],
+    docPath: '/vant-pros',
   },
   {
     name: 'hooks',
@@ -252,10 +268,7 @@ const ProjectsPage: React.FC = () => {
         <div className="wa-projects__hero-main">
           <p className="wa-projects__eyebrow">wa · Monorepo</p>
           <h1 className="wa-projects__title">前端 SDK</h1>
-          <p className="wa-projects__subtitle">
-            前端 JS SDK 共仓下的能力包，覆盖 Vue 3 组件库、Hooks、工具函数、文件预览、视频播放与 App 桥接，并提供 AI
-            助手可直连的 MCP Server；全部由 pnpm workspace 管理并独立发包。
-          </p>
+          <p className="wa-projects__subtitle">{SUBTITLE}</p>
           <div>
             <Link
               to="/guide"

@@ -1,0 +1,126 @@
+/**
+ * 筛选栏公共样式。
+ *
+ * 字段「标题在上、控件占满整行」的布局，跟业务里筛选面板的排法一致：
+ * 标题左对齐加粗，下面整行放控件，不做 label 左右分栏（分栏会让日期、快捷项各错一格）。
+ */
+
+.wa-mobile-filter-bar__field {
+  padding: 20rpx 0;
+}
+
+.wa-mobile-filter-bar__label {
+  margin-bottom: 20rpx;
+  color: var(--wa-mobile-text-color, #323233);
+  font-size: var(--wa-mobile-font-size, 30rpx);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* 选项网格：三列等宽，业务里最常用的排法 */
+.wa-mobile-filter-bar__options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24rpx;
+  width: 100%;
+}
+
+.wa-mobile-filter-bar__option {
+  height: var(--wa-mobile-cell-height, 80rpx);
+  padding: 0 16rpx;
+  border: 0;
+  border-radius: var(--wa-mobile-radius, 16rpx);
+  background: var(--wa-mobile-background, #f7f8fa);
+  color: var(--wa-mobile-text-color, #323233);
+  font-family: inherit;
+  font-size: var(--wa-mobile-font-size, 30rpx);
+  line-height: 1;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* 选中态：白底 + 2rpx 主色描边（用 inset 阴影画，避免加边框改变尺寸） */
+.wa-mobile-filter-bar__option.is-active {
+  background: var(--wa-mobile-background-white, #fff);
+  box-shadow: inset 0 0 0 2rpx var(--wa-mobile-color-primary, #1989fa);
+  color: var(--wa-mobile-color-primary, #1989fa);
+  font-weight: 500;
+}
+
+.wa-mobile-filter-bar__option:disabled,
+.wa-mobile-filter-bar__option.is-disabled {
+  color: var(--wa-mobile-text-color-weak, #969799);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 字段下拉：竖排选项，点一个就选中，不铺确认按钮 */
+.wa-mobile-filter-bar__list {
+  width: 100%;
+  padding: 8rpx 0;
+}
+
+.wa-mobile-filter-bar__list-item.van-cell {
+  min-height: 80rpx;
+  padding: 0 28rpx;
+  background: transparent;
+  color: var(--wa-mobile-text-color, #323233);
+  font-size: var(--wa-mobile-font-size, 30rpx);
+}
+
+.wa-mobile-filter-bar__list-item.van-cell::after {
+  display: none;
+}
+
+.wa-mobile-filter-bar__list-item.van-cell.is-active {
+  color: var(--wa-mobile-color-primary, #1989fa);
+}
+
+.wa-mobile-filter-bar__list-item.van-cell.is-disabled {
+  color: var(--wa-mobile-text-color-weak, #969799);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.wa-mobile-filter-bar__list-item .van-cell__value {
+  color: inherit;
+}
+
+.wa-mobile-filter-bar__list-check {
+  flex: 0 0 auto;
+  margin-left: 16rpx;
+  font-size: 32rpx;
+}
+
+/* 输入 / 展示格子：价格、日期、下拉共用 */
+.wa-mobile-filter-bar__cell {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: var(--wa-mobile-cell-height, 80rpx);
+  padding: 0 24rpx;
+  border: 0;
+  border-radius: var(--wa-mobile-radius, 16rpx);
+  background: var(--wa-mobile-background, #f7f8fa);
+  color: var(--wa-mobile-text-color, #323233);
+  font-family: inherit;
+  font-size: var(--wa-mobile-font-size, 30rpx);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wa-mobile-filter-bar__cell--placeholder {
+  color: var(--wa-mobile-text-color-weak, #969799);
+}
+
+.wa-mobile-filter-bar__placeholder {
+  color: var(--wa-mobile-text-color-weak, #969799);
+  font-size: 26rpx;
+}

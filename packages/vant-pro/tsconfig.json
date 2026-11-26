@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    // 仓库根 tsconfig 只声明 target=ESNext，默认不带 DOM lib；H5 组件要直接用
+    // HTMLInputElement / File / Event 等浏览器类型，这里显式补上。
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": []
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}

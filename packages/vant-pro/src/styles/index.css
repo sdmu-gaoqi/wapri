@@ -1,0 +1,33 @@
+/**
+ * 组件库公共变量与基础类。
+ *
+ * 变量默认值全部引用 Vant 的 CSS 变量：宿主换了主题色，本包组件自动跟随，
+ * 不需要再让业务方同步维护一份色板。业务也可以只覆盖 --wa-mobile-* 做局部定制。
+ */
+:root {
+  --wa-mobile-color-primary: var(--van-primary-color, #1989fa);
+  --wa-mobile-color-primary-light: var(--van-primary-color-light, #e8f0ff);
+  --wa-mobile-border-color: var(--van-border-color, #ebedf0);
+  --wa-mobile-text-color: var(--van-text-color, #323233);
+  --wa-mobile-text-color-weak: var(--van-text-color-2, #969799);
+  --wa-mobile-background: var(--van-background, #f7f8fa);
+  --wa-mobile-background-white: var(--van-white, #fff);
+  --wa-mobile-radius: 16rpx;
+  --wa-mobile-radius-lg: 44rpx;
+  --wa-mobile-gap: 16rpx;
+  --wa-mobile-cell-height: 80rpx;
+  --wa-mobile-font-size: 24rpx;
+}
+
+/* 只给屏幕阅读器读的文案：组件里需要保留语义但不想占位时使用 */
+.wa-mobile-sr-only {
+  position: absolute;
+  width: 2rpx;
+  height: 2rpx;
+  padding: 0;
+  margin: -2rpx;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
