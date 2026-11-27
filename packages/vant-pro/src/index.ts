@@ -1,6 +1,7 @@
 import type { App, Component } from 'vue'
 import WaEmpty from './components/empty/WaEmpty.vue'
 import WaFilterBar from './components/filter-bar/WaFilterBar.vue'
+import WaFilterCascader from './components/filter-bar/WaFilterCascader.vue'
 import WaFilterDate from './components/filter-bar/WaFilterDate.vue'
 import WaFilterRange from './components/filter-bar/WaFilterRange.vue'
 import WaFilterSelect from './components/filter-bar/WaFilterSelect.vue'
@@ -14,6 +15,7 @@ import './styles/index.css'
 export {
   WaEmpty,
   WaFilterBar,
+  WaFilterCascader,
   WaFilterDate,
   WaFilterRange,
   WaFilterSelect,
@@ -43,6 +45,7 @@ export const components: WaComponent[] = [
   WaFilterRange,
   WaFilterDate,
   WaFilterSelect,
+  WaFilterCascader,
   WaEmpty,
   WaVH100,
   WaUmdComponent,

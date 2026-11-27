@@ -37,6 +37,34 @@ const fields: FilterField[] = [
     ],
   },
   {
+    type: 'cascader',
+    key: 'catalog',
+    label: '平台分类',
+    inline: true,
+    options: [
+      {
+        label: '食品饮料',
+        value: 'food',
+        children: [
+          {
+            label: '休闲零食',
+            value: 'snack',
+            children: [
+              { label: '坚果炒货', value: 'nut' },
+              { label: '糕点蛋糕', value: 'cake' },
+            ],
+          },
+          { label: '酒水冲调', value: 'drink' },
+        ],
+      },
+      {
+        label: '日用百货',
+        value: 'daily',
+        children: [{ label: '纸品清洁', value: 'clean' }],
+      },
+    ],
+  },
+  {
     type: 'tag',
     key: 'stock',
     label: '库存',
@@ -66,7 +94,11 @@ const onChange = (_value: FilterBarModel, key?: string) => {
       v-model="model"
       :fields="fields"
       @change="onChange"
-    />
+    >
+      <template #top>
+        <div class="filter-demo__search">搜索框走 top 插槽，放在触发器行上方</div>
+      </template>
+    </WaFilterBar>
 
     <div class="filter-demo__panel">
       <p>v-model（点「确定」后同步）：{{ queryText }}</p>
@@ -90,6 +122,17 @@ const onChange = (_value: FilterBarModel, key?: string) => {
   border-radius: 16rpx;
   color: #6b7280;
   font-size: 24rpx;
+}
+
+/* 模拟业务里的搜索入口，占满 top 插槽的宽度 */
+.filter-demo__search {
+  height: 72rpx;
+  padding: 0 24rpx;
+  border-radius: 36rpx;
+  background: #f2f3f5;
+  color: #969799;
+  font-size: 26rpx;
+  line-height: 72rpx;
 }
 
 .filter-demo__panel p {

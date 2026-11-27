@@ -173,10 +173,14 @@ export interface WaFilterCascaderProps {
   inline?: boolean
   hideLabel?: boolean
   /**
-   * 挂载后立刻展开级联弹层。
+   * 只渲染弹层，不渲染「值 ›」格子。
    *
-   * 筛选条的字段下拉里只有这一个控件，传 true 才能做到「点触发器 → 直接选分类」，
-   * 不用先点开一层窄下拉再点格子。
+   * 筛选条上点触发器时由容器挂上这个控件：屏幕上只出现级联弹层一张卡片，
+   * 不会再叠一层筛选下拉壳（两层的观感很糟）。
    */
+  popupOnly?: boolean
+  /** 挂载后立刻展开弹层，配合 `popupOnly` 用 */
   autoOpen?: boolean
+  /** 弹层底部重置按钮的文案，默认「重置」 */
+  resetText?: string
 }

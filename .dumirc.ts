@@ -37,41 +37,14 @@ export default defineConfig({
   mfsu: false,
   // utoopack: {},
   presets: ['@dumijs/preset-vue'],
+  /*
+   * 移动端 demo 的预览框样式（375 手机框、窄屏上下结构、宽屏「代码左 / 预览右」分栏）
+   * 跟着组件走，见 .dumi/theme/builtins/Previewer/index.css。
+   */
   styles: [
     `
     body {
     margin: 0;
-    }
-  `,
-    /*
-     * 移动端 demo 的预览框。
-     * demo 由 md 里的 `iframe` 指定高度，这里把宽度固定成 375，去掉 dumi 默认画的那圈「浏览器窗口」，
-     * demo 内部的 rpx 由 extraPostCSSPlugins 换算成 rem，再跟着 headScripts 设置的根字号自适应。
-     */
-    `
-    .dumi-default-previewer-demo[data-iframe] {
-      display: flex;
-      justify-content: center;
-      padding: 20px 16px !important;
-      border-top: 0 !important;
-      background: #f7f8fa !important;
-    }
-
-    .dumi-default-previewer-demo[data-iframe]::before,
-    .dumi-default-previewer-demo[data-iframe]::after {
-      display: none !important;
-      content: none !important;
-    }
-
-    .dumi-default-previewer-demo[data-iframe] iframe {
-      display: block;
-      width: 375px !important;
-      max-width: 100%;
-      margin: 0;
-      border: 1px solid #ebedf0;
-      border-radius: 12px;
-      background: #fff;
-      box-sizing: border-box;
     }
   `,
   ],

@@ -35,6 +35,22 @@ group:
 | `confirm` | `(value: FilterBarModel)` | 点「确定」 |
 | `reset` | `()` | 点「重置」 |
 
+## 插槽
+
+| 名称 | 位置 | 典型用法 |
+| --- | --- | --- |
+| `top` | 触发器行**上方**的整行 | 搜索框、门店/日期范围这类不属于某个字段的内容；筛选条上一行放不下时用它 |
+| `leading` | 触发器行**内部**、触发器的前面，占满剩余宽度 | 只剩一两个筛选项时，把搜索框和「筛选」排在同一行 |
+
+```vue | pure
+<!-- 搜索框与「筛选」同一行：字段都收进面板（不传 inline） -->
+<WaFilterBar v-model="model" :fields="fields">
+  <template #leading>
+    <AppSearchTrigger scope="order" placeholder="订单号或用户" />
+  </template>
+</WaFilterBar>
+```
+
 ## 字段定义
 
 公共字段：`key`、`label`、`inline?`（`true` 时在筛选条上显示「字段 ▾」触发器，点开改值；不传只在面板里出现）。
@@ -45,12 +61,21 @@ group:
 | `'range'` | `min?`、`max?`、`unit?`、`precision?`、`placeholder?: [string, string]` | `WaNumberRange`：`{ min?; max? }` |
 | `'date'` | `dateType?: 'date' \| 'datetime' \| 'month'`、`shortcuts?`、`placeholder?` | `WaDateRange`：`{ start; end; shortcut? }` |
 | `'select'` | `options`、`multiple?`、`placeholder?` | `string \| string[]` |
+| `'cascader'` | `options: FilterCascaderOption[]`、`placeholder?`、`separator?`、`leafOnly?` | `string`（叶子 value） |
 
 ```ts
 interface FilterOption {
   label: string
   value: string
   disabled?: boolean
+}
+
+/** 级联选项：父子嵌套，只有没有 children 的叶子能被选中 */
+interface FilterCascaderOption {
+  label: string
+  value: string
+  disabled?: boolean
+  children?: FilterCascaderOption[]
 }
 
 /** 点击时求值：跨天不刷新页面也能拿到相对当前时间的区间 */
@@ -65,8 +90,10 @@ interface DateShortcut {
 ## 行为约定
 
 - 每个字段是一个 `WaFilter*` 控件，统一挂在 `WaFilterBar` 的 `van-form` 上；选项、价格、日期与下拉共用一套字段样式。
-- 点字段触发器弹出**窄下拉**（选项列表 400rpx，价格 / 日期 640rpx），贴着触发器对齐；单选点完立即提交并收起，多选 / 价格 / 日期带确认按钮。点「筛选」才展开全字段面板，按钮不展示已选数量。
-- 字段触发器与「筛选」展开时，文字和图标统一使用主色高亮。
+- 点字段触发器弹出**窄下拉**（选项列表 400rpx，价格 / 日期 / 级联 640rpx），贴着触发器对齐；单选点完立即提交并收起，多选 / 价格 / 日期带确认按钮。点「筛选」才展开全字段面板，按钮不展示已选数量。
+- 级联（`cascader`）自带底部弹层：点触发器直接弹出弹层，**不会再叠一层筛选下拉**；选到叶子即提交并收起；弹层底部有「重置」按钮，用来回到「全部分类」（级联本身没有取消选中的位置），点关闭或遮罩视为放弃，触发器复位。
+- 字段触发器与「筛选」展开时，文字和图标统一使用主色高亮；**当前有筛选条件时「筛选」也高亮**（跟面板里看到的值一致），所以业务把字段都收进面板（不传 `inline`）也能看出当前在筛。
+- **清空已提交的条件立即生效**：面板里点某项的「清除」（日期 / 级联弹层里的重置 / 标签取消选中）会马上同步 `v-model` 并刷新列表，不必再点「确定」，收起面板也不会把它悄悄改回来；设置新值仍然要点「确定」。
 - 全字段面板贴在筛选条下方，标题与底部按钮固定、只有字段区滚动；不铺遮罩，只在面板底部留一层渐隐投影。日期 / 下拉弹层点击自身遮罩时，整个筛选面板一并收起，未确认修改丢弃。
 - 日期快捷项内置「今日 / 昨日 / 近 7 天 / 近 30 天」（四个等宽按钮），结果是 `YYYY-MM-DD`；传 `shortcuts: []` 表示不要快捷项。
 - 日期控件点开是 `van-date-picker` 年月日滚轮（`month` 类型只选年月），`datetime` 字段的结束值统一补到 `23:59:59`，避免漏掉当天。
@@ -76,7 +103,7 @@ interface DateShortcut {
 
 ## 单独使用子控件
 
-`WaFilterTag` / `WaFilterRange` / `WaFilterDate` / `WaFilterSelect` 也对外导出，可以放进自己的 `van-form`。每个控件都是 `field` + `modelValue` + `inline?` 三个 props，只 emit `update:modelValue`：
+`WaFilterTag` / `WaFilterRange` / `WaFilterDate` / `WaFilterSelect` / `WaFilterCascader` 也对外导出，可以放进自己的 `van-form`。每个控件都是 `field` + `modelValue` + `inline?` 三个 props，只 emit `update:modelValue`（级联额外 emit `close`，表示没选就退出；`popupOnly` 时只渲染弹层不渲染格子）。
 
 ```vue | pure
 <van-form>

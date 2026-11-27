@@ -23,8 +23,8 @@ const emit = defineEmits<WaFilterBarEmits>()
 const panelVisible = ref(false)
 /** 当前展开的字段；null 表示点了「筛选」，面板里是全部字段 */
 const activeKey = ref<string | null>(null)
-/** 字段下拉的锚点：贴着触发器的左边展开；靠右的触发器改挂右边，避免宽下拉被裁掉 */
-const dropdownAnchor = ref<{ left?: number; right?: number }>({ left: 0 })
+/** 字段下拉的锚点：只记左边界，贴着触发器展开后统一夹进筛选条内 */
+const dropdownAnchor = ref<{ left: number }>({ left: 0 })
 /** 筛选条根节点：点击外部时关闭面板，teleport 出去的 popup 单独放行 */
 const triggerRoot = ref<HTMLElement | null>(null)
 const draft = reactive<FilterBarModel>({})
@@ -49,6 +49,13 @@ watch(
 /** 筛选条上的触发器字段：`inline` 的字段直接在条上露一个「值 ▾」 */
 const triggerFields = computed(() => props.fields.filter((field) => isFieldInline(field, props.inlineKeys)))
 const summaryChips = computed(() => createSummaryChips(props.fields, draft))
+/**
+ * 当前条件数：跟面板里看到的一致。
+ *
+ * 不能只算「已提交」的那一份——面板里清空某项（比如级联弹层里的重置）只改草稿，
+ * 若还按已提交值高亮，就会出现「面板里明明没值了、筛选还亮着」。面板收起时草稿会被丢弃/回填，
+ * 两者自然一致。
+ */
 const activeCount = computed(() => summaryChips.value.length)
 
 /** 面板内容：点了某个触发器就只放这一个字段，点「筛选」才放全部 */
@@ -60,18 +67,25 @@ const panelFields = computed<FilterField[]>(() => {
 
 const activeField = computed(() => props.fields.find((field) => field.key === activeKey.value))
 /** 单选选项点完就走；多选、价格、日期需要留一个确认入口 */
-const isInstantField = (field: FilterField): boolean =>
-  (field.type === 'tag' || field.type === 'select') && !field.multiple
+const isInstantField = (field: FilterField): boolean => {
+  if (field.type === 'tag' || field.type === 'select') return !field.multiple
 
-/** 选项列表用窄下拉（400rpx），价格 / 日期需要更宽（640rpx），宽度都写在样式里 */
+  // 级联只有叶子可点，选中即终态
+  return field.type === 'cascader'
+}
+
+/**
+ * 选项列表用窄下拉（400rpx），价格 / 日期需要更宽（640rpx），宽度都写在样式里。
+ * 级联的窄下拉只是个「壳」——弹层会盖在它上面，所以按窄的处理，别让宽卡片先闪一下。
+ */
 const isWideDropdown = (field?: FilterField): boolean => field?.type === 'range' || field?.type === 'date'
 
-/** 下拉定位：Vue 3 不会自动给数字补 px，这里统一拼成字符串 */
-const dropdownStyle = computed<CSSProperties>(() => {
-  const { left, right } = dropdownAnchor.value
+/** 下拉宽度（rpx）换算成屏幕像素：1rpx = 视口宽 / 750，跟全局根字号是同一套公式 */
+const dropdownWidth = (field: FilterField): number =>
+  ((isWideDropdown(field) ? 640 : 400) / 750) * window.innerWidth
 
-  return left === undefined ? { right: `${right}px` } : { left: `${left}px` }
-})
+/** 下拉定位：Vue 3 不会自动给数字补 px，这里统一拼成字符串 */
+const dropdownStyle = computed<CSSProperties>(() => ({ left: `${dropdownAnchor.value.left}px` }))
 
 const hasValue = (key: string): boolean => draft[key] !== undefined
 
@@ -102,6 +116,12 @@ const closePanel = () => {
   restorePanelFields()
 }
 
+/**
+ * 自带底部弹层的字段（级联）：点触发器时不再套窄下拉，
+ * 直接把控件挂上来由它弹出底部弹层，点一次就能选。
+ */
+const isPopupField = (field?: FilterField): boolean => field?.type === 'cascader'
+
 const updateField = (key: string, value: FilterValue | undefined) => {
   if (value === undefined) delete draft[key]
   else draft[key] = value
@@ -114,6 +134,18 @@ const updateField = (key: string, value: FilterValue | undefined) => {
   if (props.autoConfirm) {
     committed.value = snapshot
     emit('update:modelValue', snapshot)
+
+    return
+  }
+
+  // 清空已提交的条件立即生效：面板里点了「清除」却还要再点确定、收起面板又悄悄回填，
+  // 用户会以为没清掉。只提交这一个 key，别把其它字段未确认的草稿一起带走。
+  if (value === undefined && committed.value[key] !== undefined) {
+    const next = { ...committed.value }
+
+    delete next[key]
+    committed.value = next
+    emit('update:modelValue', next)
   }
 }
 
@@ -131,12 +163,17 @@ const toggleField = (field: FilterField, event: MouseEvent) => {
   if (trigger && bar) {
     const barRect = bar.getBoundingClientRect()
     const triggerRect = trigger.getBoundingClientRect()
-    // 触发器在右半边时改挂 right，宽下拉往左展开，不会被屏幕裁掉
-    const anchorRight = triggerRect.left + triggerRect.width / 2 > barRect.left + barRect.width / 2
+    // 下拉一律按「左边界」定位：先贴触发器左边，右半边触发器的宽下拉改成右边对齐，
+    // 最后再把左边界夹进筛选条内——不夹的话 640rpx 的宽下拉在右侧触发器上会被屏幕裁掉半截。
+    const padding = 6
+    const width = Math.min(dropdownWidth(field), Math.max(barRect.width - padding * 2, 0))
+    const triggerLeft = triggerRect.left - barRect.left
+    const triggerRight = triggerRect.right - barRect.left
+    const preferLeft = triggerLeft + triggerRect.width / 2 <= barRect.width / 2
+    const rawLeft = preferLeft ? triggerLeft : triggerRight - width
+    const maxLeft = Math.max(barRect.width - width - padding, padding)
 
-    dropdownAnchor.value = anchorRight
-      ? { right: Math.round(barRect.right - triggerRect.right) }
-      : { left: Math.round(triggerRect.left - barRect.left) }
+    dropdownAnchor.value = { left: Math.round(Math.min(Math.max(rawLeft, padding), maxLeft)) }
   }
 
   restorePanelFields()
@@ -237,12 +274,8 @@ const handleDocumentPointerDown = (event: PointerEvent) => {
 
   const target = event.target as Node | null
 
-  // 日期 / 下拉选择器会 teleport 到 body；点它们自己的遮罩时，连同外层筛选面板一起关闭
-  if (target instanceof Element && target.closest('.van-overlay')) {
-    closePanel()
-
-    return
-  }
+  // 日期 / 下拉选择器会 teleport 到 body；点遮罩只让对应 popup 自己关闭，外层 FilterBar 保持展开
+  if (target instanceof Element && target.closest('.van-overlay')) return
 
   const root = triggerRoot.value
 
@@ -268,7 +301,23 @@ onBeforeUnmount(() => {
     class="wa-mobile-filter-bar"
     :class="{ 'wa-mobile-filter-bar--active': activeCount > 0 }"
   >
+    <!-- 触发器行上方的整行插槽：搜索框、店铺切换这类「不属于某个字段」的内容放这里 -->
+    <div
+      v-if="$slots.top"
+      class="wa-mobile-filter-bar__top"
+    >
+      <slot name="top" />
+    </div>
+
     <div class="wa-mobile-filter-bar__bar">
+      <!-- 行内前置插槽：只剩一个筛选字段时，搜索框可以和「筛选」排在同一行 -->
+      <div
+        v-if="$slots.leading"
+        class="wa-mobile-filter-bar__leading"
+      >
+        <slot name="leading" />
+      </div>
+
       <!-- 筛选条上只放「字段 ▾」触发器，选项留在面板里：手机上横排放不下选项 -->
       <div
         v-if="triggerFields.length > 0"
@@ -287,11 +336,15 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
+      <!--
+        「筛选」只在「当前有筛选条件」时高亮：业务把字段都收进面板时，条上只剩这一个入口，
+        靠它提示当前是不是在筛。面板展开本身可见，不再额外染色，避免「没值也亮」的错觉。
+      -->
       <button
         v-if="fields.length > 0"
         type="button"
         class="wa-mobile-filter-bar__filter"
-        :class="{ 'is-active': panelVisible && activeKey === null }"
+        :class="{ 'is-active': activeCount > 0 }"
         @click="toggleAll"
       >
         {{ expandText }}
@@ -309,10 +362,25 @@ onBeforeUnmount(() => {
       @close="clearField"
     />
 
-    <!-- 点字段：窄下拉，贴着触发器；点「筛选」：下面的全字段面板 -->
+    <!--
+      自带弹层的字段（级联）：不套窄下拉，直接挂控件让它的弹层弹出来，
+      否则屏幕上会同时出现「筛选下拉壳 + 级联弹层」两层卡片。
+    -->
+    <component
+      v-if="panelVisible && activeField && isPopupField(activeField)"
+      :is="getFilterControl(activeField)"
+      :field="activeField"
+      :model-value="draft[activeField.key]"
+      popup-only
+      auto-open
+      @update:model-value="(value: FilterValue | undefined) => handleDropdownUpdate(activeField!, value)"
+      @close="closePanel"
+    />
+
+    <!-- 其它字段：窄下拉贴着触发器；点「筛选」是下面的全字段面板 -->
     <Transition name="wa-mobile-filter-bar-drop">
       <div
-        v-if="panelVisible && activeField"
+        v-if="panelVisible && activeField && !isPopupField(activeField)"
         class="wa-mobile-filter-bar__dropdown"
         :class="{ 'wa-mobile-filter-bar__dropdown--wide': isWideDropdown(activeField) }"
         :style="dropdownStyle"
@@ -395,6 +463,17 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 24rpx;
   padding: 24rpx;
+}
+
+/* 顶部插槽：左右内边距跟筛选条对齐，底部留白交给 __bar 的 padding */
+.wa-mobile-filter-bar__top {
+  padding: 24rpx 24rpx 0;
+}
+
+/* 行内前置插槽：占满剩余宽度，右侧的「筛选」保持贴边 */
+.wa-mobile-filter-bar__leading {
+  flex: 1;
+  min-width: 0;
 }
 
 .wa-mobile-filter-bar__triggers {
@@ -509,7 +588,12 @@ onBeforeUnmount(() => {
   border-radius: var(--wa-mobile-radius-lg, 44rpx);
 }
 
-/* 面板：标题固定、字段区滚动、按钮固定在底部；只在下方投影，顶部不加任何遮挡 */
+/*
+ * 面板：标题固定、字段区滚动、按钮固定在底部；浮在列表上方，靠一层投影和下面的内容分开。
+ *
+ * 投影必须写成「大 y 偏移 + 负 spread」：这样阴影整体落在面板下方，
+ * 顶部不会溢出一圈暗边（面板上面就是白色筛选条，溢出来就是一条脏线）。
+ */
 .wa-mobile-filter-bar__panel {
   position: absolute;
   z-index: 30;
@@ -521,18 +605,7 @@ onBeforeUnmount(() => {
   max-height: 78vh;
   border-radius: 0 0 32rpx 32rpx;
   background: var(--wa-mobile-background-white, #fff);
-}
-
-/* 用伪元素画底部渐隐，避免 box-shadow 在面板顶部也溢出一圈 */
-.wa-mobile-filter-bar__panel::after {
-  position: absolute;
-  right: 0;
-  bottom: -12rpx;
-  left: 0;
-  height: 12rpx;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0));
-  content: '';
-  pointer-events: none;
+  box-shadow: 0 24rpx 48rpx -24rpx rgba(15, 23, 42, 0.28);
 }
 
 .wa-mobile-filter-bar-drop-enter-active,

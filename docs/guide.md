@@ -185,6 +185,7 @@ pnpm doc   # 构建到 docs-dist
 
 - 品牌、部署子路径、接口代理都由环境变量注入：`DOC_SITE_NAME`、`DOC_SITE_TITLE`、`DOC_LOGO`、`DOC_BASE_PATH`、`DOC_PROXY_TARGET`；仓库内不写死业务地址。
 - 每个组件的文案放在 `src/<组件>/index.md`，示例用 `<code src="./demo/basic.vue"></code>` 引用。
+- 带 `iframe` 的 demo 是手机预览（固定 375 宽，高度由 `iframe="640"` 指定）：内容区宽度 ≥ 960px 时代码在左、预览在右，源码默认展开；更窄时自动落回「预览在上、代码在下」。版式与分栏开关都在 `.dumi/theme/builtins/Previewer/`，写 demo 时不用额外传参。
 - 页面路由由 `atomDirs` 推导并复数化，新增页面或导航时注意前缀（见上一节的提示）。
 - `pnpm doc` 走 `scripts/doc-build.mjs`：dumi 构建完成后进程不会自行退出（bundler 句柄未释放），脚本在产物文件数稳定后主动结束子进程，本地与 CI 都不会挂住。
 - dumi 会把 demo 的绝对路径写进 `meta__packages.*.async.js`，部署前先确认产物里没有构建机的本机路径。

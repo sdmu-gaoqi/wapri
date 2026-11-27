@@ -1,0 +1,110 @@
+/*
+ * 移动端 demo（iframe）的预览框样式。
+ *
+ * 两种排布：
+ * - 内容区 ≥ 960px：代码在左、手机预览在右，源码默认展开（见 index.tsx 里的 defaultShowCode）；
+ * - 更窄：预览在上、代码在下，与改造前的版式一致。
+ *
+ * 分栏开关是 index.tsx 量出来的 `.wapri-mobile-demo--split`，不用容器查询，
+ * 免得 container-type 的 layout containment 把动作栏 tooltip 的定位搞乱。
+ *
+ * 375 是手机宽度，demo 由 md 里的 `iframe` 指定高度；demo 内部的 rpx 由 .dumirc.ts 的
+ * extraPostCSSPlugins 换算成 rem，再跟着 headScripts 设置的根字号自适应。
+ */
+.dumi-default-previewer-demo[data-iframe] {
+  display: flex;
+  justify-content: center;
+  padding: 20px 16px !important;
+  border-top: 0 !important;
+  background: #f7f8fa !important;
+}
+
+/* 去掉 dumi 默认画的那圈「浏览器窗口」 */
+.dumi-default-previewer-demo[data-iframe]::before,
+.dumi-default-previewer-demo[data-iframe]::after {
+  display: none !important;
+  content: none !important;
+}
+
+.dumi-default-previewer-demo[data-iframe] iframe {
+  display: block;
+  width: 375px !important;
+  max-width: 100%;
+  margin: 0;
+  border: 1px solid #ebedf0;
+  border-radius: 12px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/*
+ * 左右分栏：两栏等高靠「预览在流内占右侧定宽、代码栏绝对定位撑满左侧」保证，源码区自己滚动。
+ * 960 是「375 手机 + 至少 480 代码」的临界值，改这里时同步 index.tsx 的 SPLIT_MIN_WIDTH。
+ *
+ * 卡片自己不裁溢出（不要 overflow: hidden）：动作栏的提示是按钮上的 ::before 伪元素
+ * （dumi 的 [data-dumi-tooltip]，浮在按钮上方 8px），卡片顶边离按钮只有 12px，
+ * 一裁就只剩贴着顶边的一条黑边。圆角改由真正贴边的那一栏各自裁。
+ */
+.wapri-mobile-demo--split .dumi-default-previewer.wapri-mobile-previewer {
+  position: relative;
+  display: block;
+  border-radius: 8px;
+}
+
+/* 右栏：375 的手机 + 两侧留白；灰底贴到卡片右边缘，右上 / 右下两个圆角自己裁 */
+.wapri-mobile-demo--split .dumi-default-previewer-demo[data-iframe] {
+  width: 420px;
+  margin-left: auto;
+  border-left: 1px solid #ebedf0;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+}
+
+/* 左栏：标题 / 动作按钮 / 源码 */
+.wapri-mobile-demo--split .dumi-default-previewer-meta {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(100% - 420px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-top: 0 !important;
+}
+
+.wapri-mobile-demo--split .dumi-default-previewer-desc {
+  grid-area: 1 / 1 / 2 / 2;
+  min-width: 0;
+}
+
+/* 标题不再浮在边框上，改成代码区顶部的说明 */
+.wapri-mobile-demo--split .dumi-default-previewer-desc > h5 {
+  position: static;
+  padding: 14px 20px;
+  font-weight: 500;
+  line-height: 20px;
+  background: none;
+}
+
+.wapri-mobile-demo--split .dumi-default-previewer-desc > .markdown {
+  padding: 0 20px 12px;
+  border-bottom: 0;
+}
+
+.wapri-mobile-demo--split .dumi-default-previewer-actions {
+  grid-area: 1 / 2 / 2 / 3;
+  height: auto;
+  padding: 8px 8px 8px 0;
+  justify-content: flex-end;
+  border-bottom: 0 !important;
+}
+
+.wapri-mobile-demo--split .dumi-default-previewer-sources {
+  grid-area: 2 / 1 / 3 / 3;
+  min-height: 0;
+  /* 竖向滚动留给代码区，横向滚动交给 pre 自己，避免两处滚动条 */
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-top: 1px solid #ebedf0;
+  /* 代码区贴到卡片左下角，自己裁这个圆角 */
+  border-radius: 0 0 0 8px;
+}
