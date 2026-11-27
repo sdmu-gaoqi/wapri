@@ -1,5 +1,11 @@
 # @wapri/gbase
 
+## 2.4.3
+
+### Patch Changes
+
+- 新增了vant-pro项目,移动端开源组件库
+
 ## 2.4.2
 
 ### Patch Changes

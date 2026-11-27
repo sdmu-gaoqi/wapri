@@ -1,5 +1,13 @@
 # @wapri/ghooks
 
+## 1.1.10
+
+### Patch Changes
+
+- 新增了vant-pro项目,移动端开源组件库
+- Updated dependencies
+  - @wapri/gbase@2.4.3
+
 ## 1.1.9
 
 ### Patch Changes

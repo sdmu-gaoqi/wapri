@@ -1,5 +1,13 @@
 # @wapri/gplayer
 
+## 0.3.7
+
+### Patch Changes
+
+- 新增了vant-pro项目,移动端开源组件库
+- Updated dependencies
+  - @wapri/gbase@2.4.3
+
 ## 0.3.6
 
 ### Patch Changes

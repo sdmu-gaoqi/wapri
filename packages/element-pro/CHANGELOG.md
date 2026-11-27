@@ -1,5 +1,16 @@
 # @wapri/element-pro
 
+## 3.14.3
+
+### Patch Changes
+
+- 新增了vant-pro项目,移动端开源组件库
+- Updated dependencies
+  - @wapri/ghooks@1.1.10
+  - @wapri/gplayer@0.3.7
+  - @wapri/gutils@2.3.10
+  - @wapri/preview@0.1.10
+
 ## 3.14.2
 
 ### Patch Changes

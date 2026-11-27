@@ -1,5 +1,14 @@
 # @wapri/vant-pro
 
+## 0.1.1
+
+### Patch Changes
+
+- 新增了vant-pro项目,移动端开源组件库
+- Updated dependencies
+  - @wapri/ghooks@1.1.10
+  - @wapri/gutils@2.3.10
+
 ## 0.1.0
 
 ### Minor Changes

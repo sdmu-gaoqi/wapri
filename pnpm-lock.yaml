@@ -15,8 +15,8 @@ importers:
         specifier: ^7.24.4
         version: 7.27.0
       '@wagq/wa-cli':
-        specifier: ^0.6.70
-        version: 0.6.70(@types/node@22.14.1)
+        specifier: ^0.6.71
+        version: 0.6.71(@types/node@22.14.1)
       vue:
         specifier: ^3.4.0
         version: 3.5.38(typescript@5.8.3)
@@ -3216,8 +3216,8 @@ packages:
       oxfmt: ^0.75.0
       oxlint: ^1.90.0
 
-  '@wagq/wa-cli@0.6.70':
-    resolution: {integrity: sha512-aAfNCHyfg2AO5IlZ41WnsPw7O1gRzWJDMhRxcT5rcRGYdMf5wV64Y5/EpIwacD9GizpvUByluX5CCSWAlti4ig==}
+  '@wagq/wa-cli@0.6.71':
+    resolution: {integrity: sha512-rRLBSEqq/xGKcYouKhFG+Ln1+aW/HQvsCtm5vrs9OXt+lMp1bKvKvYuiTEv0wfoLafK4Zf9ZS5Wm756Qg7uc0g==}
     hasBin: true
 
   '@webassemblyjs/ast@1.14.1':
@@ -12958,7 +12958,7 @@ snapshots:
       oxfmt: 0.75.0
       oxlint: 1.91.0
 
-  '@wagq/wa-cli@0.6.70(@types/node@22.14.1)':
+  '@wagq/wa-cli@0.6.71(@types/node@22.14.1)':
     dependencies:
       chalk: 3.0.0
       child_process: 1.0.2
